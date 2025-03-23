@@ -11,7 +11,7 @@ using namespace std;
 class Vehiculo {
   // Constructor de la clase
   public:
-  Vehiculo(int capacidad, int velocidad, pair<int, int> posicion, int duracion);
+  Vehiculo(const int& capacidad, const int& velocidad, const pair<int, int>& posicion, const int& duracion);
 
   protected:
   int capacidad_;

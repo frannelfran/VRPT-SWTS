@@ -9,5 +9,5 @@
 class Transporte : public Vehiculo {
   public:
   // Constructor de la clase
-  Transporte(int capacidad, int velocidad, pair<int, int> posicion, int duracion) : Vehiculo(capacidad, velocidad, posicion, duracion) {}
+  Transporte(const int& capacidad, const int& velocidad, const pair<int, int>& posicion, const int& duracion) : Vehiculo(capacidad, velocidad, posicion, duracion) {}
 };
