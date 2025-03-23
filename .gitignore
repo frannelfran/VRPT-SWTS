@@ -1,0 +1,6 @@
+# Ignorar el ejecutable
+*programa
+
+# Eliminar lo .o de la carpeta src y todas las subcarpetas
+src/*.o
+src/*/*.o
