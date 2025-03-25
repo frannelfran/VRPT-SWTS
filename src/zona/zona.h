@@ -11,15 +11,16 @@ using namespace std;
 class Zona {
   public:
   // Constructor de la clase
-  Zona(const string& id, const pair<double, double>& posicion, const double& contenido) : id_(id), posicion_(posicion), contenido_(contenido) {};
+  Zona() {}
+  Zona(const string& id, const pair<int, int>& posicion, const double& contenido) : id_(id), posicion_(posicion), contenido_(contenido) {};
 
   // Getters
   inline string getId() const { return id_; }
-  inline pair<double, double> getPosicion() const { return posicion_; }
+  inline pair<int, int> getPosicion() const { return posicion_; }
   inline double getContenido() const { return contenido_; }
 
   private:
   string id_;
-  pair<double, double> posicion_;
+  pair<int, int> posicion_;
   double contenido_;
 };

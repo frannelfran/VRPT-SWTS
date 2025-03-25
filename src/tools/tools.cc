@@ -32,9 +32,9 @@ void crearZona(string id, istringstream& linea) {
   pair<double, double> posicion;
   double contenido;
   linea >> posicion.first >> posicion.second;
-//if (posicion.first > tools.maxX || posicion.second > tools.maxY) {
-//  throw invalid_argument("Error: Las coordenadas de la zona " + id + " están fuera del rango");
-//}
+  //if (posicion.first > tools.maxX || posicion.second > tools.maxY) {
+  //  throw invalid_argument("Error: Las coordenadas de la zona " + id + " están fuera del rango");
+  //}
   if (id == "epsilon" || id == "offset" || id == "k") return;
   else if (id == "Depot" || id == "IF" || id == "IF1" || id == "Dumpsite") {
     contenido = 0;

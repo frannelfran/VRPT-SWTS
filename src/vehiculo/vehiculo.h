@@ -13,7 +13,7 @@ class Vehiculo {
   public:
   Vehiculo(const int& capacidad, const int& velocidad, const pair<int, int>& posicion, const int& duracion);
 
-  protected:
+  private:
   int capacidad_;
   int velocidad_;
   pair<int, int> posicion_;
