@@ -49,3 +49,22 @@ void Vehiculo::moverVehiculo(const Zona& zona) {
   posicion_ = zona.getPosicion();
   zonasVisitadas_.push_back(zona);
 }
+
+/**
+ * @brief Método para obtener la zona más cercana al vehículo que no haya sido visitada aún.
+ *        Para ello se calculara la distancia euclídea entre el vehículo y las zonas que no han sido visitadas.
+ * @return Zona más cercana al vehículo
+ */
+Zona Vehiculo::zonaMasCercana() {
+  double distancia = 0.0;
+  double minDistancia = sqrt(pow(zonas_[0].getPosicion().first - posicion_.first, 2) + pow(zonas_[0].getPosicion().second - posicion_.second, 2));
+  Zona zonaMasCercana = zonas_[0];
+  for (size_t i = 1; i < zonas_.size(); i++) {
+    distancia = sqrt(pow(zonas_[i].getPosicion().first - posicion_.first, 2) + pow(zonas_[i].getPosicion().second - posicion_.second, 2));
+    if (distancia < minDistancia && find(zonasVisitadas_.begin(), zonasVisitadas_.end(), zonas_[i]) == zonasVisitadas_.end()) {
+      minDistancia = distancia;
+      zonaMasCercana = zonas_[i];
+    }
+  }
+  return zonaMasCercana;
+}

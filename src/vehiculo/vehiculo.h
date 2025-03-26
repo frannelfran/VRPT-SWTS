@@ -6,6 +6,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
+#include <algorithm>
 #include "../zona/zona.h"
 
 using namespace std;
@@ -19,6 +21,11 @@ class Vehiculo {
   bool llenarVehiculo(double cantidad);
   void vaciarVehiculo(Zona& zona);
   void moverVehiculo(const Zona& zona);
+
+  Zona zonaMasCercana(); // Zona más cercana al vehículo
+
+  // Getters
+  inline pair<int, int> getPosicion() const { return posicion_; }
   
   private:
   // Valores que dependen para que el vehículo siga funcionando
