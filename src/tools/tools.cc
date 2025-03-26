@@ -19,6 +19,8 @@ void procesarLinea(istringstream& linea) {
   else if (token == "Q1") linea >> tools.capacidadRecoleccion;
   else if (token == "Q2") linea >> tools.duracionTransporte;
   else if (token == "V") linea >> tools.velocidad;
+  else if (token == "Depot") tools.deposito = make_pair(linea.get(), linea.get());
+  else if (token == "Dumpsite") tools.vertedero = make_pair(linea.get(), linea.get());
   else crearZona(token, linea);
 }
 
@@ -32,11 +34,11 @@ void crearZona(string id, istringstream& linea) {
   pair<double, double> posicion;
   double contenido;
   linea >> posicion.first >> posicion.second;
-  //if (posicion.first > tools.maxX || posicion.second > tools.maxY) {
-  //  throw invalid_argument("Error: Las coordenadas de la zona " + id + " están fuera del rango");
-  //}
   if (id == "epsilon" || id == "offset" || id == "k") return;
-  else if (id == "Depot" || id == "IF" || id == "IF1" || id == "Dumpsite") {
+  else if (posicion.first > tools.maxX || posicion.second > tools.maxY) {
+    throw invalid_argument("Error: Las coordenadas de la zona " + id + " están fuera del rango");
+  }
+  else if (id == "IF" || id == "IF1") {
     contenido = 0;
   } else {
     double D1, D2;

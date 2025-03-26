@@ -28,6 +28,8 @@ struct Tools {
   int velocidad;
   int maxX;
   int maxY;
+  pair<int, int> deposito; // Ubicación del depósito (Punto de partida de los vehículos)
+  pair<int, int> vertedero; // Ubicación del vertedero
 };
 
 extern Tools tools;
