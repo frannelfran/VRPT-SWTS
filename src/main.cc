@@ -3,6 +3,7 @@
  * @brief Función principal del programa
  */
 #include "tools/tools.h"
+#include "algoritmo/voraz/voraz.h"
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
@@ -16,9 +17,13 @@ int main(int argc, char* argv[]) {
     vector<Zona> zonas = tools.zonas;
     // Muestro las zonas
     cout << "Zonas:" << endl;
-    for (int i = 0; i < zonas.size(); i++) {
+    for (size_t i = 0; i < zonas.size(); i++) {
       cout << zonas[i].getId() << " " << zonas[i].getPosicion().first << " " << zonas[i].getPosicion().second << " " << zonas[i].getContenido() << endl;
     }
+
+    Algoritmo* algoritmo = new Voraz(tools);
+    vector<Vehiculo> vehiculos = algoritmo->ejecutar();
+
   } catch (const invalid_argument& e) {
     cerr << e.what() << endl;
     exit(1);
