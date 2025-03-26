@@ -19,6 +19,9 @@ class Zona {
   inline pair<int, int> getPosicion() const { return posicion_; }
   inline double getContenido() const { return contenido_; }
 
+  // Setters
+  inline void setContenido(double contenido) { contenido_ = contenido; }
+
   private:
   string id_;
   pair<int, int> posicion_;
