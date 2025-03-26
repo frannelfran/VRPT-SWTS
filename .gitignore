@@ -4,6 +4,7 @@
 # Eliminar lo .o de la carpeta src y todas las subcarpetas
 src/*.o
 src/*/*.o
+src/*/*/*.o
 
 # No incluir .vscode
 .vscode
