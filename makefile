@@ -1,29 +1,26 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra
+CXXFLAGS = -Wall -Wextra -std=c++17
 LDFLAGS = 
+SRC_DIR = ./src
+OBJ_DIR = ./obj
+
+SRCS = $(shell find $(SRC_DIR) -name '*.cc')
+OBJS = $(SRCS:$(SRC_DIR)/%.cc=$(OBJ_DIR)/%.o)
 TARGET = programa
-
-# Buscar archivos .cc en el directorio raíz y subdirectorios comunes (ej: src/, vehiculo/, zona/)
-SRC_DIRS = . src vehiculo zona  # Agrega aquí tus subdirectorios
-SRC = $(shell find $(SRC_DIRS) -name '*.cc' 2>/dev/null)
-
-# Validar que haya archivos fuente
-ifeq ($(SRC),)
-  $(error No se encontraron archivos .cc en los directorios: $(SRC_DIRS))
-endif
-
-OBJ = $(patsubst %.cc, %.o, $(SRC))
 
 all: $(TARGET)
 
-$(TARGET): $(OBJ)
-	$(CXX) $(LDFLAGS) -o $@ $^
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
-%.o: %.cc
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	@mkdir -p $@
 
 clean:
-	rm -f $(TARGET)
-	find $(SRC_DIRS) -name '*.o' -delete
+	rm -rf $(OBJ_DIR) $(TARGET)
 
 .PHONY: all clean
