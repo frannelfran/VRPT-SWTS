@@ -3,7 +3,7 @@
  */
 
 #pragma once
-#include "algoritmo.h"
+#include "../algoritmo.h"
 
 class Voraz : public Algoritmo {
   public:
