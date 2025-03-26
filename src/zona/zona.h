@@ -22,6 +22,11 @@ class Zona {
   // Setters
   inline void setContenido(double contenido) { contenido_ = contenido; }
 
+  // Sobrecarga de operadores
+  friend bool operator==(const Zona& zona1, const Zona& zona2) {
+    return zona1.id_ == zona2.id_;
+  }
+
   private:
   string id_;
   pair<int, int> posicion_;
