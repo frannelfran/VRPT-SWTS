@@ -19,8 +19,8 @@ void procesarLinea(istringstream& linea) {
   else if (token == "Q1") linea >> tools.capacidadRecoleccion;
   else if (token == "Q2") linea >> tools.duracionTransporte;
   else if (token == "V") linea >> tools.velocidad;
-  else if (token == "Depot") tools.deposito = make_pair(linea.get(), linea.get());
-  else if (token == "Dumpsite") tools.vertedero = make_pair(linea.get(), linea.get());
+  else if (token == "Depot") linea >> tools.deposito.first >> tools.deposito.second;
+  else if (token == "Dumpsite") linea >> tools.vertedero.first >> tools.vertedero.second;
   else crearZona(token, linea);
 }
 
