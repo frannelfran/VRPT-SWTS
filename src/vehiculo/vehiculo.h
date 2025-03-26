@@ -16,7 +16,7 @@ class Vehiculo {
   Vehiculo(const int& capacidad, const int& velocidad, const pair<int, int>& posicion, const int& duracion, const vector<Zona>& zonas);
 
   // Métodos de la clase
-  void llenarVehiculo(double cantidad);
+  bool llenarVehiculo(double cantidad);
   void vaciarVehiculo(Zona& zona);
   void moverVehiculo(const Zona& zona);
   

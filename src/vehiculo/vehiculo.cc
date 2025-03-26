@@ -20,10 +20,14 @@ Vehiculo::Vehiculo(const int& capacidad, const int& velocidad, const pair<int, i
 /**
  * @brief Método para llenar el vehículo
  * @param cantidad Cantidad de residuos que se van a añadir al vehículo
- * @return void
+ * @return bool
  */
-void Vehiculo::llenarVehiculo(double cantidad) {
-  cantidad_ += cantidad;
+bool Vehiculo::llenarVehiculo(double cantidad) {
+  if (cantidad_ + cantidad > capacidad_) return false;
+  else {
+    cantidad_ += cantidad;
+  }
+  return true;
 }
 
 /**
