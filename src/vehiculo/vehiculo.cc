@@ -60,5 +60,7 @@ void Vehiculo::moverVehiculo(const Zona& zona, const double distancia) {
  * @return Tiempo que tarda el vehículo en llegar a la zona
  */
 int Vehiculo::calcularTiempo(const Zona& zona) {
-  return sqrt(pow(posicion_.first - zona.getPosicion().first, 2) + pow(posicion_.second - zona.getPosicion().second, 2)) / velocidad_;
+  double tiempo = sqrt(pow(posicion_.first - zona.getPosicion().first, 2) + pow(posicion_.second - zona.getPosicion().second, 2)) / velocidad_;
+  // Paso el tiempo a minutos
+  return int(tiempo * 60);
 }
