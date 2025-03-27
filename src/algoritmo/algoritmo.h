@@ -21,6 +21,8 @@ class Algoritmo {
   // Métodos de la clase
   virtual vector<Vehiculo> ejecutar() = 0;
 
+  pair<Zona, double> zonaMasCercana(const vector<Zona>& zonas, const Vehiculo& vehiculo); // Zona más cercana al vehículo
+
   protected:
   // Datos importantes para el algoritmo
   Tools datos_;
