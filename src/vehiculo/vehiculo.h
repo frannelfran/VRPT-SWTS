@@ -20,7 +20,8 @@ class Vehiculo {
   // Métodos de la clase
   bool llenarVehiculo(double cantidad);
   void vaciarVehiculo(Zona& zona);
-  void moverVehiculo(const Zona& zona);
+  void moverVehiculo(const Zona& zona, const double distancia);
+  int calcularTiempo(const Zona& zona);
 
   // Getters
   inline pair<int, int> getPosicion() const { return posicion_; }

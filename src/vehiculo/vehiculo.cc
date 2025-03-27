@@ -42,9 +42,23 @@ void Vehiculo::vaciarVehiculo(Zona& zona) {
 /**
  * @brief Método para mover el vehículo a una zona
  * @param zona Zona a la que se va a mover el vehículo
+ * @param distancia Distancia que hay entre la posición actual del vehículo y la zona
  * @return void
  */
-void Vehiculo::moverVehiculo(const Zona& zona) {
+void Vehiculo::moverVehiculo(const Zona& zona, const double distancia) {
+  // En base a la posicion actual del vehículo, la velocidad y la distancia a la que se encuentra la zona 
+  // se calcula el tiempo que tarda en llegar a la zona
+  int tiempo = distancia / velocidad_;
+  duracion_ -= tiempo;
   posicion_ = zona.getPosicion();
   zonasVisitadas_.push_back(zona);
+}
+
+/**
+ * @brief Método para calcular el tiempo que tarda en llegar a una zona
+ * @param zona Zona a la que se va a mover el vehículo
+ * @return Tiempo que tarda el vehículo en llegar a la zona
+ */
+int Vehiculo::calcularTiempo(const Zona& zona) {
+  return sqrt(pow(posicion_.first - zona.getPosicion().first, 2) + pow(posicion_.second - zona.getPosicion().second, 2)) / velocidad_;
 }
