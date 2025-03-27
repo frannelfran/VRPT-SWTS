@@ -15,17 +15,16 @@ using namespace std;
 class Vehiculo {
   // Constructor de la clase
   public:
-  Vehiculo(const int& capacidad, const int& velocidad, const pair<int, int>& posicion, const int& duracion, const vector<Zona>& zonas);
+  Vehiculo(const int& capacidad, const int& velocidad, const pair<int, int>& posicion, const int& duracion);
 
   // Métodos de la clase
   bool llenarVehiculo(double cantidad);
   void vaciarVehiculo(Zona& zona);
   void moverVehiculo(const Zona& zona);
 
-  Zona zonaMasCercana(); // Zona más cercana al vehículo
-
   // Getters
   inline pair<int, int> getPosicion() const { return posicion_; }
+  inline vector<Zona> getZonasVisitadas() const { return zonasVisitadas_; }
   
   private:
   // Valores que dependen para que el vehículo siga funcionando
@@ -36,5 +35,4 @@ class Vehiculo {
   int velocidad_;
   pair<int, int> posicion_; // Posición actual del vehículo
   vector<Zona> zonasVisitadas_; // Zonas que ha visitado el vehículo
-  vector<Zona> zonas_; // Conjunto de zonas que tiene que visitar el vehículo
 };
