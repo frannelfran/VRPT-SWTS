@@ -19,8 +19,6 @@ void procesarLinea(istringstream& linea) {
   else if (token == "Q1") linea >> tools.capacidadRecoleccion;
   else if (token == "Q2") linea >> tools.duracionTransporte;
   else if (token == "V") linea >> tools.velocidad;
-  else if (token == "Depot") linea >> tools.deposito.first >> tools.deposito.second;
-  else if (token == "Dumpsite") linea >> tools.vertedero.first >> tools.vertedero.second;
   else crearZona(token, linea);
 }
 
@@ -35,10 +33,18 @@ void crearZona(string id, istringstream& linea) {
   double contenido;
   linea >> posicion.first >> posicion.second;
   if (id == "epsilon" || id == "offset" || id == "k") return;
+  else if (id == "Dumpsite") {
+    contenido = 0;
+    tools.zonas.push_back(Zona(id, posicion, contenido));
+    return;
+  }
+  else if ((posicion.first < 0 || posicion.second < 0)) {
+    throw invalid_argument("Error: Las coordenadas de la zona " + id + " no pueden ser negativas");
+  } 
   else if (posicion.first > tools.maxX || posicion.second > tools.maxY) {
     throw invalid_argument("Error: Las coordenadas de la zona " + id + " están fuera del rango");
   }
-  else if (id == "IF" || id == "IF1") {
+  else if (id == "IF" || id == "IF1" || id == "Depot") {
     contenido = 0;
   } else {
     double D1, D2;
@@ -56,10 +62,7 @@ vector<vector<double>> calcularDistancias() {
   vector<vector<double>> distancias(tools.zonas.size(), vector<double>(tools.zonas.size(), 0.0));
   for (size_t i = 0; i < tools.zonas.size(); i++) {
     for (size_t j = 0; j < tools.zonas.size(); j++) {
-      double distancia = sqrt(pow(tools.zonas[i].getPosicion().first - tools.zonas[j].getPosicion().first, 2) + pow(tools.zonas[i].getPosicion().second - tools.zonas[j].getPosicion().second, 2));
-      if (i != j) {
-        distancias[i][j] = distancia;
-      }
+      distancias[i][j] = sqrt(pow(tools.zonas[i].getPosicion().first - tools.zonas[j].getPosicion().first, 2) + pow(tools.zonas[i].getPosicion().second - tools.zonas[j].getPosicion().second, 2));
     }
   }
   return distancias;
