@@ -49,6 +49,47 @@ void crearZona(string id, istringstream& linea) {
 }
 
 /**
+ * @brief Función para calcular las distancias entre las zonas
+ * @return void
+ */
+vector<vector<double>> calcularDistancias() {
+  vector<vector<double>> distancias(tools.zonas.size(), vector<double>(tools.zonas.size(), 0.0));
+  for (size_t i = 0; i < tools.zonas.size(); i++) {
+    for (size_t j = 0; j < tools.zonas.size(); j++) {
+      double distancia = sqrt(pow(tools.zonas[i].getPosicion().first - tools.zonas[j].getPosicion().first, 2) + pow(tools.zonas[i].getPosicion().second - tools.zonas[j].getPosicion().second, 2));
+      if (i != j) {
+        distancias[i][j] = distancia;
+      }
+    }
+  }
+  return distancias;
+}
+
+/**
+ * @brief Función para mostrar las zonas
+ * @return void
+ */
+void mostrarZonas() {
+  for (size_t i = 0; i < tools.zonas.size(); i++) {
+    cout << "Zona " << tools.zonas[i].getId() << ": " << tools.zonas[i].getPosicion().first << " " << tools.zonas[i].getPosicion().second << " " << tools.zonas[i].getContenido() << endl;
+  }
+}
+
+/**
+ * @brief Función para mostrar las distancias
+ * @return void
+ */
+void mostrarDistancias() {
+  for (size_t i = 0; i < tools.distancias.size(); i++) {
+    cout << "Distancias de la zona " << tools.zonas[i].getId() << endl;
+    for (size_t j = 0; j < tools.distancias[i].size(); j++) {
+      cout << tools.zonas[i].getId() << " --> " << tools.zonas[j].getId() << ": " << tools.distancias[i][j] << endl;
+    }
+    cout << endl;
+  }
+}
+
+/**
  * @brief Función para leer los datos del fichero
  * @param tools Estructura con los datos del fichero
  * @return Tools
@@ -60,5 +101,6 @@ Tools readData(const string& fileName) {
     istringstream lineaStream(line);
     procesarLinea(lineaStream);
   }
+  tools.distancias = calcularDistancias(); // Calculo las distancias entre las zonas
   return tools;
 }

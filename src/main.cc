@@ -17,12 +17,11 @@ int main(int argc, char* argv[]) {
     vector<Zona> zonas = tools.zonas;
     // Muestro las zonas
     cout << "Zonas:" << endl;
-    for (size_t i = 0; i < zonas.size(); i++) {
-      cout << zonas[i].getId() << " " << zonas[i].getPosicion().first << " " << zonas[i].getPosicion().second << " " << zonas[i].getContenido() << endl;
-    }
+    //mostrarZonas();
+    mostrarDistancias();
 
-    Algoritmo* algoritmo = new Voraz(tools);
-    vector<Vehiculo> vehiculos = algoritmo->ejecutar();
+    //Algoritmo* algoritmo = new Voraz(tools);
+    //vector<Vehiculo> vehiculos = algoritmo->ejecutar();
 
   } catch (const invalid_argument& e) {
     cerr << e.what() << endl;

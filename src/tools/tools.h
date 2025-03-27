@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <cmath>
 #include <sstream> // Para procesar las líneas
 #include <cctype> // Para convertir a minúsculas
 #include <stdexcept> // Para lanzar excepciones
@@ -16,6 +17,7 @@ using namespace std;
 
 struct Tools {
   vector<Zona> zonas;
+  vector<vector<double>> distancias;
   int numZonas;
   int numVehiculos;
   // Información de los vehículos de recolección
@@ -37,3 +39,6 @@ extern Tools tools;
 Tools readData(const string& fileName); // Función para almacenar los datos del fichero
 void procesarLinea(istringstream& linea); // Función para procesar una línea de texto
 void crearZona(string id, istringstream& linea); // Función para crear una zona
+vector<vector<double>> calcularDistancias(); // Función para calcular las distancias entre las zonas
+void mostrarZonas(); // Función para mostrar las zonas
+void mostrarDistancias(); // Función para mostrar las distancias
