@@ -59,10 +59,13 @@ void crearZona(string id, istringstream& linea) {
  * @return void
  */
 vector<vector<double>> calcularDistancias() {
-  vector<vector<double>> distancias(tools.zonas.size(), vector<double>(tools.zonas.size(), 0.0));
+  vector<vector<double>> distancias(tools.zonas.size(), vector<double>(tools.zonas.size(), INFINITY));
   for (size_t i = 0; i < tools.zonas.size(); i++) {
     for (size_t j = 0; j < tools.zonas.size(); j++) {
-      distancias[i][j] = sqrt(pow(tools.zonas[i].getPosicion().first - tools.zonas[j].getPosicion().first, 2) + pow(tools.zonas[i].getPosicion().second - tools.zonas[j].getPosicion().second, 2));
+      if (i == j) continue;
+      else {
+        distancias[i][j] = sqrt(pow(tools.zonas[i].getPosicion().first - tools.zonas[j].getPosicion().first, 2) + pow(tools.zonas[i].getPosicion().second - tools.zonas[j].getPosicion().second, 2));
+      }
     }
   }
   return distancias;
@@ -104,6 +107,7 @@ Tools readData(const string& fileName) {
     istringstream lineaStream(line);
     procesarLinea(lineaStream);
   }
+  file.close();
   tools.distancias = calcularDistancias(); // Calculo las distancias entre las zonas
   return tools;
 }
