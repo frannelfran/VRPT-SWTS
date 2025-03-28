@@ -1,26 +1,22 @@
-CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++17
-LDFLAGS = 
-SRC_DIR = ./src
-OBJ_DIR = ./obj
+# Compilador y flags
+CXX := g++
+CXXFLAGS := -std=c++20 -Iinclude
 
-SRCS = $(shell find $(SRC_DIR) -name '*.cc')
-OBJS = $(SRCS:$(SRC_DIR)/%.cc=$(OBJ_DIR)/%.o)
-TARGET = programa
+# Obtener todos los archivos .cc en el proyecto (recursivamente)
+SRCS := $(shell find . -name '*.cc')
+
+# Nombre del ejecutable
+TARGET := programa
+
+.PHONY: all clean
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc | $(OBJ_DIR)
-	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(OBJ_DIR):
-	@mkdir -p $@
+# Compilar todos los .cc directamente en el ejecutable
+$(TARGET): $(SRCS)
+	@echo "Compilando y enlazando..."  
+	$(CXX) $(CXXFLAGS) $^ -o $@       
 
 clean:
-	rm -rf $(OBJ_DIR) $(TARGET)
-
-.PHONY: all clean
+	@echo "Eliminando ejecutable..."  
+	rm -f $(TARGET)                   

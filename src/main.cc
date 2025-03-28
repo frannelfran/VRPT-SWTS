@@ -14,14 +14,13 @@ int main(int argc, char* argv[]) {
   string fileName = argv[1];
   try {
     Tools tools = readData(fileName);
-    vector<Zona> zonas = tools.zonas;
     // Muestro las zonas
     cout << "Zonas:" << endl;
     //mostrarZonas();
     mostrarDistancias();
 
-    //Algoritmo* algoritmo = new Voraz(tools);
-    //vector<Vehiculo> vehiculos = algoritmo->ejecutar();
+    Algoritmo* algoritmo = new Voraz(tools);
+    vector<Vehiculo> vehiculos = algoritmo->ejecutar();
 
   } catch (const invalid_argument& e) {
     cerr << e.what() << endl;
