@@ -9,7 +9,7 @@
  * @param zonas Zonas que tiene que visitar el vehículo
  * @return Vehiculo
  */
-Vehiculo::Vehiculo(const int& capacidad, const int& velocidad, const pair<int, int>& posicion, const int& duracion) {
+Vehiculo::Vehiculo(const int& capacidad, const int& velocidad, const Zona& posicion, const int& duracion) {
   capacidad_ = capacidad;
   velocidad_ = velocidad;
   posicion_ = posicion;
@@ -50,17 +50,17 @@ void Vehiculo::moverVehiculo(const Zona& zona, const double distancia) {
   // se calcula el tiempo que tarda en llegar a la zona
   int tiempo = distancia / velocidad_;
   duracion_ -= tiempo;
-  posicion_ = zona.getPosicion();
-  zonasVisitadas_.push_back(zona);
+  zonasVisitadas_.push_back(posicion_);
+  posicion_ = zona;
 }
 
 /**
- * @brief Método para calcular el tiempo que tarda en llegar a una zona
- * @param zona Zona a la que se va a mover el vehículo
+ * @brief Método para calcular el tiempo que tarda en recorrer una distancia
+ * @param distancia Distancia que hay entre la posición actual del vehículo y la zona
  * @return Tiempo que tarda el vehículo en llegar a la zona
  */
-int Vehiculo::calcularTiempo(const Zona& zona) {
-  double tiempo = sqrt(pow(posicion_.first - zona.getPosicion().first, 2) + pow(posicion_.second - zona.getPosicion().second, 2)) / velocidad_;
+int Vehiculo::calcularTiempo(const double distancia) const {
+  double tiempo = distancia / velocidad_;
   // Paso el tiempo a minutos
   return int(tiempo * 60);
 }
