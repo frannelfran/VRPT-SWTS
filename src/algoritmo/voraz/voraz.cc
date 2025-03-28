@@ -9,19 +9,22 @@ vector<Vehiculo> Voraz::ejecutar() {
   vector<Zona> zonas = datos_.zonas;
   while (zonas.size() != 0) {
     // Creamos el vehículo
-    Vehiculo vehiculo(datos_.capacidadRecoleccion, datos_.velocidad, datos_.deposito, datos_.duracionRecoleccion);
-    
+    Vehiculo vehiculo(datos_.capacidadRecoleccion, datos_.velocidad, zonas[0], datos_.duracionRecoleccion);
     do {
-      pair<Zona, double> zonaCercana = zonaMasCercana(zonas, vehiculo);
-      int tiempo = TiempoVolverDeposito(vehiculo, zonaCercana.first);
-      cout << "Tiempo: " << tiempo << endl;
-      return rutasDeVehiculos;
-
-
-
+      pair<Zona, double> zonaCercana = zonaMasCercana(vehiculo);
+      break;
     } while (zonas.size() != 0);
+    int tiempo = TiempoVolverDeposito(vehiculo);
+    cout << "Tiempo: " << tiempo << endl;
+    return rutasDeVehiculos;
+//
+//  break
+//
+    //} while (zonas.size() != 0);
+    break;
 
   }
+  return rutasDeVehiculos;
 
 
 }
