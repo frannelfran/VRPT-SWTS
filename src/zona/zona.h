@@ -18,6 +18,9 @@ class Zona {
   inline string getId() const { return id_; }
   inline pair<int, int> getPosicion() const { return posicion_; }
   inline double getContenido() const { return contenido_; }
+  inline double getDistancia(const Zona& zona) const {
+    return sqrt(pow(posicion_.first - zona.getPosicion().first, 2) + pow(posicion_.second - zona.getPosicion().second, 2));
+  }
 
   // Setters
   inline void setContenido(double contenido) { contenido_ = contenido; }
