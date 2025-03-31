@@ -34,4 +34,5 @@ class Zona {
   string id_;
   pair<int, int> posicion_;
   double contenido_;
+  bool visitada_ = false; // Indica si la zona ha sido visitada
 };
