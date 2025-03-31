@@ -14,7 +14,9 @@ pair<Zona, double> Algoritmo::zonaMasCercana(const Vehiculo& vehiculo) {
 
   int index = distance(datos_.zonas.begin(), it);
   for (size_t i = 0; i < distancias[index].size(); i++) {
-    if (distancias[index][i] < minDistancia && find(vehiculo.getZonasVisitadas().begin(), vehiculo.getZonasVisitadas().end(), datos_.zonas[i]) == vehiculo.getZonasVisitadas().end()) {
+    if (distancias[index][i] < minDistancia &&
+        find(vehiculo.getZonasVisitadas().begin(), vehiculo.getZonasVisitadas().end(), datos_.zonas[i]) == vehiculo.getZonasVisitadas().end() &&
+        find(datos_.zonasRecoleccion.begin(), datos_.zonasRecoleccion.end(), datos_.zonas[i]) != datos_.zonasRecoleccion.end()) {
       minDistancia = distancias[index][i];
       zonaCercana = datos_.zonas[i];
     }
@@ -27,9 +29,10 @@ pair<Zona, double> Algoritmo::zonaMasCercana(const Vehiculo& vehiculo) {
  * @param vehiculo Vehículo que se va a mover
  * @return SWTS más cercana al vehículo con su distancia
  */
-pair<Zona, double> Algoritmo::swtsMasCercana(const Vehiculo& vehiculo) {
+pair<Zona&, double> Algoritmo::swtsMasCercana(const Vehiculo& vehiculo) {
   vector<vector<double>> distancias = datos_.distancias;
-  Zona zonaActual = vehiculo.getPosicion(), swtsMasCercana;
+  Zona zonaActual = vehiculo.getPosicion();
+  Zona* swtsMasCercana = nullptr;
   double mindistancia = INFINITY;
 
   auto it = find(datos_.zonas.begin(), datos_.zonas.end(), zonaActual); // Obtengo la posicion de la zona
@@ -40,12 +43,12 @@ pair<Zona, double> Algoritmo::swtsMasCercana(const Vehiculo& vehiculo) {
 
   if (distanciaIF < distanciaIF1) {
     mindistancia = distanciaIF;
-    swtsMasCercana = datos_.zonas[1];
+    swtsMasCercana = &datos_.zonas[1];
   } else {
     mindistancia = distanciaIF1;
-    swtsMasCercana = datos_.zonas[2];
+    swtsMasCercana = &datos_.zonas[2];
   }
-  return make_pair(swtsMasCercana, mindistancia);
+  return pair<Zona&, double>(*swtsMasCercana, mindistancia);
 }
 
 /**

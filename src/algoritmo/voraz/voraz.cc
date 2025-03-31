@@ -1,26 +1,12 @@
 #include "voraz.h"
 
 /**
- * @brief Método para obtener las zonas de recoleccion
- * @return vector<Zona> Zonas de recolección
- */
-vector<Zona> Voraz::zonasDeRecoleccion() const {
-  vector<Zona> zonasDeRecoleccion;
-  for (const auto& zona : datos_.zonas) {
-    if (zona.getContenido() > 0) {
-      zonasDeRecoleccion.push_back(zona);
-    }
-  }
-  return zonasDeRecoleccion;
-}
-
-/**
  * @brief Método para construir las rutas de los vehículos de recolección
  * @return vector<Vehiculo> Rutas de los vehículos de recolección
  */
 vector<Vehiculo> Voraz::ejecutar() {
   vector<Vehiculo> rutasDeVehiculos;
-  vector<Zona> zonasPendientes = zonasDeRecoleccion();
+  vector<Zona>& zonasPendientes = datos_.zonasRecoleccion;
 
   while (!zonasPendientes.empty()) {
     // Creamos el vehículo
@@ -34,7 +20,7 @@ vector<Vehiculo> Voraz::ejecutar() {
         zonasPendientes.erase(remove(zonasPendientes.begin(), zonasPendientes.end(), zonaCercana.first), zonasPendientes.end());
       } else {
         // Si no puede recoger la zona, buscamos la swts más cercana
-        pair<Zona, double> swtsCercana = swtsMasCercana(vehiculo);
+        pair<Zona&, double> swtsCercana = swtsMasCercana(vehiculo);
         if (tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
           vehiculo.moverVehiculo(swtsCercana.first, swtsCercana.second);
           vehiculo.vaciarVehiculo(swtsCercana.first);
@@ -58,13 +44,11 @@ vector<Vehiculo> Voraz::ejecutar() {
       cout << endl;
       cout << "--------------------------" << endl;
 
-    } while (true);
+    } while (!zonasPendientes.empty());
     cout << datos_.zonas[1].getId() << " " << datos_.zonas[2].getId() << endl;
     cout << datos_.zonas[1].getContenido() << " " << datos_.zonas[2].getContenido() << endl;
   }
   return rutasDeVehiculos;
-
-
 }
 
 //1: K ← ∅

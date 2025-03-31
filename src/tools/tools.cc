@@ -52,6 +52,10 @@ void crearZona(string id, istringstream& linea) {
     contenido = D2 - D1;
   }
   tools.zonas.push_back(Zona(id, posicion, contenido));
+  // Si la zona es de recolección, la añado al vector de zonas de recolección
+  if (id != "IF" && id != "IF1" && id != "Depot" && id != "Dumpsite") {
+    tools.zonasRecoleccion.push_back(Zona(id, posicion, contenido));
+  }
 }
 
 /**

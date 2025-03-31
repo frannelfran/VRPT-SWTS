@@ -16,7 +16,8 @@
 using namespace std;
 
 struct Tools {
-  vector<Zona> zonas;
+  vector<Zona> zonas; // Vector con todas las zonas
+  vector<Zona> zonasRecoleccion; // Vector con las zonas de recolección
   vector<vector<double>> distancias;
   int numZonas;
   int numVehiculos;
