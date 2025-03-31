@@ -28,25 +28,24 @@ pair<Zona, double> Algoritmo::zonaMasCercana(const Vehiculo& vehiculo) {
  * @return SWTS más cercana al vehículo con su distancia
  */
 pair<Zona, double> Algoritmo::swtsMasCercana(const Vehiculo& vehiculo) {
-  static double distanciaTotal = 0.0; // Variable estática para acumular la distancia total
   vector<vector<double>> distancias = datos_.distancias;
-  Zona zonaActual = vehiculo.getPosicion();
-  Vehiculo vehiculoAux = vehiculo;
-  pair<Zona, double> zonaCercana = zonaMasCercana(vehiculoAux); // Calculo la zona más cercana
-  // Sumo las distancias
-  distanciaTotal += zonaCercana.second;
-  // Muevo el vehículo a la zona más cercana
-  vehiculoAux.moverVehiculo(zonaCercana.first, zonaCercana.second);
-  // Compruebo si ha llegado a una swts
-  if (vehiculoAux.getPosicion().getId() == "IF" || vehiculoAux.getPosicion().getId() == "IF1") {
-    cout << distanciaTotal << endl;
-    double resultado = distanciaTotal; // Guardar el valor antes de reiniciar
-    distanciaTotal = 0.0; // Reiniciar la distancia total para futuras llamadas
-    return make_pair(zonaCercana.first, resultado);
+  Zona zonaActual = vehiculo.getPosicion(), swtsMasCercana;
+  double mindistancia = INFINITY;
+
+  auto it = find(datos_.zonas.begin(), datos_.zonas.end(), zonaActual); // Obtengo la posicion de la zona
+  int index = distance(datos_.zonas.begin(), it);
+  
+  double distanciaIF = distancias[index][1];
+  double distanciaIF1 = distancias[index][2];
+
+  if (distanciaIF < distanciaIF1) {
+    mindistancia = distanciaIF;
+    swtsMasCercana = datos_.zonas[1];
+  } else {
+    mindistancia = distanciaIF1;
+    swtsMasCercana = datos_.zonas[2];
   }
-  else {
-    return swtsMasCercana(vehiculoAux);
-  }
+  return make_pair(swtsMasCercana, mindistancia);
 }
 
 /**

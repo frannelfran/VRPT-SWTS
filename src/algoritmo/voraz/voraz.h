@@ -12,4 +12,5 @@ class Voraz : public Algoritmo {
 
   // Métodos de la clase
   vector<Vehiculo> ejecutar() override;
+  vector<Zona> zonasDeRecoleccion() const;
 };

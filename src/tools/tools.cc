@@ -45,7 +45,7 @@ void crearZona(string id, istringstream& linea) {
     throw invalid_argument("Error: Las coordenadas de la zona " + id + " están fuera del rango");
   }
   else if (id == "IF" || id == "IF1" || id == "Depot") {
-    contenido = 0;
+    contenido = 0.0;
   } else {
     double D1, D2;
     linea >> D1 >> D2;

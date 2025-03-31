@@ -35,7 +35,7 @@ bool Vehiculo::llenarVehiculo(double cantidad) {
  * @return void
  */
 void Vehiculo::vaciarVehiculo(Zona& zona) {
-  zona.setContenido(this->cantidad_);
+  zona.setContenido(this->cantidad_ + zona.getContenido());
   this->cantidad_ = 0.0;
 }
 
@@ -48,7 +48,7 @@ void Vehiculo::vaciarVehiculo(Zona& zona) {
 void Vehiculo::moverVehiculo(const Zona& zona, const double distancia) {
   // En base a la posicion actual del vehículo, la velocidad y la distancia a la que se encuentra la zona 
   // se calcula el tiempo que tarda en llegar a la zona
-  int tiempo = distancia / velocidad_;
+  int tiempo = calcularTiempo(distancia);
   duracion_ -= tiempo;
   zonasVisitadas_.push_back(posicion_);
   posicion_ = zona;

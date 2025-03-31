@@ -1,28 +1,66 @@
 #include "voraz.h"
 
 /**
+ * @brief Método para obtener las zonas de recoleccion
+ * @return vector<Zona> Zonas de recolección
+ */
+vector<Zona> Voraz::zonasDeRecoleccion() const {
+  vector<Zona> zonasDeRecoleccion;
+  for (const auto& zona : datos_.zonas) {
+    if (zona.getContenido() > 0) {
+      zonasDeRecoleccion.push_back(zona);
+    }
+  }
+  return zonasDeRecoleccion;
+}
+
+/**
  * @brief Método para construir las rutas de los vehículos de recolección
  * @return vector<Vehiculo> Rutas de los vehículos de recolección
  */
 vector<Vehiculo> Voraz::ejecutar() {
   vector<Vehiculo> rutasDeVehiculos;
-  vector<Zona> zonas = datos_.zonas;
-  while (zonas.size() != 0) {
+  vector<Zona> zonasPendientes = zonasDeRecoleccion();
+
+  while (!zonasPendientes.empty()) {
     // Creamos el vehículo
-    Vehiculo vehiculo(datos_.capacidadRecoleccion, datos_.velocidad, zonas[0], datos_.duracionRecoleccion);
+    Vehiculo vehiculo(datos_.capacidadRecoleccion, datos_.velocidad, datos_.zonas[0], datos_.duracionRecoleccion);
     do {
       pair<Zona, double> zonaCercana = zonaMasCercana(vehiculo);
-      break;
-    } while (zonas.size() != 0);
-    int tiempo = TiempoVolverDeposito(vehiculo);
-    cout << "Tiempo: " << tiempo << endl;
-    return rutasDeVehiculos;
-//
-//  break
-//
-    //} while (zonas.size() != 0);
-    break;
+      int tiempoEnVolverAlDeposito = TiempoVolverDeposito(vehiculo);
+      // Si el contendio de la zona es menor a la capacidad del vehículo y le da tiempo a volver al deposito
+      if (vehiculo.llenarVehiculo(zonaCercana.first.getContenido()) && tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
+        vehiculo.moverVehiculo(zonaCercana.first, zonaCercana.second);
+        zonasPendientes.erase(remove(zonasPendientes.begin(), zonasPendientes.end(), zonaCercana.first), zonasPendientes.end());
+      } else {
+        // Si no puede recoger la zona, buscamos la swts más cercana
+        pair<Zona, double> swtsCercana = swtsMasCercana(vehiculo);
+        if (tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
+          vehiculo.moverVehiculo(swtsCercana.first, swtsCercana.second);
+          vehiculo.vaciarVehiculo(swtsCercana.first);
+        } else {
+          break; // No se puede añadir más zonas
+        }
+      }
+      // Muestro las iteraciones del vehículo
+      cout << "Zona: " << vehiculo.getPosicion().getId() << " - Contenido del vehículo: " << vehiculo.getContenido() << " - Tiempo: " << vehiculo.getDuracion() << endl;
+      cout << "Contenido de la zona: " << vehiculo.getPosicion().getContenido() << endl;
+      cout << "Zonas visitadas: ";
+      for (const auto& zona : vehiculo.getZonasVisitadas()) {
+        cout << zona.getId() << " ";
+      }
+      cout << endl;
+      // Muestro las zonas pendientes
+      cout << "Zonas pendientes: ";
+      for (const auto& zona : zonasPendientes) {
+        cout << zona.getId() << " ";
+      }
+      cout << endl;
+      cout << "--------------------------" << endl;
 
+    } while (true);
+    cout << datos_.zonas[1].getId() << " " << datos_.zonas[2].getId() << endl;
+    cout << datos_.zonas[1].getContenido() << " " << datos_.zonas[2].getContenido() << endl;
   }
   return rutasDeVehiculos;
 

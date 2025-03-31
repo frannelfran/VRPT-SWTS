@@ -30,7 +30,7 @@ class Vehiculo {
   // Setters
   inline Vehiculo setPosicion(const Zona& zona) { posicion_ = zona; return *this; }
   inline int getDuracion() const { return duracion_; }
-  inline int getCantidad() const { return cantidad_; }
+  inline int getContenido() const { return cantidad_; }
   
   private:
   // Valores que dependen para que el vehículo siga funcionando
