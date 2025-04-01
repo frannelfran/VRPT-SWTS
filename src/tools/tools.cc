@@ -85,9 +85,12 @@ vector<vector<double>> calcularDistancias() {
  * @return void
  */
 void mostrarZonas() {
-  for (size_t i = 0; i < tools.zonas.size(); i++) {
-    cout << "Zona " << tools.zonas[i].getId() << ": " << tools.zonas[i].getPosicion().first << " " << tools.zonas[i].getPosicion().second << " ";
-    cout << tools.zonas[i].getTiempoDeProcesado() << " " << tools.zonas[i].getContenido() << endl;
+  for (const auto& zona : tools.zonas) {
+    cout << "Zona: " << zona.getId() << endl;
+    cout << "Posición: (" << zona.getPosicion().first << ", " << zona.getPosicion().second << ")" << endl;
+    cout << "Contenido: " << zona.getContenido() << endl;
+    cout << "Tiempo de procesado: " << zona.getTiempoDeProcesado() << endl;
+    cout << "----------------------------------------" << endl;
   }
 }
 

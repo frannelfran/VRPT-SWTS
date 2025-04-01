@@ -8,7 +8,7 @@
 class Voraz : public Algoritmo {
   public:
   // Constructor de la clase
-  Voraz(const Tools& datos) : Algoritmo(datos) {};
+  Voraz(Tools& datos) : Algoritmo(datos) {};
 
   // Métodos de la clase
   vector<Vehiculo> ejecutar() override;

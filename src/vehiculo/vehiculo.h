@@ -19,6 +19,7 @@ class Vehiculo {
 
   // Métodos de la clase
   bool llenarVehiculo(double cantidad);
+  void vaciarZona(Zona& zona);
   void vaciarVehiculo(Zona& zona);
   void moverVehiculo(const Zona& zona, const double distancia);
   int calcularTiempo(const double distancia) const;

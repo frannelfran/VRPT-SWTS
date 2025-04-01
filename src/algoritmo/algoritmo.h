@@ -13,7 +13,7 @@ using namespace std;
 class Algoritmo {
   public:
   // Constructor de la clase
-  Algoritmo(const Tools& datos) : datos_(datos) {};
+  Algoritmo(Tools& datos) : datos_(datos) {};
 
   // Destructor de la clase
   ~Algoritmo() {}
@@ -27,5 +27,5 @@ class Algoritmo {
 
   protected:
   // Datos importantes para el algoritmo
-  Tools datos_;
+  Tools& datos_;
 };

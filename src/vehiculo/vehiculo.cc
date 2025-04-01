@@ -22,9 +22,18 @@ Vehiculo::Vehiculo(const int& capacidad, const int& velocidad, const Zona& posic
  * @return bool
  */
 bool Vehiculo::llenarVehiculo(double cantidad) {
-  if ((contenido_ + cantidad) > capacidad_) return false;
-  contenido_ += cantidad;
-  return true;
+  return (contenido_ + cantidad <= capacidad_);
+}
+
+/**
+ * @brief Método para vaciar la zona
+ * @param zona Zona que se va a vaciar
+ * @return void
+ */
+void Vehiculo::vaciarZona(Zona& zona) {
+  this->contenido_ += zona.getContenido();
+  zona.setContenido(0.0);
+  this->duracion_ -= zona.getTiempoDeProcesado();
 }
 
 /**

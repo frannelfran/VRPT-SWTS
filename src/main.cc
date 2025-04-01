@@ -37,6 +37,21 @@ int main(int argc, char* argv[]) {
       cout << endl;
     }
 
+    // Sumo el contenido de las zonas
+  //double contenidoTotal = 0.0;
+  //for (const auto& zona : tools.zonas) {
+  //  if (!zona.esSWTS()) {
+  //    contenidoTotal += zona.getContenido();
+  //  }
+  //}
+  //cout << "Contenido total de las zonas: " << contenidoTotal << endl;
+
+  //for (const auto& zona : tools.zonas) {
+  //  if (zona.esSWTS()) {
+  //    cout << "Zona " << zona.getId() << ": " << zona.getContenido() << endl;
+  //  }
+  //}
+
   } catch (const invalid_argument& e) {
     cerr << e.what() << endl;
     exit(1);
