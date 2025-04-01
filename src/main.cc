@@ -16,11 +16,28 @@ int main(int argc, char* argv[]) {
     Tools tools = readData(fileName);
     // Muestro las zonas
     cout << "Zonas:" << endl;
-    //mostrarZonas();
-    mostrarDistancias();
+    mostrarZonas();
+    //mostrarDistancias();
+
+    double totalContenido = 0.0;
+    for (const auto& zona : tools.zonasRecoleccion) {
+      totalContenido += zona.getContenido();
+    }
 
     Algoritmo* algoritmo = new Voraz(tools);
     vector<Vehiculo> vehiculos = algoritmo->ejecutar();
+    // Muestro los vehículos
+    cout << "Vehículos:" << endl;
+    for (size_t i = 0; i < vehiculos.size(); i++) {
+      cout << "Vehículo " << i + 1 << ": " << endl;
+      cout << "Zonas visitadas: ";
+      for (const auto& zona : vehiculos[i].getZonasVisitadas()) {
+        cout << zona.getId() << " ";
+      }
+      cout << endl;
+    }
+
+    // Sumar el contenido de las zonas de recolección
 
   } catch (const invalid_argument& e) {
     cerr << e.what() << endl;

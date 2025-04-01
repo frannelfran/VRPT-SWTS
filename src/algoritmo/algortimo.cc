@@ -31,24 +31,21 @@ pair<Zona, double> Algoritmo::zonaMasCercana(const Vehiculo& vehiculo) {
  */
 pair<Zona&, double> Algoritmo::swtsMasCercana(const Vehiculo& vehiculo) {
   vector<vector<double>> distancias = datos_.distancias;
-  Zona zonaActual = vehiculo.getPosicion();
-  Zona* swtsMasCercana = nullptr;
-  double mindistancia = INFINITY;
+  vector<Zona>& zonas = datos_.zonas; // Referencia al vector original
+  Zona* swtsCercana = nullptr;
+  double minDistancia = INFINITY;
 
-  auto it = find(datos_.zonas.begin(), datos_.zonas.end(), zonaActual); // Obtengo la posicion de la zona
-  int index = distance(datos_.zonas.begin(), it);
-  
-  double distanciaIF = distancias[index][1];
-  double distanciaIF1 = distancias[index][2];
-
-  if (distanciaIF < distanciaIF1) {
-    mindistancia = distanciaIF;
-    swtsMasCercana = &datos_.zonas[1];
-  } else {
-    mindistancia = distanciaIF1;
-    swtsMasCercana = &datos_.zonas[2];
+  for (Zona& zona : zonas) {
+      if (zona.esSWTS()) {
+        double distancia = vehiculo.getPosicion().getDistancia(zona);
+      if (distancia < minDistancia) {
+        minDistancia = distancia;
+        swtsCercana = &zona;
+      }
+    }
   }
-  return pair<Zona&, double>(*swtsMasCercana, mindistancia);
+
+  return pair<Zona&, double>(*swtsCercana, minDistancia);
 }
 
 /**
@@ -58,7 +55,9 @@ pair<Zona&, double> Algoritmo::swtsMasCercana(const Vehiculo& vehiculo) {
  */
 int Algoritmo::TiempoVolverDeposito(Vehiculo vehiculo) {
   int tiempo = 0;
-  pair<Zona, double> zonaTransferenciaCercana = swtsMasCercana(vehiculo), zonaCercana = zonaMasCercana(vehiculo);
+  pair<Zona&, double> zonaTransferenciaCercana = swtsMasCercana(vehiculo);
+  pair<Zona, double> zonaCercana = zonaMasCercana(vehiculo);
+
   Vehiculo vehiculoAux = vehiculo.setPosicion(zonaTransferenciaCercana.first);
   // Tiempo que tarda en llegar a la zona más cercana
   tiempo += vehiculo.calcularTiempo(zonaCercana.second);

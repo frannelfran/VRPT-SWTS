@@ -12,41 +12,32 @@ vector<Vehiculo> Voraz::ejecutar() {
     // Creamos el vehículo
     Vehiculo vehiculo(datos_.capacidadRecoleccion, datos_.velocidad, datos_.zonas[0], datos_.duracionRecoleccion);
     do {
+      if (zonasPendientes.empty()) break;
       pair<Zona, double> zonaCercana = zonaMasCercana(vehiculo);
       int tiempoEnVolverAlDeposito = TiempoVolverDeposito(vehiculo);
       // Si el contendio de la zona es menor a la capacidad del vehículo y le da tiempo a volver al deposito
       if (vehiculo.llenarVehiculo(zonaCercana.first.getContenido()) && tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
         vehiculo.moverVehiculo(zonaCercana.first, zonaCercana.second);
         zonasPendientes.erase(remove(zonasPendientes.begin(), zonasPendientes.end(), zonaCercana.first), zonasPendientes.end());
-      } else {
+      } else if (tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
         // Si no puede recoger la zona, buscamos la swts más cercana
         pair<Zona&, double> swtsCercana = swtsMasCercana(vehiculo);
-        if (tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
-          vehiculo.moverVehiculo(swtsCercana.first, swtsCercana.second);
-          vehiculo.vaciarVehiculo(swtsCercana.first);
-        } else {
-          break; // No se puede añadir más zonas
-        }
+        vehiculo.moverVehiculo(swtsCercana.first, swtsCercana.second);
+        vehiculo.vaciarVehiculo(swtsCercana.first);
+      } else {
+        break; // No se puede añadir más zonas
       }
-      // Muestro las iteraciones del vehículo
-      cout << "Zona: " << vehiculo.getPosicion().getId() << " - Contenido del vehículo: " << vehiculo.getContenido() << " - Tiempo: " << vehiculo.getDuracion() << endl;
-      cout << "Contenido de la zona: " << vehiculo.getPosicion().getContenido() << endl;
-      cout << "Zonas visitadas: ";
-      for (const auto& zona : vehiculo.getZonasVisitadas()) {
-        cout << zona.getId() << " ";
-      }
-      cout << endl;
-      // Muestro las zonas pendientes
-      cout << "Zonas pendientes: ";
-      for (const auto& zona : zonasPendientes) {
-        cout << zona.getId() << " ";
-      }
-      cout << endl;
-      cout << "--------------------------" << endl;
-
-    } while (!zonasPendientes.empty());
-    cout << datos_.zonas[1].getId() << " " << datos_.zonas[2].getId() << endl;
-    cout << datos_.zonas[1].getContenido() << " " << datos_.zonas[2].getContenido() << endl;
+    } while (true);
+    // Si la última zona visitada no es una swts, buscamos la más cercana
+    if (!vehiculo.getPosicion().esSWTS()) {
+      pair<Zona&, double> swtsCercana = swtsMasCercana(vehiculo);
+      vehiculo.moverVehiculo(swtsCercana.first, swtsCercana.second);
+      vehiculo.vaciarVehiculo(swtsCercana.first);
+    }
+    else {
+      vehiculo.moverVehiculo(datos_.zonas[0], datos_.zonas[0].getDistancia(vehiculo.getPosicion()));
+    }
+    rutasDeVehiculos.push_back(vehiculo);
   }
   return rutasDeVehiculos;
 }

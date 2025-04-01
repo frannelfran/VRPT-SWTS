@@ -68,7 +68,7 @@ vector<vector<double>> calcularDistancias() {
     for (size_t j = 0; j < tools.zonas.size(); j++) {
       if (i == j) continue;
       else {
-        distancias[i][j] = sqrt(pow(tools.zonas[i].getPosicion().first - tools.zonas[j].getPosicion().first, 2) + pow(tools.zonas[i].getPosicion().second - tools.zonas[j].getPosicion().second, 2));
+        distancias[i][j] = tools.zonas[i].getDistancia(tools.zonas[j]);
       }
     }
   }

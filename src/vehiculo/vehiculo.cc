@@ -22,10 +22,8 @@ Vehiculo::Vehiculo(const int& capacidad, const int& velocidad, const Zona& posic
  * @return bool
  */
 bool Vehiculo::llenarVehiculo(double cantidad) {
-  if (cantidad_ + cantidad > capacidad_) return false;
-  else {
-    cantidad_ += cantidad;
-  }
+  if ((contenido_ + cantidad) > capacidad_) return false;
+  contenido_ += cantidad;
   return true;
 }
 
@@ -35,8 +33,9 @@ bool Vehiculo::llenarVehiculo(double cantidad) {
  * @return void
  */
 void Vehiculo::vaciarVehiculo(Zona& zona) {
-  zona.setContenido(this->cantidad_ + zona.getContenido());
-  this->cantidad_ = 0.0;
+  double contenidoTotal = zona.getContenido() + contenido_;
+  zona.setContenido(contenidoTotal);
+  this->contenido_ = 0.0;
 }
 
 /**

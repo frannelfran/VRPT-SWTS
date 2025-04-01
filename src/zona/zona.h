@@ -21,6 +21,7 @@ class Zona {
   inline double getDistancia(const Zona& zona) const {
     return sqrt(pow(posicion_.first - zona.getPosicion().first, 2) + pow(posicion_.second - zona.getPosicion().second, 2));
   }
+  inline bool esSWTS() const { return id_ == "IF" || id_ == "IF1"; }
 
   // Setters
   inline void setContenido(double contenido) { contenido_ = contenido; }
