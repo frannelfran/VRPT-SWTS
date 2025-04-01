@@ -30,7 +30,7 @@ void procesarLinea(istringstream& linea) {
  */
 void crearZona(string id, istringstream& linea) {
   pair<double, double> posicion;
-  double contenido;
+  double contenido, tiempoProcesado;
   linea >> posicion.first >> posicion.second;
   if (id == "epsilon" || id == "offset" || id == "k") return;
   else if (id == "Dumpsite") {
@@ -46,15 +46,20 @@ void crearZona(string id, istringstream& linea) {
   }
   else if (id == "IF" || id == "IF1" || id == "Depot") {
     contenido = 0.0;
+    tiempoProcesado = 0.0;
   } else {
-    double D1, D2;
-    linea >> D1 >> D2;
-    contenido = D2 - D1;
+    linea >> tiempoProcesado >> contenido;
+    if (contenido < 0) {
+      throw invalid_argument("Error: El contenido de la zona " + id + " no puede ser negativo");
+    }
+    if (tiempoProcesado < 0) {
+      throw invalid_argument("Error: El tiempo de procesado de la zona " + id + " no puede ser negativo");
+    }
   }
-  tools.zonas.push_back(Zona(id, posicion, contenido));
+  tools.zonas.push_back(Zona(id, posicion, tiempoProcesado, contenido));
   // Si la zona es de recolección, la añado al vector de zonas de recolección
   if (id != "IF" && id != "IF1" && id != "Depot" && id != "Dumpsite") {
-    tools.zonasRecoleccion.push_back(Zona(id, posicion, contenido));
+    tools.zonasRecoleccion.push_back(Zona(id, posicion, tiempoProcesado, contenido));
   }
 }
 
@@ -81,7 +86,8 @@ vector<vector<double>> calcularDistancias() {
  */
 void mostrarZonas() {
   for (size_t i = 0; i < tools.zonas.size(); i++) {
-    cout << "Zona " << tools.zonas[i].getId() << ": " << tools.zonas[i].getPosicion().first << " " << tools.zonas[i].getPosicion().second << " " << tools.zonas[i].getContenido() << endl;
+    cout << "Zona " << tools.zonas[i].getId() << ": " << tools.zonas[i].getPosicion().first << " " << tools.zonas[i].getPosicion().second << " ";
+    cout << tools.zonas[i].getTiempoDeProcesado() << " " << tools.zonas[i].getContenido() << endl;
   }
 }
 

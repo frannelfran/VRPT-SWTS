@@ -37,8 +37,6 @@ int main(int argc, char* argv[]) {
       cout << endl;
     }
 
-    // Sumar el contenido de las zonas de recolección
-
   } catch (const invalid_argument& e) {
     cerr << e.what() << endl;
     exit(1);
