@@ -112,16 +112,40 @@ void mostrarDistancias() {
 /**
  * @brief Función para leer los datos del fichero
  * @param tools Estructura con los datos del fichero
- * @return Tools
+ * @return vector<Tools> Vector con los datos de los ficheros
  */
-Tools readData(const string& fileName) {
-  ifstream file(fileName);
-  string line;
-  while (getline(file, line)) {
-    istringstream lineaStream(line);
-    procesarLinea(lineaStream);
+vector<Tools> readData(const string& dirName) {
+  vector<Tools> datos;
+  // Recorro los ficheros del directorio
+  for (const auto& nombre : fs::directory_iterator(dirName)) {
+    if (nombre.path().extension() == ".txt") {
+      string fileName = nombre.path().string();
+      ifstream file(fileName);
+      string line;
+      while (getline(file, line)) {
+        istringstream lineaStream(line);
+        procesarLinea(lineaStream);
+      }
+      file.close();
+      tools.distancias = calcularDistancias(); // Calculo las distancias entre las zonas
+      datos.push_back(tools);
+      file.close();
+
+    }
+    else {
+      throw invalid_argument("Error: El fichero " + nombre.path().string() + " no es un fichero de texto");
+    }
   }
-  file.close();
-  tools.distancias = calcularDistancias(); // Calculo las distancias entre las zonas
-  return tools;
+  return datos;
 }
+
+
+//ifstream file(fileName);
+//  string line;
+//  while (getline(file, line)) {
+//    istringstream lineaStream(line);
+//    procesarLinea(lineaStream);
+//  }
+//  file.close();
+//  tools.distancias = calcularDistancias(); // Calculo las distancias entre las zonas
+//  return tools;

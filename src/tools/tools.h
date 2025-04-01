@@ -11,7 +11,10 @@
 #include <sstream> // Para procesar las líneas
 #include <cctype> // Para convertir a minúsculas
 #include <stdexcept> // Para lanzar excepciones
+#include <filesystem> // Para recorrer los ficheros del directorio
 #include "../zona/zona.h"
+
+namespace fs = filesystem;
 
 using namespace std;
 
@@ -35,9 +38,10 @@ struct Tools {
 
 extern Tools tools;
 
-Tools readData(const string& fileName); // Función para almacenar los datos del fichero
+vector<Tools> readData(const string& dirName); // Función para almacenar los datos de los ficheros
 void procesarLinea(istringstream& linea); // Función para procesar una línea de texto
 void crearZona(string id, istringstream& linea); // Función para crear una zona
 vector<vector<double>> calcularDistancias(); // Función para calcular las distancias entre las zonas
 void mostrarZonas(const vector<Zona>& zonas); // Función para mostrar las zonas
 void mostrarDistancias(); // Función para mostrar las distancias
+void mostrarMenu(); // Función para mostrar el menú de opciones
