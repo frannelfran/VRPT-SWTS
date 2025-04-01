@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     Tools tools = readData(fileName);
     // Muestro las zonas
     cout << "Zonas:" << endl;
-    mostrarZonas(tools.zonas);
+    //mostrarZonas(tools.zonas);
     //mostrarDistancias();
 
     double totalContenido = 0.0;
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Muestro el contenido de las zonas
-    mostrarZonas(tools.zonas);
+    //mostrarZonas(tools.zonas);
 
     // Sumo el contenido de las zonas
   //double contenidoTotal = 0.0;

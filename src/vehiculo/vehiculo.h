@@ -23,6 +23,7 @@ class Vehiculo {
   void vaciarVehiculo(Zona& zona);
   void moverVehiculo(const Zona& zona, const double distancia);
   int calcularTiempo(const double distancia) const;
+  void volverAlDeposito();
 
   // Getters
   inline Zona getPosicion() const { return posicion_; }

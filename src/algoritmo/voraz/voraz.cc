@@ -34,9 +34,10 @@ vector<Vehiculo> Voraz::ejecutar() {
       pair<Zona&, double> swtsCercana = swtsMasCercana(vehiculo);
       vehiculo.moverVehiculo(swtsCercana.first, swtsCercana.second);
       vehiculo.vaciarVehiculo(swtsCercana.first);
+      vehiculo.volverAlDeposito();
     }
     else {
-      vehiculo.moverVehiculo(datos_.zonas[0], datos_.zonas[0].getDistancia(vehiculo.getPosicion()));
+      vehiculo.volverAlDeposito();
     }
     rutasDeVehiculos.push_back(vehiculo);
   }
