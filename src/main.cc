@@ -15,13 +15,12 @@ int main(int argc, char* argv[]) {
   try {
     vector<Tools> datos = readData(dirName);
     // Menú de opciones
-    cout << "Seleccione una opción:" << endl;
-    cout << "1. Algortimo Voraz" << endl;
-    cout << "Introduce una opción: ";
-    
-
-    
-
+    for (auto& dato : datos) {
+      Algoritmo* voraz = new Voraz(dato);
+      vector<Vehiculo> rutas = voraz->ejecutar();
+      dato.rutasRecoleccion = rutas;
+    }
+    mostrarResultados(datos);
   } catch (const invalid_argument& e) {
     cerr << e.what() << endl;
     exit(1);

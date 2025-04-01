@@ -118,34 +118,80 @@ vector<Tools> readData(const string& dirName) {
   vector<Tools> datos;
   // Recorro los ficheros del directorio
   for (const auto& nombre : fs::directory_iterator(dirName)) {
-    if (nombre.path().extension() == ".txt") {
-      string fileName = nombre.path().string();
-      ifstream file(fileName);
-      string line;
-      while (getline(file, line)) {
-        istringstream lineaStream(line);
-        procesarLinea(lineaStream);
-      }
-      file.close();
-      tools.distancias = calcularDistancias(); // Calculo las distancias entre las zonas
-      datos.push_back(tools);
-      file.close();
-
+    string fileName = nombre.path().string();
+    tools.nombreInstancia = fileName.substr(fileName.find_last_of("/\\") + 1);
+    size_t lastDot = tools.nombreInstancia.find_last_of('.');
+    if (lastDot != string::npos) {
+      tools.nombreInstancia = tools.nombreInstancia.substr(0, lastDot);
     }
-    else {
-      throw invalid_argument("Error: El fichero " + nombre.path().string() + " no es un fichero de texto");
+    ifstream file(fileName);
+    string line;
+    while (getline(file, line)) {
+      istringstream lineaStream(line);
+      procesarLinea(lineaStream);
     }
+    tools.distancias = calcularDistancias(); // Calculo las distancias entre las zonas
+    datos.push_back(tools);
   }
   return datos;
 }
 
+/**
+ * @brief Función que muestra el menú del programa
+ * @return void
+ */
+void mostrarMenu() {
+  cout << "Seleccione una opción:" << endl;
+  cout << "1. Algoritmo Voraz" << endl;
+  cout << "4. Salir" << endl;
+  cout << "Introduce una opción: ";
+}
 
-//ifstream file(fileName);
-//  string line;
-//  while (getline(file, line)) {
-//    istringstream lineaStream(line);
-//    procesarLinea(lineaStream);
-//  }
-//  file.close();
-//  tools.distancias = calcularDistancias(); // Calculo las distancias entre las zonas
-//  return tools;
+/**
+ * @brief Función para mostrar los resultados
+ * @param datos Vector con los datos de los ficheros
+ * @return void
+ */
+void mostrarResultados(const vector<Tools>& datos) {
+  // Cabecera
+  cout << left 
+  << setw(15) << "Instancia" 
+  << setw(10) << "#Zonas" 
+  << setw(6) << "#CV" 
+  << setw(6) << "#TV" 
+  << setw(12) << "Tiempo CPU" 
+  << endl;
+
+  // Itero sobre los datos
+  for (const auto& dato : datos) {
+    cout << left 
+    << setw(15) << dato.nombreInstancia 
+    << setw(10) << dato.numZonas
+    << setw(6) << dato.rutasRecoleccion.size()
+    << setw(6) << dato.capacidadRecoleccion
+    << setw(12) << "Tiempo CPU" 
+    << endl;
+  }
+  cout << "----------------------------------------" << endl;
+  // Calculo la media de todas las instancias
+  double mediaZonas = 0.0;
+  double mediaCV = 0.0;
+  double mediaTV = 0.0;
+  for (const auto& dato : datos) {
+    mediaZonas += dato.numZonas;
+    mediaCV += dato.rutasRecoleccion.size();
+    mediaTV += dato.capacidadRecoleccion;
+  }
+  mediaZonas /= datos.size();
+  mediaCV /= datos.size();
+  mediaTV /= datos.size();
+  cout << left 
+  << setw(15) << "Averages" 
+  << setw(10) << mediaZonas
+  << setw(6) << mediaCV
+  << setw(6) << mediaTV
+  << setw(12) << "N/A" 
+  << endl;
+  cout << "----------------------------------------" << endl;
+  cout << "Fin del programa" << endl;
+}

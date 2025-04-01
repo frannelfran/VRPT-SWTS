@@ -13,6 +13,7 @@
 #include <stdexcept> // Para lanzar excepciones
 #include <filesystem> // Para recorrer los ficheros del directorio
 #include "../zona/zona.h"
+#include "../algoritmo/algoritmo.h"
 
 namespace fs = filesystem;
 
@@ -21,6 +22,7 @@ using namespace std;
 struct Tools {
   vector<Zona> zonas; // Vector con todas las zonas
   vector<Zona> zonasRecoleccion; // Vector con las zonas de recolección
+  vector<Vehiculo> rutasRecoleccion; // Vector con las rutas de los vehículos de recolección
   vector<vector<double>> distancias;
   int numZonas;
   int numVehiculos;
@@ -34,6 +36,7 @@ struct Tools {
   int velocidad;
   int maxX;
   int maxY;
+  string nombreInstancia;
 };
 
 extern Tools tools;
@@ -45,3 +48,4 @@ vector<vector<double>> calcularDistancias(); // Función para calcular las dista
 void mostrarZonas(const vector<Zona>& zonas); // Función para mostrar las zonas
 void mostrarDistancias(); // Función para mostrar las distancias
 void mostrarMenu(); // Función para mostrar el menú de opciones
+void mostrarResultados(const vector<Tools>& datos); // Función para mostrar los resultados

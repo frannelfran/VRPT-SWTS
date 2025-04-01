@@ -8,6 +8,8 @@
 #include "../tools/tools.h"
 #include <vector>
 
+class Tools; // Declaración anticipada de la clase Tools
+
 using namespace std;
 
 class Algoritmo {
