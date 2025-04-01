@@ -39,5 +39,5 @@ Tools readData(const string& fileName); // Función para almacenar los datos del
 void procesarLinea(istringstream& linea); // Función para procesar una línea de texto
 void crearZona(string id, istringstream& linea); // Función para crear una zona
 vector<vector<double>> calcularDistancias(); // Función para calcular las distancias entre las zonas
-void mostrarZonas(); // Función para mostrar las zonas
+void mostrarZonas(const vector<Zona>& zonas); // Función para mostrar las zonas
 void mostrarDistancias(); // Función para mostrar las distancias

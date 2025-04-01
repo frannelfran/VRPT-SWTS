@@ -13,7 +13,7 @@ vector<Vehiculo> Voraz::ejecutar() {
     Vehiculo vehiculo(datos_.capacidadRecoleccion, datos_.velocidad, datos_.zonas[0], datos_.duracionRecoleccion);
     do {
       if (zonasPendientes.empty()) break;
-      pair<Zona, double> zonaCercana = zonaMasCercana(vehiculo);
+      pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo);
       int tiempoEnVolverAlDeposito = TiempoVolverDeposito(vehiculo);
       // Si el contendio de la zona es menor a la capacidad del vehículo y le da tiempo a volver al deposito
       if (vehiculo.llenarVehiculo(zonaCercana.first.getContenido()) && tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {

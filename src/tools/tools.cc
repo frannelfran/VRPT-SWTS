@@ -82,10 +82,11 @@ vector<vector<double>> calcularDistancias() {
 
 /**
  * @brief Función para mostrar las zonas
+ * @param zonas Vector con las zonas a mostrar
  * @return void
  */
-void mostrarZonas() {
-  for (const auto& zona : tools.zonas) {
+void mostrarZonas(const vector<Zona>& zonas) {
+  for (const auto& zona : zonas) {
     cout << "Zona: " << zona.getId() << endl;
     cout << "Posición: (" << zona.getPosicion().first << ", " << zona.getPosicion().second << ")" << endl;
     cout << "Contenido: " << zona.getContenido() << endl;
