@@ -29,11 +29,11 @@ void procesarLinea(istringstream& linea) {
  * @return void
  */
 void crearZona(string id, istringstream& linea) {
+  if (id == "epsilon" || id == "offset" || id == "k") return;
   pair<double, double> posicion;
   double contenido, tiempoProcesado;
   linea >> posicion.first >> posicion.second;
-  if (id == "epsilon" || id == "offset" || id == "k") return;
-  else if (id == "Dumpsite") {
+  if (id == "Dumpsite") {
     contenido = 0;
     tools.zonas.push_back(Zona(id, posicion, contenido));
     return;

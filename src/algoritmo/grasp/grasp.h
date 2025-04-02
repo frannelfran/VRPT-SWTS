@@ -3,10 +3,10 @@
  */
 
 #pragma once
-#include "../algoritmo/algoritmo.h"
-#include "../vehiculo/vehiculo.h"
-#include "../zona/zona.h"
-#include "../tools/tools.h"
+#include "../algoritmo.h"
+#include "../../vehiculo/vehiculo.h"
+#include "../../zona/zona.h"
+#include "../../tools/tools.h"
 
 class Grasp : public Algoritmo {
   public:
