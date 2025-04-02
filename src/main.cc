@@ -21,7 +21,6 @@ int main(int argc, char* argv[]) {
       dato.rutasRecoleccion = rutasRecoleccion;
     }
     mostrarResultados(datos);
-    cout << "Fin del programa" << endl;
   } catch (const invalid_argument& e) {
     cerr << e.what() << endl;
     exit(1);

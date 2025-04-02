@@ -128,6 +128,7 @@ vector<Tools> readData(const string& dirName) {
     }
     tools.distancias = calcularDistancias(); // Calculo las distancias entre las zonas
     datos.push_back(tools);
+    tools.zonas.clear();
   }
   return datos;
 }
