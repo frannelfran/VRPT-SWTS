@@ -17,8 +17,8 @@ vector<Vehiculo> Voraz::ejecutar() {
       int tiempoEnVolverAlDeposito = TiempoVolverDeposito(vehiculo);
       // Si el contendio de la zona es menor a la capacidad del vehículo y le da tiempo a volver al deposito
       if (vehiculo.llenarVehiculo(zonaCercana.first.getContenido()) && tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
-        vehiculo.vaciarZona(zonaCercana.first);
         vehiculo.moverVehiculo(zonaCercana.first, zonaCercana.second);
+        vehiculo.vaciarZona(zonaCercana.first);
         zonasPendientes.erase(remove(zonasPendientes.begin(), zonasPendientes.end(), zonaCercana.first), zonasPendientes.end());
       } else if (tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
         // Si no puede recoger la zona, buscamos la swts más cercana

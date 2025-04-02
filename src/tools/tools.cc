@@ -117,14 +117,10 @@ void mostrarDistancias() {
 vector<Tools> readData(const string& dirName) {
   vector<Tools> datos;
   // Recorro los ficheros del directorio
-  for (const auto& nombre : fs::directory_iterator(dirName)) {
-    string fileName = nombre.path().string();
-    tools.nombreInstancia = fileName.substr(fileName.find_last_of("/\\") + 1);
-    size_t lastDot = tools.nombreInstancia.find_last_of('.');
-    if (lastDot != string::npos) {
-      tools.nombreInstancia = tools.nombreInstancia.substr(0, lastDot);
-    }
+  for (int i = 1; i <= 20; i++) {
+    string fileName = dirName + "instance" + to_string(i) + ".txt";
     ifstream file(fileName);
+    tools.nombreInstancia = "instance" + to_string(i);
     string line;
     while (getline(file, line)) {
       istringstream lineaStream(line);
@@ -154,6 +150,7 @@ void mostrarMenu() {
  */
 void mostrarResultados(const vector<Tools>& datos) {
   // Cabecera
+  cout << "----------------------------------------" << endl;
   cout << left 
   << setw(15) << "Instancia" 
   << setw(10) << "#Zonas" 
@@ -161,6 +158,7 @@ void mostrarResultados(const vector<Tools>& datos) {
   << setw(6) << "#TV" 
   << setw(12) << "Tiempo CPU" 
   << endl;
+  cout << "----------------------------------------" << endl;
 
   // Itero sobre los datos
   for (const auto& dato : datos) {

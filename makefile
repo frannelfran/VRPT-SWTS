@@ -1,6 +1,6 @@
 # Compilador y flags
 CXX := g++
-CXXFLAGS := -std=c++20 -Iinclude
+CXXFLAGS := -std=c++20 -I include -O0 -g
 
 # Obtener todos los archivos .cc en el proyecto (recursivamente)
 SRCS := $(shell find . -name '*.cc')

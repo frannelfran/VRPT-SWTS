@@ -62,6 +62,8 @@ int Algoritmo::TiempoVolverDeposito(Vehiculo vehiculo) {
   Vehiculo vehiculoAux = vehiculo.setPosicion(zonaTransferenciaCercana.first);
   // Tiempo que tarda en llegar a la zona más cercana
   tiempo += vehiculo.calcularTiempo(zonaCercana.second);
+  // Tiempo que tarda en procesar la zona más cercana
+  tiempo += zonaCercana.first.getTiempoDeProcesado();
   // Tiempo que tarda en llegar a la swts más cercana
   tiempo += vehiculo.calcularTiempo(zonaTransferenciaCercana.second);
   // Tiempo que tarda en volver al depósito desde la swts más cercana
