@@ -17,8 +17,8 @@ int main(int argc, char* argv[]) {
     // Menú de opciones
     for (auto& dato : datos) {
       Algoritmo* voraz = new Voraz(dato);
-      vector<Vehiculo> rutas = voraz->ejecutar();
-      dato.rutasRecoleccion = rutas;
+      vector<Vehiculo> rutasRecoleccion = voraz->ejecutar();
+      dato.rutasRecoleccion = rutasRecoleccion;
     }
     mostrarResultados(datos);
   } catch (const invalid_argument& e) {
