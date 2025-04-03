@@ -27,4 +27,5 @@ class Grasp : public Algoritmo {
 
   // Método para crear el conjunto de tareas
   vector<Tarea> crearConjuntoTareas(const vector<Vehiculo>& vehiculos);
+  vector<Tarea> ordenarTareas(const vector<Tarea>& tareas);
 };
