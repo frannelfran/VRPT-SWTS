@@ -4,6 +4,7 @@
  */
 #include "tools/tools.h"
 #include "algoritmo/voraz/voraz.h"
+#include "algoritmo/grasp/grasp.h"
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
@@ -16,9 +17,13 @@ int main(int argc, char* argv[]) {
     vector<Tools> datos = readData(dirName);
     // Menú de opciones
     for (auto& dato : datos) {
+      // Calculamos las rutas de los vehículos de recolección
       Algoritmo* voraz = new Voraz(dato);
       vector<Vehiculo> rutasRecoleccion = voraz->ejecutar();
       dato.rutasRecoleccion = rutasRecoleccion;
+      // Calculamos las rutas de los vehículos de transporte
+      Algoritmo* grasp = new Grasp(dato);
+      vector<Vehiculo> rutasTransporte = grasp->ejecutar();
     }
     mostrarResultados(datos);
   } catch (const invalid_argument& e) {
