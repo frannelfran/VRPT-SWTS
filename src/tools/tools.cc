@@ -11,13 +11,13 @@ void procesarLinea(istringstream& linea) {
   string token;
   linea >> token;
   if (token == "L1") linea >> tools.duracionRecoleccion;
-  else if (token == "L2") linea >> tools.capacidadTransporte;
+  else if (token == "L2") linea >> tools.duracionTransporte;
   else if (token == "num_vehicles") linea >> tools.numVehiculos;
   else if (token == "num_zones") linea >> tools.numZonas;
   else if (token == "Lx") linea >> tools.maxX;
   else if (token == "Ly") linea >> tools.maxY;
   else if (token == "Q1") linea >> tools.capacidadRecoleccion;
-  else if (token == "Q2") linea >> tools.duracionTransporte;
+  else if (token == "Q2") linea >> tools.capacidadTransporte;
   else if (token == "V") linea >> tools.velocidad;
   else crearZona(token, linea);
 }
