@@ -32,20 +32,24 @@ pair<Zona&, double> Algoritmo::zonaMasCercana(const Vehiculo& vehiculo) {
  */
 pair<Zona&, double> Algoritmo::swtsMasCercana(const Vehiculo& vehiculo) {
   vector<vector<double>> distancias = datos_.distancias;
-  vector<Zona>& zonas = datos_.zonas; // Referencia al vector original
+  Zona zonaActual = vehiculo.getPosicion();
   Zona* swtsCercana = nullptr;
   double minDistancia = INFINITY;
 
-  for (Zona& zona : zonas) {
-      if (zona.esSWTS()) {
-        double distancia = vehiculo.getPosicion().getDistancia(zona);
-      if (distancia < minDistancia) {
-        minDistancia = distancia;
-        swtsCercana = &zona;
+  auto it = find(datos_.zonas.begin(), datos_.zonas.end(), zonaActual);
+
+  int posicion = distance(datos_.zonas.begin(), it);
+
+  for (size_t i = 0; i < distancias[posicion].size(); i++) {
+    Zona& zona = datos_.zonas[i];
+    if (!zona.esSWTS()) continue;
+    else {
+      if (distancias[posicion][i] < minDistancia) {
+        minDistancia = distancias[posicion][i];
+        swtsCercana = &datos_.zonas[i];
       }
     }
   }
-
   return pair<Zona&, double>(*swtsCercana, minDistancia);
 }
 
