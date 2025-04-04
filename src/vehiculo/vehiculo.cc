@@ -79,10 +79,7 @@ int Vehiculo::calcularTiempo(const double distancia) const {
  */
 void Vehiculo::volverAlDeposito() {
   Zona deposito = zonasVisitadas_[0];
-  double distancia = posicion_.getDistancia(deposito);
-  int tiempo = calcularTiempo(distancia);
   zonasVisitadas_.push_back(posicion_);
   zonasVisitadas_.push_back(deposito);
   posicion_ = deposito;
-  contenido_ = 0.0;
 }
