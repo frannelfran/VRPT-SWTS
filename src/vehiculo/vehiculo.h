@@ -20,10 +20,11 @@ class Vehiculo {
   // Métodos de la clase
   bool llenarVehiculo(double cantidad);
   void vaciarZona(Zona& zona);
+  void vaciarZona(Zona& zona, double cantidad); // Vaciar una zona con una cantidad específica
   void vaciarVehiculo(Zona& zona);
   void moverVehiculo(const Zona& zona, const double distancia);
   int calcularTiempo(const double distancia) const;
-  void volverAlDeposito();
+  void volverAlInicio();
   inline void agregarContenido(double contenido) { contenido_ += contenido; }
 
   // Getters

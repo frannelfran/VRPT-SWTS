@@ -31,8 +31,23 @@ bool Vehiculo::llenarVehiculo(double cantidad) {
  * @return void
  */
 void Vehiculo::vaciarZona(Zona& zona) {
-  this->contenido_ += zona.getContenido();
+  agregarContenido(zona.getContenido()); // Agregamos el contenido de la zona al vehículo
   zona.setContenido(0.0);
+  this->duracion_ -= zona.getTiempoDeProcesado();
+}
+
+/**
+ * @brief Método para vaciar una zona con una cantidad específica
+ * @param zona Zona que se va a vaciar
+ * @param cantidad Cantidad de residuos que se van a vaciar
+ * @return void
+ */
+void Vehiculo::vaciarZona(Zona& zona, double cantidad) {
+  if (cantidad > zona.getContenido()) {
+    throw invalid_argument("La cantidad a vaciar es mayor que el contenido de la zona");
+  }
+  agregarContenido(cantidad); // Agregamos el contenido de la zona al vehículo
+  zona.setContenido(zona.getContenido() - cantidad);
   this->duracion_ -= zona.getTiempoDeProcesado();
 }
 
@@ -74,12 +89,12 @@ int Vehiculo::calcularTiempo(const double distancia) const {
 }
 
 /**
- * @brief Método para volver al depósito
+ * @brief Método para volver a la zona inicial
  * @return void
  */
-void Vehiculo::volverAlDeposito() {
-  Zona deposito = zonasVisitadas_[0];
+void Vehiculo::volverAlInicio() {
+  Zona inicial = zonasVisitadas_[0];
   zonasVisitadas_.push_back(posicion_);
-  zonasVisitadas_.push_back(deposito);
-  posicion_ = deposito;
+  zonasVisitadas_.push_back(inicial);
+  posicion_ = inicial;
 }
