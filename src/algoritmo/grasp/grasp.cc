@@ -26,7 +26,7 @@ vector<Tarea> Grasp::crearConjuntoTareas(const vector<Vehiculo>& vehiculos) {
     // Recorremos las zonas visitadas por el vehiculo
     for (auto it = vehiculo.getZonasVisitadas().begin(); it != vehiculo.getZonasVisitadas().end(); ++it) {
       Zona zona = *it;
-      if (zona.getId() == "IF" || zona.getId() == "IF1") {
+      if (zona.esSWTS()) {
         tarea.Dh = totalBasura;
         tarea.Sh = zona.getId();
         tarea.Th = totalTiempo;
@@ -53,8 +53,7 @@ vector<Vehiculo> Grasp::ejecutar() {
   cout << "Conjunto de tareas:" << endl;
   for (auto& tarea : tareas) {
     cout << "Dh: " << tarea.Dh << ", Sh: " << tarea.Sh << ", Th: " << tarea.Th << endl;
-  }
-  exit(0);
+  } 
   vector<Vehiculo> rutas;
   return rutas;
   
