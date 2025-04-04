@@ -24,15 +24,16 @@ class Vehiculo {
   void moverVehiculo(const Zona& zona, const double distancia);
   int calcularTiempo(const double distancia) const;
   void volverAlDeposito();
+  inline void agregarContenido(double contenido) { contenido_ += contenido; }
 
   // Getters
   inline Zona getPosicion() const { return posicion_; }
   const inline vector<Zona>& getZonasVisitadas() const { return zonasVisitadas_; }
-
-  // Setters
-  inline Vehiculo setPosicion(const Zona& zona) { posicion_ = zona; return *this; }
   inline int getDuracion() const { return duracion_; }
   inline int getContenido() const { return contenido_; }
+
+  // Setters
+  inline void setPosicion(const Zona& zona) { posicion_ = zona; }
   
   private:
   // Valores que dependen para que el vehículo siga funcionando

@@ -23,6 +23,7 @@ struct Tools {
   vector<Zona> zonas; // Vector con todas las zonas
   vector<Zona> zonasRecoleccion; // Vector con las zonas de recolección
   vector<Vehiculo> rutasRecoleccion; // Vector con las rutas de los vehículos de recolección
+  vector<Vehiculo> rutasTransporte; // Vector con las rutas de los vehículos de transporte
   vector<vector<double>> distancias;
   int numZonas;
   int numVehiculos;

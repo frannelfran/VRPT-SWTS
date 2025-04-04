@@ -63,7 +63,8 @@ int Algoritmo::TiempoVolverDeposito(Vehiculo vehiculo) {
   pair<Zona&, double> zonaTransferenciaCercana = swtsMasCercana(vehiculo);
   pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo);
 
-  Vehiculo vehiculoAux = vehiculo.setPosicion(zonaTransferenciaCercana.first);
+  Vehiculo vehiculoAux = vehiculo;
+  vehiculoAux.setPosicion(zonaTransferenciaCercana.first);
   // Tiempo que tarda en llegar a la zona más cercana
   tiempo += vehiculo.calcularTiempo(zonaCercana.second);
   // Tiempo que tarda en procesar la zona más cercana
