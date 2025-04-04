@@ -43,18 +43,36 @@ vector<Tarea> Grasp::crearConjuntoTareas(const vector<Vehiculo>& vehiculos) {
 }
 
 /**
+ * @brief Método para buscar la cantidad mínima de residuos entre todas las tareas
+ * @param tareas Vector con las tareas
+ * @return double Cantidad mínima de residuos
+ */
+double Grasp::buscarCantidadMinima(const vector<Tarea>& tareas) {
+  double cantidadMinima = INFINITY;
+  for (const auto& tarea : tareas) {
+    if (tarea.Dh < cantidadMinima) {
+      cantidadMinima = tarea.Dh;
+    }
+  }
+  return cantidadMinima;
+}
+
+/**
  * @brief Método para ejecutar el algoritmo GRASP
  * @return vector<Vehiculo> Rutas de los vehiculos de transporte
  */
 vector<Vehiculo> Grasp::ejecutar() {
+  vector<Vehiculo> rutasDeVehiculos;
   vector<Tarea> tareas = crearConjuntoTareas(datos_.rutasRecoleccion);
-
-  // Muestro el conjunto de tareas
-  cout << "Conjunto de tareas:" << endl;
-  for (auto& tarea : tareas) {
+  // Muestro las tareas
+  cout << "Tareas:" << endl;
+  for (const auto& tarea : tareas) {
     cout << "Dh: " << tarea.Dh << ", Sh: " << tarea.Sh << ", Th: " << tarea.Th << endl;
-  } 
-  vector<Vehiculo> rutas;
-  return rutas;
-  
+  }
+  double cantidadMínima = buscarCantidadMinima(tareas);
+  // Mientras queden tareas por hacer
+  while (!tareas.empty()) {
+    Tarea tarea = tareas.front(); // Tomamos la primera tarea
+    tareas.erase(tareas.begin()); // La eliminamos de la lista
+  }
 }

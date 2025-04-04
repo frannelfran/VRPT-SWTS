@@ -25,7 +25,10 @@ class Grasp : public Algoritmo {
   // Método para ejecutar el algoritmo GRASP
   vector<Vehiculo> ejecutar() override;
 
-  // Método para crear el conjunto de tareas
+  // Métodos de la clase
+  private:
   vector<Tarea> crearConjuntoTareas(const vector<Vehiculo>& vehiculos);
   vector<Tarea> ordenarTareas(const vector<Tarea>& tareas);
+  double buscarCantidadMinima(const vector<Tarea>& tareas); // Método para obtener la cantidad mínima de residuos entre todas las tareas
+  Vehiculo& escogerVehiculo(const vector<Vehiculo>& vehiculos, const Tarea& tarea); // Escoger el vehículo que mínimice el costo de inserción
 };
