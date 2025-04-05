@@ -1,4 +1,4 @@
-#include "voraz.h"
+#include "vorazRecoleccion.h"
 
 /**
  * @brief Método para obtener la zona más cercana al vehículo que no haya sido visitada aún.
@@ -6,7 +6,7 @@
  * @param vehiculo Vehículo que se va a mover
  * @return Zona más cercana al vehículo con su distancia
  */
-pair<Zona&, double> Voraz::zonaMasCercana(const Vehiculo& vehiculo) {
+pair<Zona&, double> VorazRecoleccion::zonaMasCercana(const Vehiculo& vehiculo) {
   vector<vector<double>> distancias = datos_.distancias;
   Zona zonaActual = vehiculo.getPosicion();
   Zona* zonaCercana = nullptr; // Inicializo la zona más cercana
@@ -30,7 +30,7 @@ pair<Zona&, double> Voraz::zonaMasCercana(const Vehiculo& vehiculo) {
  * @param vehiculo Vehículo que se va a mover
  * @return SWTS más cercana al vehículo con su distancia
  */
-pair<Zona&, double> Voraz::swtsMasCercana(const Vehiculo& vehiculo) {
+pair<Zona&, double> VorazRecoleccion::swtsMasCercana(const Vehiculo& vehiculo) {
   vector<vector<double>> distancias = datos_.distancias;
   Zona zonaActual = vehiculo.getPosicion();
   Zona* swtsCercana = nullptr;
@@ -58,7 +58,7 @@ pair<Zona&, double> Voraz::swtsMasCercana(const Vehiculo& vehiculo) {
  * @param vehiculo Vehículo que se va a mover
  * @return Tiempo que tarda en volver al depósito
  */
-int Voraz::TiempoVolverDeposito(Vehiculo vehiculo) {
+int VorazRecoleccion::TiempoVolverDeposito(Vehiculo vehiculo) {
   int tiempo = 0;
   pair<Zona&, double> zonaTransferenciaCercana = swtsMasCercana(vehiculo);
   pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo);
@@ -81,7 +81,7 @@ int Voraz::TiempoVolverDeposito(Vehiculo vehiculo) {
  * @brief Método para construir las rutas de los vehículos de recolección
  * @return vector<Vehiculo> Rutas de los vehículos de recolección
  */
-vector<Vehiculo> Voraz::ejecutar() {
+vector<Vehiculo> VorazRecoleccion::ejecutar() {
   vector<Vehiculo> rutasDeVehiculos;
   vector<Zona>& zonasPendientes = datos_.zonasRecoleccion;
 

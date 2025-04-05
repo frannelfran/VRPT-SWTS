@@ -4,7 +4,7 @@
 
 #pragma once
 #include "../algoritmo.h"
-#include "../../vehiculo/vehiculo.h"
+#include "../../vehiculo/transporte/transporte.h"
 #include "../../zona/zona.h"
 #include "../../tools/tools.h"
 
@@ -31,5 +31,5 @@ class Grasp : public Algoritmo {
     vector<Tarea> ordenarTareas(const vector<Tarea>& tareas);
     double buscarCantidadMinima(const vector<Tarea>& tareas); // Método para obtener la cantidad mínima de residuos entre todas las tareas
     int calcularCostoInsercion(const Tarea& tarea, const Vehiculo& vehiculo); // Método para calcular el costo de inserción de una tarea en un vehículo
-    Vehiculo* escogerVehiculo(vector<Vehiculo>& vehiculos, const Tarea& tarea); // Escoger el vehículo que mínimice el costo de inserción
+    Vehiculo& escogerVehiculo(vector<Vehiculo>& vehiculos, const Tarea& tarea); // Escoger el vehículo que mínimice el costo de inserción
 };

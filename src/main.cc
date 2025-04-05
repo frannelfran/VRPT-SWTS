@@ -3,7 +3,7 @@
  * @brief Función principal del programa
  */
 #include "tools/tools.h"
-#include "algoritmo/voraz/voraz.h"
+#include "algoritmo/vorazRecoleccion/vorazRecoleccion.h"
 #include "algoritmo/grasp/grasp.h"
 
 int main(int argc, char* argv[]) {
@@ -18,8 +18,8 @@ int main(int argc, char* argv[]) {
     // Menú de opciones
     for (auto& dato : datos) {
       // Calculamos las rutas de los vehículos de recolección
-      Algoritmo* voraz = new Voraz(dato);
-      vector<Vehiculo> rutasRecoleccion = voraz->ejecutar();
+      Algoritmo* vorazRecoleccion = new VorazRecoleccion(dato);
+      vector<Vehiculo> rutasRecoleccion = vorazRecoleccion->ejecutar();
       dato.rutasRecoleccion = rutasRecoleccion;
       // Calculamos las rutas de los vehículos de transporte
     }

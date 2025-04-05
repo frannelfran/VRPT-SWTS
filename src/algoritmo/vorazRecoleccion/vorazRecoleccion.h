@@ -6,10 +6,10 @@
 #include "../algoritmo.h"
 #include "../../vehiculo/recoleccion/recoleccion.h"
 
-class Voraz : public Algoritmo {
+class VorazRecoleccion : public Algoritmo {
   public:
     // Constructor de la clase
-    Voraz(Tools& datos) : Algoritmo(datos) {};
+    VorazRecoleccion(Tools& datos) : Algoritmo(datos) {};
     
     // Métodos de la clase
     vector<Vehiculo> ejecutar() override;
