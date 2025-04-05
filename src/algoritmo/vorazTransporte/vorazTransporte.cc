@@ -1,11 +1,11 @@
-#include "grasp.h"
+#include "vorazTransporte.h"
 
 /**
  * @brief Método para ordenar el conjunto de tareas en función del tiempo
  * @param tareas Vector con las tareas a ordenar
  * @return vector<Tarea> Vector con las tareas ordenadas
  */
-vector<Tarea> Grasp::ordenarTareas(const vector<Tarea>& tareas) {
+vector<Tarea> VorazTransporte::ordenarTareas(const vector<Tarea>& tareas) {
   vector<Tarea> tareasOrdenadas = tareas;
   sort(tareasOrdenadas.begin(), tareasOrdenadas.end(), [](const Tarea& a, const Tarea& b) {
     return a.Th < b.Th;
@@ -18,7 +18,7 @@ vector<Tarea> Grasp::ordenarTareas(const vector<Tarea>& tareas) {
  * @param vehículos Vector con los vehículos de recolección
  * @return vector<Tarea> Conjunto de tareas
  */
-vector<Tarea> Grasp::crearConjuntoTareas(const vector<Vehiculo>& vehiculos) {
+vector<Tarea> VorazTransporte::crearConjuntoTareas(const vector<Vehiculo>& vehiculos) {
   vector<Tarea> tareas;
   for (auto& vehiculo : vehiculos) {
     int totalBasura = 0, totalTiempo = 0;
@@ -47,7 +47,7 @@ vector<Tarea> Grasp::crearConjuntoTareas(const vector<Vehiculo>& vehiculos) {
  * @param tareas Vector con las tareas
  * @return double Cantidad mínima de residuos
  */
-double Grasp::buscarCantidadMinima(const vector<Tarea>& tareas) {
+double VorazTransporte::buscarCantidadMinima(const vector<Tarea>& tareas) {
   double cantidadMinima = INFINITY;
   for (const auto& tarea : tareas) {
     if (tarea.Dh < cantidadMinima) {
@@ -58,11 +58,11 @@ double Grasp::buscarCantidadMinima(const vector<Tarea>& tareas) {
 }
 
 /**
- * @brief Método para ejecutar el algoritmo GRASP
+ * @brief Método para ejecutar el algoritmo VorazTransporte
  * @return vector<Vehiculo> Rutas de los vehiculos de transporte
  */
-vector<Vehiculo> Grasp::ejecutar() {
-  vector<Vehiculo> rutasDeVehiculos;
+vector<Vehiculo> VorazTransporte::ejecutar() {
+  vector<Transporte> rutasDeVehiculos;
   vector<Tarea> tareas = crearConjuntoTareas(datos_.rutasRecoleccion);
   // Muestro las tareas
   cout << "Tareas:" << endl;
@@ -88,9 +88,9 @@ vector<Vehiculo> Grasp::ejecutar() {
  * @param tarea Tarea a realizar
  * @return Vehiculo& Vehículo que mínimice el costo de inserción
  */
-Vehiculo& Grasp::escogerVehiculo(vector<Vehiculo>& vehiculos, const Tarea& tarea) {
+Transporte& VorazTransporte::escogerVehiculo(vector<Transporte>& vehiculos, const Tarea& tarea) {
   double costoMinimo = INFINITY;
-  Vehiculo* vehiculoMinimo = nullptr;
+  Transporte* vehiculoMinimo = nullptr;
 
   for (auto& vehiculo : vehiculos) {
     int costo = calcularCostoInsercion(tarea, vehiculo);
@@ -108,11 +108,23 @@ Vehiculo& Grasp::escogerVehiculo(vector<Vehiculo>& vehiculos, const Tarea& tarea
  * @param tarea Tarea a realizar
  * @return int Costo de inserción
  */
-int Grasp::calcularCostoInsercion(const Tarea& tarea, const Vehiculo& vehiculo) {
-  int costo = 0;
+int VorazTransporte::calcularCostoInsercion(const Tarea& tarea, Transporte& vehiculo) {
+  int costo;
 
-  // El tiempo de la tarea que se quiere asignar menos el tiempo de la tarea anterior debe ser menoro igual que el timepo que tardas en ir
+  // La cantidad de residuos del vehículo debe ser menor a la cantidad de residuos de la tarea
+  if (!vehiculo.llenarVehiculo(tarea.Dh)) {
+    return INFINITY;
+  }
+  // El tiempo de la tarea que se quiere asignar menos el tiempo de la tarea anterior debe ser menor o igual que el timepo que tardas en ir
   // a la zona de la tarea que se quiere asignar
+  int tiempoTarea = tarea.Th;
+  int tiempoAnterior = vehiculo.getTareasAsignadas().back().Th;
+  int tiempoViaje = vehiculo.calcularTiempo(tarea.Sh.getDistancia(vehiculo.getPosicion()));
+
+
+
+
+
   
 
 

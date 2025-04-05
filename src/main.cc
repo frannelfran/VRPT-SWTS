@@ -4,7 +4,7 @@
  */
 #include "tools/tools.h"
 #include "algoritmo/vorazRecoleccion/vorazRecoleccion.h"
-#include "algoritmo/grasp/grasp.h"
+#include "algoritmo/vorazTransporte/vorazTransporte.h"
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {

@@ -1,5 +1,5 @@
 /**
- * @class Clase para representar un algoritmo GRASP en el sistema
+ * @class Clase para representar un algoritmo VorazTransporte en el sistema
  */
 
 #pragma once
@@ -9,20 +9,20 @@
 #include "../../tools/tools.h"
 
 struct Tarea {
-  int Dh; // Cantidad de residuos tranposrtados por el vehículo derecolección
+  double Dh; // Cantidad de residuos tranposrtados por el vehículo derecolección
   Zona Sh; // SWTS visitada por el vehículo de recolección
   int Th; // Tiempo en el que el vehículo de recolección llega a la SWTS
 };
 
-class Grasp : public Algoritmo {
+class VorazTransporte : public Algoritmo {
   public:
     // Constructor de la clase
-    Grasp(Tools& datos) : Algoritmo(datos) {}
+    VorazTransporte(Tools& datos) : Algoritmo(datos) {}
 
     // Destructor de la clase
-    ~Grasp() {}
+    ~VorazTransporte() {}
 
-    // Método para ejecutar el algoritmo GRASP
+    // Método para ejecutar el algoritmo VorazTransporte
     vector<Vehiculo> ejecutar() override;
 
     // Métodos de la clase
@@ -30,6 +30,6 @@ class Grasp : public Algoritmo {
     vector<Tarea> crearConjuntoTareas(const vector<Vehiculo>& vehiculos);
     vector<Tarea> ordenarTareas(const vector<Tarea>& tareas);
     double buscarCantidadMinima(const vector<Tarea>& tareas); // Método para obtener la cantidad mínima de residuos entre todas las tareas
-    int calcularCostoInsercion(const Tarea& tarea, const Vehiculo& vehiculo); // Método para calcular el costo de inserción de una tarea en un vehículo
-    Vehiculo& escogerVehiculo(vector<Vehiculo>& vehiculos, const Tarea& tarea); // Escoger el vehículo que mínimice el costo de inserción
+    int calcularCostoInsercion(const Tarea& tarea, Transporte& vehiculo); // Método para calcular el costo de inserción de una tarea en un vehículo
+    Transporte& escogerVehiculo(vector<Transporte>& vehiculos, const Tarea& tarea); // Escoger el vehículo que mínimice el costo de inserción
 };
