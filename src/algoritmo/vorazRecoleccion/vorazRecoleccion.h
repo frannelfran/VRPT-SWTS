@@ -3,8 +3,7 @@
  */
 
 #pragma once
-#include "../algoritmo.h"
-#include "../../vehiculo/recoleccion/recoleccion.h"
+#include "../../tools/tools.h"
 
 class VorazRecoleccion : public Algoritmo {
   public:
@@ -12,7 +11,7 @@ class VorazRecoleccion : public Algoritmo {
     VorazRecoleccion(Tools& datos) : Algoritmo(datos) {};
     
     // Métodos de la clase
-    vector<Vehiculo> ejecutar() override;
+    void ejecutar() override;
     pair<Zona&, double> zonaMasCercana(const Recoleccion& vehiculo); // Zona más cercana al vehículo
     pair<Zona&, double> swtsMasCercana(const Recoleccion& vehiculo); // SWTS más cercana a la zona
     int TiempoVolverDeposito(Recoleccion vehiculo); // Tiempo que tarda en volver al depósito pasando por las zonas y la swts más cercanas

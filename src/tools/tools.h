@@ -14,6 +14,8 @@
 #include <filesystem> // Para recorrer los ficheros del directorio
 #include "../zona/zona.h"
 #include "../algoritmo/algoritmo.h"
+#include "../vehiculo/recoleccion/recoleccion.h"
+#include "../vehiculo/transporte/transporte.h"
 
 namespace fs = filesystem;
 
@@ -22,8 +24,8 @@ using namespace std;
 struct Tools {
   vector<Zona> zonas; // Vector con todas las zonas
   vector<Zona> zonasRecoleccion; // Vector con las zonas de recolección
-  vector<Vehiculo> rutasRecoleccion; // Vector con las rutas de los vehículos de recolección
-  vector<Vehiculo> rutasTransporte; // Vector con las rutas de los vehículos de transporte
+  vector<Recoleccion> rutasRecoleccion; // Vector con las rutas de los vehículos de recolección
+  vector<Transporte> rutasTransporte; // Vector con las rutas de los vehículos de transporte
   vector<vector<double>> distancias;
   int numZonas;
   int numVehiculos;

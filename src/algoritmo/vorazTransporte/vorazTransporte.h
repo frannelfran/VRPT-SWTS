@@ -3,10 +3,9 @@
  */
 
 #pragma once
-#include "../algoritmo.h"
-#include "../../vehiculo/transporte/transporte.h"
-#include "../../zona/zona.h"
 #include "../../tools/tools.h"
+
+class Transporte;
 
 struct Tarea {
   double Dh; // Cantidad de residuos tranposrtados por el vehículo derecolección
@@ -23,11 +22,11 @@ class VorazTransporte : public Algoritmo {
     ~VorazTransporte() {}
 
     // Método para ejecutar el algoritmo VorazTransporte
-    vector<Vehiculo> ejecutar() override;
+    void ejecutar() override;
 
     // Métodos de la clase
   private:
-    vector<Tarea> crearConjuntoTareas(const vector<Vehiculo>& vehiculos);
+    vector<Tarea> crearConjuntoTareas(const vector<Recoleccion>& vehiculos);
     vector<Tarea> ordenarTareas(const vector<Tarea>& tareas);
     double buscarCantidadMinima(const vector<Tarea>& tareas); // Método para obtener la cantidad mínima de residuos entre todas las tareas
     double calcularCostoInsercion(const Tarea& tarea, Transporte& vehiculo); // Método para calcular el costo de inserción de una tarea en un vehículo

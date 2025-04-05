@@ -18,7 +18,7 @@ vector<Tarea> VorazTransporte::ordenarTareas(const vector<Tarea>& tareas) {
  * @param vehículos Vector con los vehículos de recolección
  * @return vector<Tarea> Conjunto de tareas
  */
-vector<Tarea> VorazTransporte::crearConjuntoTareas(const vector<Vehiculo>& vehiculos) {
+vector<Tarea> VorazTransporte::crearConjuntoTareas(const vector<Recoleccion>& vehiculos) {
   vector<Tarea> tareas;
   for (auto& vehiculo : vehiculos) {
     int totalBasura = 0, totalTiempo = 0;
@@ -59,9 +59,9 @@ double VorazTransporte::buscarCantidadMinima(const vector<Tarea>& tareas) {
 
 /**
  * @brief Método para ejecutar el algoritmo VorazTransporte
- * @return vector<Vehiculo> Rutas de los vehiculos de transporte
+ * @return void
  */
-vector<Vehiculo> VorazTransporte::ejecutar() {
+void VorazTransporte::ejecutar() {
   vector<Transporte> rutasDeVehiculos;
   vector<Tarea> tareas = crearConjuntoTareas(datos_.rutasRecoleccion);
   // Muestro las tareas
@@ -106,6 +106,7 @@ vector<Vehiculo> VorazTransporte::ejecutar() {
       vehiculo.volverAlInicio();
     }
   }
+  datos_.rutasTransporte = rutasDeVehiculos; // Guardamos las rutas de los vehículos de transporte
 }
 
 /**

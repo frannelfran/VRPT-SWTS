@@ -81,8 +81,8 @@ int VorazRecoleccion::TiempoVolverDeposito(Recoleccion vehiculo) {
  * @brief Método para construir las rutas de los vehículos de recolección
  * @return vector<Vehiculo> Rutas de los vehículos de recolección
  */
-vector<Vehiculo> VorazRecoleccion::ejecutar() {
-  vector<Vehiculo> rutasDeVehiculos;
+void VorazRecoleccion::ejecutar() {
+  vector<Recoleccion> rutasDeVehiculos;
   vector<Zona>& zonasPendientes = datos_.zonasRecoleccion;
 
   while (!zonasPendientes.empty()) {
@@ -118,7 +118,7 @@ vector<Vehiculo> VorazRecoleccion::ejecutar() {
     }
     rutasDeVehiculos.push_back(vehiculo);
   }
-  return rutasDeVehiculos;
+  datos_.rutasRecoleccion = rutasDeVehiculos; // Guardamos las rutas de los vehículos de recolección
 }
 
 //1: K ← ∅

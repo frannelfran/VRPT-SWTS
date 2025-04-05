@@ -3,10 +3,7 @@
  */
 
 #pragma once
-#include "../vehiculo/vehiculo.h"
-#include "../zona/zona.h"
 #include "../tools/tools.h"
-#include <vector>
 
 class Tools; // Declaración anticipada de la clase Tools
 
@@ -21,7 +18,7 @@ class Algoritmo {
     ~Algoritmo() {}
 
     // Métodos de la clase
-    virtual vector<Vehiculo> ejecutar() = 0;
+    virtual void ejecutar() = 0;
 
   protected:
     // Datos importantes para el algoritmo
