@@ -167,7 +167,7 @@ void mostrarResultados(const vector<Tools>& datos) {
     << setw(15) << dato.nombreInstancia 
     << setw(10) << dato.numZonas
     << setw(6) << dato.rutasRecoleccion.size()
-    << setw(6) << dato.capacidadRecoleccion
+    << setw(6) << dato.rutasTransporte.size()
     << setw(12) << "Tiempo CPU" 
     << endl;
   }
@@ -179,7 +179,7 @@ void mostrarResultados(const vector<Tools>& datos) {
   for (const auto& dato : datos) {
     mediaZonas += dato.numZonas;
     mediaCV += dato.rutasRecoleccion.size();
-    mediaTV += dato.capacidadRecoleccion;
+    mediaTV += dato.rutasTransporte.size();
   }
   mediaZonas /= datos.size();
   mediaCV /= datos.size();

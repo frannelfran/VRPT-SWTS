@@ -30,6 +30,7 @@ class VorazTransporte : public Algoritmo {
     vector<Tarea> crearConjuntoTareas(const vector<Vehiculo>& vehiculos);
     vector<Tarea> ordenarTareas(const vector<Tarea>& tareas);
     double buscarCantidadMinima(const vector<Tarea>& tareas); // Método para obtener la cantidad mínima de residuos entre todas las tareas
-    int calcularCostoInsercion(const Tarea& tarea, Transporte& vehiculo); // Método para calcular el costo de inserción de una tarea en un vehículo
+    double calcularCostoInsercion(const Tarea& tarea, Transporte& vehiculo); // Método para calcular el costo de inserción de una tarea en un vehículo
+    int tiempoVolverAlVertedero(Transporte vehiculo);
     Transporte& escogerVehiculo(vector<Transporte>& vehiculos, const Tarea& tarea); // Escoger el vehículo que mínimice el costo de inserción
 };

@@ -76,9 +76,35 @@ vector<Vehiculo> VorazTransporte::ejecutar() {
     tareas.erase(tareas.begin()); // La eliminamos de la lista
     Transporte* vehiculo = nullptr;
     // Buscamos el vehículo que mínimice el costo de inserción
-    
-    
+    vehiculo = &escogerVehiculo(rutasDeVehiculos, tareaMinima);
 
+    if (vehiculo == nullptr) {
+      // Si no hay vehículos disponibles, creamos uno nuevo
+      vehiculo = new Transporte(datos_.capacidadTransporte, datos_.velocidad, datos_.zonas[3], datos_.duracionTransporte);
+      vehiculo->moverVehiculo(tareaMinima.Sh, tareaMinima.Sh.getDistancia(datos_.zonas[3]));
+      // Llenamos el vehículo con la cantidad de la tarea
+      vehiculo->agregarContenido(tareaMinima.Dh);
+      vehiculo->agregarTarea(tareaMinima);
+      // Agregamos el vehículo a la lista de rutas
+      rutasDeVehiculos.push_back(*vehiculo);
+    } else {
+      // Agregamos la SWTS de la tarea a la ruta del vehículo
+      vehiculo->moverVehiculo(tareaMinima.Sh, tareaMinima.Sh.getDistancia(vehiculo->getPosicion()));
+      vehiculo->agregarContenido(tareaMinima.Dh);
+      // Si la capacidad remanente es insuficiente para atender la tarea mínima
+      if (!vehiculo->llenarVehiculo(cantidadMínima)) {
+        // Nos desplazamos al vertedero para vaciar el vehículo
+        vehiculo->moverVehiculo(datos_.zonas[3], vehiculo->getPosicion().getDistancia(datos_.zonas[3]));
+        vehiculo->vaciarVehiculo(datos_.zonas[3]); // Vaciar en el vertedero
+      }
+    }
+  }
+  // Para cada vehículo de trasnporte revisar si la ultima parada fue el vertedero
+  for (auto& vehiculo : rutasDeVehiculos) {
+    if (!vehiculo.getPosicion().esDumpsite()) {
+      // Nos aseguramos que la ruta finalice en el vertedero
+      vehiculo.volverAlInicio();
+    }
   }
 }
 
@@ -93,7 +119,7 @@ Transporte& VorazTransporte::escogerVehiculo(vector<Transporte>& vehiculos, cons
   Transporte* vehiculoMinimo = nullptr;
 
   for (auto& vehiculo : vehiculos) {
-    int costo = calcularCostoInsercion(tarea, vehiculo);
+    double costo = calcularCostoInsercion(tarea, vehiculo);
     if (costo < costoMinimo) {
       costoMinimo = costo;
       vehiculoMinimo = &vehiculo;
@@ -108,7 +134,7 @@ Transporte& VorazTransporte::escogerVehiculo(vector<Transporte>& vehiculos, cons
  * @param tarea Tarea a realizar
  * @return int Costo de inserción
  */
-int VorazTransporte::calcularCostoInsercion(const Tarea& tarea, Transporte& vehiculo) {
+double VorazTransporte::calcularCostoInsercion(const Tarea& tarea, Transporte& vehiculo) {
   int costo;
 
   // La cantidad de residuos del vehículo debe ser menor a la cantidad de residuos de la tarea
@@ -119,21 +145,31 @@ int VorazTransporte::calcularCostoInsercion(const Tarea& tarea, Transporte& vehi
   // a la zona de la tarea que se quiere asignar
   int tiempoTarea = tarea.Th;
   int tiempoAnterior = vehiculo.getTareasAsignadas().back().Th;
-  int tiempoViaje = vehiculo.calcularTiempo(tarea.Sh.getDistancia(vehiculo.getPosicion()));
+  int tiempoViaje = vehiculo.calcularTiempo(tarea.Sh.getDistancia(vehiculo.getTareasAsignadas().back().Sh));
 
-
-
-
-
-  
-
-
-
-
-
-
-
-  
-
+  if (tiempoViaje > (tiempoTarea - tiempoAnterior)) {
+    return INFINITY;
+  }
+  // La duracion total de la ruta considerando el regreso al vertedero no debe exceder el tiempo del vehiculo
+  else if (tiempoVolverAlVertedero(vehiculo) > vehiculo.getDuracion()) {
+    return INFINITY;
+  }
+  costo = vehiculo.calcularTiempo(tarea.Sh.getDistancia(vehiculo.getPosicion()));
   return costo;
+}
+
+/**
+ * @brief Método para calcular el tiempo que tarda el vehículo en volver al vertedero
+ * @param vehiculo Vehículo a calcular el tiempo
+ * @return int Tiempo que tarda el vehículo en volver al vertedero
+ */
+int VorazTransporte::tiempoVolverAlVertedero(Transporte vehiculo) {
+  int tiempo = 0;
+  // Sumo el tiempo total de la ruta
+  for (auto& tarea : vehiculo.getTareasAsignadas()) {
+    tiempo += tarea.Th;
+  }
+  // Agrego el tiempo que tarda en volver al vertedero
+  tiempo += vehiculo.calcularTiempo(vehiculo.getPosicion().getDistancia(datos_.zonas[3]));
+  return tiempo;
 }

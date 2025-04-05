@@ -19,9 +19,11 @@ int main(int argc, char* argv[]) {
     for (auto& dato : datos) {
       // Calculamos las rutas de los vehículos de recolección
       Algoritmo* vorazRecoleccion = new VorazRecoleccion(dato);
+      Algoritmo* vorazTransporte = new VorazTransporte(dato);
       vector<Vehiculo> rutasRecoleccion = vorazRecoleccion->ejecutar();
       dato.rutasRecoleccion = rutasRecoleccion;
-      // Calculamos las rutas de los vehículos de transporte
+      vector<Vehiculo> rutasTransporte = vorazTransporte->ejecutar();
+      dato.rutasTransporte = rutasTransporte;
     }
     mostrarResultados(datos);
   } catch (const invalid_argument& e) {
