@@ -70,18 +70,19 @@ void VorazTransporte::ejecutar() {
     cout << "Dh: " << tarea.Dh << ", Sh: " << tarea.Sh.getId() << ", Th: " << tarea.Th << endl;
   }
   double cantidadMínima = buscarCantidadMinima(tareas);
+  cout << "Cantidad mínima de residuos: " << cantidadMínima << endl;
   // Mientras queden tareas por hacer
   while (!tareas.empty()) {
     Tarea tareaMinima = tareas.front(); // Tomamos la primera tarea
     tareas.erase(tareas.begin()); // La eliminamos de la lista
     Transporte* vehiculo = nullptr;
     // Buscamos el vehículo que mínimice el costo de inserción
-    vehiculo = &escogerVehiculo(rutasDeVehiculos, tareaMinima);
+    vehiculo = escogerVehiculo(rutasDeVehiculos, tareaMinima);
 
     if (vehiculo == nullptr) {
       // Si no hay vehículos disponibles, creamos uno nuevo
       vehiculo = new Transporte(datos_.capacidadTransporte, datos_.velocidad, datos_.zonas[3], datos_.duracionTransporte);
-      vehiculo->moverVehiculo(tareaMinima.Sh, tareaMinima.Sh.getDistancia(datos_.zonas[3]));
+      vehiculo->moverVehiculo(tareaMinima.Sh, vehiculo->getPosicion().getDistancia(tareaMinima.Sh));
       // Llenamos el vehículo con la cantidad de la tarea
       vehiculo->agregarContenido(tareaMinima.Dh);
       vehiculo->agregarTarea(tareaMinima);
@@ -89,10 +90,11 @@ void VorazTransporte::ejecutar() {
       rutasDeVehiculos.push_back(*vehiculo);
     } else {
       // Agregamos la SWTS de la tarea a la ruta del vehículo
+      vehiculo->agregarTarea(tareaMinima);
       vehiculo->moverVehiculo(tareaMinima.Sh, tareaMinima.Sh.getDistancia(vehiculo->getPosicion()));
       vehiculo->agregarContenido(tareaMinima.Dh);
       // Si la capacidad remanente es insuficiente para atender la tarea mínima
-      if (!vehiculo->llenarVehiculo(cantidadMínima)) {
+      if (vehiculo->getContenido() < cantidadMínima) {
         // Nos desplazamos al vertedero para vaciar el vehículo
         vehiculo->moverVehiculo(datos_.zonas[3], vehiculo->getPosicion().getDistancia(datos_.zonas[3]));
         vehiculo->vaciarVehiculo(datos_.zonas[3]); // Vaciar en el vertedero
@@ -103,6 +105,7 @@ void VorazTransporte::ejecutar() {
   for (auto& vehiculo : rutasDeVehiculos) {
     if (!vehiculo.getPosicion().esDumpsite()) {
       // Nos aseguramos que la ruta finalice en el vertedero
+      vehiculo.vaciarVehiculo(datos_.zonas[3]); // Vaciar en el vertedero
       vehiculo.volverAlInicio();
     }
   }
@@ -115,7 +118,7 @@ void VorazTransporte::ejecutar() {
  * @param tarea Tarea a realizar
  * @return Vehiculo& Vehículo que mínimice el costo de inserción
  */
-Transporte& VorazTransporte::escogerVehiculo(vector<Transporte>& vehiculos, const Tarea& tarea) {
+Transporte* VorazTransporte::escogerVehiculo(vector<Transporte>& vehiculos, const Tarea& tarea) {
   double costoMinimo = INFINITY;
   Transporte* vehiculoMinimo = nullptr;
 
@@ -126,7 +129,7 @@ Transporte& VorazTransporte::escogerVehiculo(vector<Transporte>& vehiculos, cons
       vehiculoMinimo = &vehiculo;
     }
   }
-  return *vehiculoMinimo;
+  return vehiculoMinimo;
 }
 
 /**
@@ -146,7 +149,7 @@ double VorazTransporte::calcularCostoInsercion(const Tarea& tarea, Transporte& v
   // a la zona de la tarea que se quiere asignar
   int tiempoTarea = tarea.Th;
   int tiempoAnterior = vehiculo.getTareasAsignadas().back().Th;
-  int tiempoViaje = vehiculo.calcularTiempo(tarea.Sh.getDistancia(vehiculo.getTareasAsignadas().back().Sh));
+  int tiempoViaje = vehiculo.calcularTiempo(vehiculo.getTareasAsignadas().back().Sh.getDistancia(tarea.Sh));
 
   if (tiempoViaje > (tiempoTarea - tiempoAnterior)) {
     return INFINITY;
@@ -164,11 +167,16 @@ double VorazTransporte::calcularCostoInsercion(const Tarea& tarea, Transporte& v
  * @param vehiculo Vehículo a calcular el tiempo
  * @return int Tiempo que tarda el vehículo en volver al vertedero
  */
-int VorazTransporte::tiempoVolverAlVertedero(Transporte vehiculo) {
+int VorazTransporte::tiempoVolverAlVertedero(const Transporte& vehiculo) {
   int tiempo = 0;
-  // Sumo el tiempo total de la ruta
+  Transporte vehiculoAux = vehiculo;
+  vehiculoAux.setPosicion(datos_.zonas[3]); // Colocamos el vehículo en el vertedero
+  // Recorremos las tareas asignadas al vehículo
   for (auto& tarea : vehiculo.getTareasAsignadas()) {
-    tiempo += tarea.Th;
+    // Agregamos el tiempo que tarda en ir a la zona de la tarea
+    tiempo += vehiculoAux.calcularTiempo(vehiculoAux.getPosicion().getDistancia(tarea.Sh));
+    // Actualizamos la posición del vehículo
+    vehiculoAux.setPosicion(tarea.Sh);
   }
   // Agrego el tiempo que tarda en volver al vertedero
   tiempo += vehiculo.calcularTiempo(vehiculo.getPosicion().getDistancia(datos_.zonas[3]));

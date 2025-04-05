@@ -23,6 +23,14 @@ int main(int argc, char* argv[]) {
       // Pasamos los datos y ejecutamos los algoritmos
       vorazRecoleccion->ejecutar();
       vorazTransporte->ejecutar();
+      // Muestro la ruta de los vehiculos de transporte
+      for (auto& vehiculo : dato.rutasTransporte) {
+        for (auto& zona : vehiculo.getZonasVisitadas()) {
+          cout << zona.getId() << " ";
+        }
+        cout << endl;
+      }
+      //exit(0);
     }
     mostrarResultados(datos);
   } catch (const invalid_argument& e) {
