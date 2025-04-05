@@ -14,20 +14,16 @@ using namespace std;
 
 class Algoritmo {
   public:
-  // Constructor de la clase
-  Algoritmo(Tools& datos) : datos_(datos) {};
+    // Constructor de la clase
+    Algoritmo(Tools& datos) : datos_(datos) {};
 
-  // Destructor de la clase
-  ~Algoritmo() {}
+    // Destructor de la clase
+    ~Algoritmo() {}
 
-  // Métodos de la clase
-  virtual vector<Vehiculo> ejecutar() = 0;
-
-  pair<Zona&, double> zonaMasCercana(const Vehiculo& vehiculo); // Zona más cercana al vehículo
-  pair<Zona&, double> swtsMasCercana(const Vehiculo& vehiculo); // SWTS más cercana a la zona
-  int TiempoVolverDeposito(Vehiculo vehiculo); // Tiempo que tarda en volver al depósito pasando por las zonas y la swts más cercanas
+    // Métodos de la clase
+    virtual vector<Vehiculo> ejecutar() = 0;
 
   protected:
-  // Datos importantes para el algoritmo
-  Tools& datos_;
+    // Datos importantes para el algoritmo
+    Tools& datos_;
 };

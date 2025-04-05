@@ -26,32 +26,6 @@ bool Vehiculo::llenarVehiculo(double cantidad) {
 }
 
 /**
- * @brief Método para vaciar la zona
- * @param zona Zona que se va a vaciar
- * @return void
- */
-void Vehiculo::vaciarZona(Zona& zona) {
-  agregarContenido(zona.getContenido()); // Agregamos el contenido de la zona al vehículo
-  zona.setContenido(0.0);
-  this->duracion_ -= zona.getTiempoDeProcesado();
-}
-
-/**
- * @brief Método para vaciar una zona con una cantidad específica
- * @param zona Zona que se va a vaciar
- * @param cantidad Cantidad de residuos que se van a vaciar
- * @return void
- */
-void Vehiculo::vaciarZona(Zona& zona, double cantidad) {
-  if (cantidad > zona.getContenido()) {
-    throw invalid_argument("La cantidad a vaciar es mayor que el contenido de la zona");
-  }
-  agregarContenido(cantidad); // Agregamos el contenido de la zona al vehículo
-  zona.setContenido(zona.getContenido() - cantidad);
-  this->duracion_ -= zona.getTiempoDeProcesado();
-}
-
-/**
  * @brief Método para vaciar el vehículo
  * @param zona Zona en la que se va a vaciar el vehículo
  * @return void

@@ -16,20 +16,20 @@ struct Tarea {
 
 class Grasp : public Algoritmo {
   public:
-  // Constructor de la clase
-  Grasp(Tools& datos) : Algoritmo(datos) {}
+    // Constructor de la clase
+    Grasp(Tools& datos) : Algoritmo(datos) {}
 
-  // Destructor de la clase
-  ~Grasp() {}
+    // Destructor de la clase
+    ~Grasp() {}
 
-  // Método para ejecutar el algoritmo GRASP
-  vector<Vehiculo> ejecutar() override;
+    // Método para ejecutar el algoritmo GRASP
+    vector<Vehiculo> ejecutar() override;
 
-  // Métodos de la clase
+    // Métodos de la clase
   private:
-  vector<Tarea> crearConjuntoTareas(const vector<Vehiculo>& vehiculos);
-  vector<Tarea> ordenarTareas(const vector<Tarea>& tareas);
-  double buscarCantidadMinima(const vector<Tarea>& tareas); // Método para obtener la cantidad mínima de residuos entre todas las tareas
-  int calcularCostoInsercion(const Tarea& tarea, const Vehiculo& vehiculo); // Método para calcular el costo de inserción de una tarea en un vehículo
-  Vehiculo& escogerVehiculo(const vector<Vehiculo>& vehiculos, const Tarea& tarea); // Escoger el vehículo que mínimice el costo de inserción
+    vector<Tarea> crearConjuntoTareas(const vector<Vehiculo>& vehiculos);
+    vector<Tarea> ordenarTareas(const vector<Tarea>& tareas);
+    double buscarCantidadMinima(const vector<Tarea>& tareas); // Método para obtener la cantidad mínima de residuos entre todas las tareas
+    int calcularCostoInsercion(const Tarea& tarea, const Vehiculo& vehiculo); // Método para calcular el costo de inserción de una tarea en un vehículo
+    Vehiculo* escogerVehiculo(vector<Vehiculo>& vehiculos, const Tarea& tarea); // Escoger el vehículo que mínimice el costo de inserción
 };

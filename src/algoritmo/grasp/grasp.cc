@@ -61,49 +61,49 @@ double Grasp::buscarCantidadMinima(const vector<Tarea>& tareas) {
  * @brief Método para ejecutar el algoritmo GRASP
  * @return vector<Vehiculo> Rutas de los vehiculos de transporte
  */
-vector<Vehiculo> Grasp::ejecutar() {
-  vector<Vehiculo> rutasDeVehiculos;
-  vector<Tarea> tareas = crearConjuntoTareas(datos_.rutasRecoleccion);
-  // Muestro las tareas
-  cout << "Tareas:" << endl;
-  for (const auto& tarea : tareas) {
-    cout << "Dh: " << tarea.Dh << ", Sh: " << tarea.Sh.getId() << ", Th: " << tarea.Th << endl;
-  }
-  double cantidadMínima = buscarCantidadMinima(tareas);
-  // Mientras queden tareas por hacer
-  while (!tareas.empty()) {
-    Tarea tareaMinima = tareas.front(); // Tomamos la primera tarea
-    tareas.erase(tareas.begin()); // La eliminamos de la lista
-    Vehiculo* vehiculo = nullptr;
-    // Buscamos el vehículo que mínimice el costo de inserción
-    vehiculo = &escogerVehiculo(rutasDeVehiculos, tareaMinima);
-
-    if (vehiculo == nullptr) {
-      Vehiculo vehiculoNuevo(datos_.capacidadTransporte, datos_.velocidad, datos_.zonas[3], datos_.duracionTransporte);
-      vehiculoNuevo.moverVehiculo(tareaMinima.Sh, tareaMinima.Sh.getDistancia(vehiculoNuevo.getPosicion()));
-      vehiculoNuevo.vaciarZona(tareaMinima.Sh, tareaMinima.Dh);
-      rutasDeVehiculos.push_back(vehiculoNuevo);
-    }
-    else {
-      // Movemos el vehículo a la zona de transferencia
-      vehiculo->moverVehiculo(tareaMinima.Sh, tareaMinima.Sh.getDistancia(vehiculo->getPosicion()));
-      vehiculo->vaciarZona(tareaMinima.Sh, tareaMinima.Dh);
-      // Si la capacidad remanente es menor es insuficiente para atender la tarea mínima
-      if  (vehiculo->getContenido() < cantidadMínima) {
-        // Volvemos al vertedero
-        vehiculo->moverVehiculo(datos_.zonas[3], vehiculo->getPosicion().getDistancia(datos_.zonas[3]));
-        vehiculo->vaciarVehiculo(datos_.zonas[3]);
-      }
-    }
-  }
-  for (auto& vehiculo : rutasDeVehiculos) {
-    // Si la última parada no es el vertedero
-    if (vehiculo.getPosicion().getId() != "Dumpsite") {
-      vehiculo.volverAlInicio(); // Volvemos al vertedero
-    }
-  }
-  return rutasDeVehiculos;
-}
+//vector<Vehiculo> Grasp::ejecutar() {
+//  vector<Vehiculo> rutasDeVehiculos;
+//  vector<Tarea> tareas = crearConjuntoTareas(datos_.rutasRecoleccion);
+//  // Muestro las tareas
+//  cout << "Tareas:" << endl;
+//  for (const auto& tarea : tareas) {
+//    cout << "Dh: " << tarea.Dh << ", Sh: " << tarea.Sh.getId() << ", Th: " << tarea.Th << endl;
+//  }
+//  double cantidadMínima = buscarCantidadMinima(tareas);
+//  // Mientras queden tareas por hacer
+//  while (!tareas.empty()) {
+//    Tarea tareaMinima = tareas.front(); // Tomamos la primera tarea
+//    tareas.erase(tareas.begin()); // La eliminamos de la lista
+//    Vehiculo* vehiculo = nullptr;
+//    // Buscamos el vehículo que mínimice el costo de inserción
+//    vehiculo = escogerVehiculo(rutasDeVehiculos, tareaMinima);
+//
+//    if (vehiculo == nullptr) {
+//      Vehiculo vehiculoNuevo(datos_.capacidadTransporte, datos_.velocidad, datos_.zonas[3], datos_.duracionTransporte);
+//      vehiculoNuevo.moverVehiculo(tareaMinima.Sh, tareaMinima.Sh.getDistancia(vehiculoNuevo.getPosicion()));
+//      vehiculoNuevo.vaciarZona(tareaMinima.Sh, tareaMinima.Dh);
+//      rutasDeVehiculos.push_back(vehiculoNuevo);
+//    }
+//    else {
+//      // Movemos el vehículo a la zona de transferencia
+//      vehiculo->moverVehiculo(tareaMinima.Sh, tareaMinima.Sh.getDistancia(vehiculo->getPosicion()));
+//      vehiculo->vaciarZona(tareaMinima.Sh, tareaMinima.Dh);
+//      // Si la capacidad remanente es menor es insuficiente para atender la tarea mínima
+//      if  (vehiculo->getContenido() < cantidadMínima) {
+//        // Volvemos al vertedero
+//        vehiculo->moverVehiculo(datos_.zonas[3], vehiculo->getPosicion().getDistancia(datos_.zonas[3]));
+//        vehiculo->vaciarVehiculo(datos_.zonas[3]);
+//      }
+//    }
+//  }
+//  for (auto& vehiculo : rutasDeVehiculos) {
+//    // Si la última parada no es el vertedero
+//    if (vehiculo.getPosicion().getId() != "Dumpsite") {
+//      vehiculo.volverAlInicio(); // Volvemos al vertedero
+//    }
+//  }
+//  return rutasDeVehiculos;
+//}
 
 /**
  * @brief Método para escoger el vehículo que mínimice el costo de inserción
@@ -111,10 +111,15 @@ vector<Vehiculo> Grasp::ejecutar() {
  * @param tarea Tarea a realizar
  * @return Vehiculo& Vehículo que mínimice el costo de inserción
  */
-Vehiculo& Grasp::escogerVehiculo(const vector<Vehiculo>& vehiculos, const Tarea& tarea) {
+Vehiculo* Grasp::escogerVehiculo(vector<Vehiculo>& vehiculos, const Tarea& tarea) {
   Vehiculo* vehiculoMinimo = nullptr;
   if (vehiculos.empty()) {
-    return *vehiculoMinimo;
+    return vehiculoMinimo;
+  }
+  else {
+    // Devuelvo el primer vehiculo
+    vehiculoMinimo = &vehiculos[0];
+    return vehiculoMinimo;
   }
 }
 
@@ -127,7 +132,15 @@ Vehiculo& Grasp::escogerVehiculo(const vector<Vehiculo>& vehiculos, const Tarea&
 int Grasp::calcularCostoInsercion(const Tarea& tarea, const Vehiculo& vehiculo) {
   int costo = 0;
 
-  // El trayecto de la última SWTS de e′ a sh debe ser ≤ (τh - τ último de e′)
+  
+
+
+
+
+
+
+
+  
 
   return costo;
 }

@@ -22,8 +22,6 @@ int main(int argc, char* argv[]) {
       vector<Vehiculo> rutasRecoleccion = voraz->ejecutar();
       dato.rutasRecoleccion = rutasRecoleccion;
       // Calculamos las rutas de los vehículos de transporte
-      Algoritmo* grasp = new Grasp(dato);
-      vector<Vehiculo> rutasTransporte = grasp->ejecutar();
     }
     mostrarResultados(datos);
   } catch (const invalid_argument& e) {
