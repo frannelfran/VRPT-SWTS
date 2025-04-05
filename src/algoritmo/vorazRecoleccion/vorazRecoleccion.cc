@@ -6,7 +6,7 @@
  * @param vehiculo Vehículo que se va a mover
  * @return Zona más cercana al vehículo con su distancia
  */
-pair<Zona&, double> VorazRecoleccion::zonaMasCercana(const Vehiculo& vehiculo) {
+pair<Zona&, double> VorazRecoleccion::zonaMasCercana(const Recoleccion& vehiculo) {
   vector<vector<double>> distancias = datos_.distancias;
   Zona zonaActual = vehiculo.getPosicion();
   Zona* zonaCercana = nullptr; // Inicializo la zona más cercana
@@ -30,7 +30,7 @@ pair<Zona&, double> VorazRecoleccion::zonaMasCercana(const Vehiculo& vehiculo) {
  * @param vehiculo Vehículo que se va a mover
  * @return SWTS más cercana al vehículo con su distancia
  */
-pair<Zona&, double> VorazRecoleccion::swtsMasCercana(const Vehiculo& vehiculo) {
+pair<Zona&, double> VorazRecoleccion::swtsMasCercana(const Recoleccion& vehiculo) {
   vector<vector<double>> distancias = datos_.distancias;
   Zona zonaActual = vehiculo.getPosicion();
   Zona* swtsCercana = nullptr;
@@ -58,12 +58,12 @@ pair<Zona&, double> VorazRecoleccion::swtsMasCercana(const Vehiculo& vehiculo) {
  * @param vehiculo Vehículo que se va a mover
  * @return Tiempo que tarda en volver al depósito
  */
-int VorazRecoleccion::TiempoVolverDeposito(Vehiculo vehiculo) {
+int VorazRecoleccion::TiempoVolverDeposito(Recoleccion vehiculo) {
   int tiempo = 0;
   pair<Zona&, double> zonaTransferenciaCercana = swtsMasCercana(vehiculo);
   pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo);
 
-  Vehiculo vehiculoAux = vehiculo;
+  Recoleccion vehiculoAux = vehiculo;
   vehiculoAux.setPosicion(zonaTransferenciaCercana.first);
   // Tiempo que tarda en llegar a la zona más cercana
   tiempo += vehiculo.calcularTiempo(zonaCercana.second);

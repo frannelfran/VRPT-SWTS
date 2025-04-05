@@ -13,7 +13,7 @@ class VorazRecoleccion : public Algoritmo {
     
     // Métodos de la clase
     vector<Vehiculo> ejecutar() override;
-    pair<Zona&, double> zonaMasCercana(const Vehiculo& vehiculo); // Zona más cercana al vehículo
-    pair<Zona&, double> swtsMasCercana(const Vehiculo& vehiculo); // SWTS más cercana a la zona
-    int TiempoVolverDeposito(Vehiculo vehiculo); // Tiempo que tarda en volver al depósito pasando por las zonas y la swts más cercanas
+    pair<Zona&, double> zonaMasCercana(const Recoleccion& vehiculo); // Zona más cercana al vehículo
+    pair<Zona&, double> swtsMasCercana(const Recoleccion& vehiculo); // SWTS más cercana a la zona
+    int TiempoVolverDeposito(Recoleccion vehiculo); // Tiempo que tarda en volver al depósito pasando por las zonas y la swts más cercanas
 };
