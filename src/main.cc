@@ -17,10 +17,10 @@ int main(int argc, char* argv[]) {
     vector<Tools> datos = readData(dirName);
     // Menú de opciones
     for (auto& dato : datos) {
-      // Calculamos las rutas de los vehículos de recolección
-      Algoritmo* vorazRecoleccion = new VorazRecoleccion(dato);
-      Algoritmo* vorazTransporte = new VorazTransporte(dato);
-      // Ejecuto los algoritmos
+      // Creamos los algoritmos una vez
+      unique_ptr<Algoritmo> vorazRecoleccion = make_unique<VorazRecoleccion>(dato);
+      unique_ptr<Algoritmo> vorazTransporte = make_unique<VorazTransporte>(dato);
+      // Pasamos los datos y ejecutamos los algoritmos
       vorazRecoleccion->ejecutar();
       vorazTransporte->ejecutar();
     }
