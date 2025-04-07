@@ -40,6 +40,7 @@ struct Tools {
   int maxX;
   int maxY;
   string nombreInstancia;
+  double tiempoCPU; // Tiempo que tarda en resolver el problema
 };
 
 extern Tools tools;

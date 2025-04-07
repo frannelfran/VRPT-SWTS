@@ -168,18 +168,17 @@ void mostrarResultados(const vector<Tools>& datos) {
     << setw(10) << dato.numZonas
     << setw(6) << dato.rutasRecoleccion.size()
     << setw(6) << dato.rutasTransporte.size()
-    << setw(12) << "Tiempo CPU" 
+    << setw(12) << dato.tiempoCPU
     << endl;
   }
   cout << "----------------------------------------" << endl;
   // Calculo la media de todas las instancias
-  double mediaZonas = 0.0;
-  double mediaCV = 0.0;
-  double mediaTV = 0.0;
+  double mediaZonas = 0.0, mediaCV = 0.0, mediaTV = 0.0, mediaCPU = 0.0;
   for (const auto& dato : datos) {
     mediaZonas += dato.numZonas;
     mediaCV += dato.rutasRecoleccion.size();
     mediaTV += dato.rutasTransporte.size();
+    mediaCPU += dato.tiempoCPU;
   }
   mediaZonas /= datos.size();
   mediaCV /= datos.size();
@@ -189,7 +188,7 @@ void mostrarResultados(const vector<Tools>& datos) {
   << setw(10) << mediaZonas
   << setw(6) << mediaCV
   << setw(6) << mediaTV
-  << setw(12) << "N/A" 
+  << setw(12) << mediaCPU
   << endl;
   cout << "----------------------------------------" << endl;
   cout << "Fin del programa" << endl;
