@@ -66,13 +66,13 @@ int VorazRecoleccion::TiempoVolverDeposito(Recoleccion vehiculo) {
   Recoleccion vehiculoAux = vehiculo;
   vehiculoAux.setPosicion(zonaTransferenciaCercana.first);
   // Tiempo que tarda en llegar a la zona más cercana
-  tiempo += vehiculo.calcularTiempo(zonaCercana.second);
+  tiempo += vehiculo.calcularTiempo(vehiculo.getPosicion().getDistancia(zonaCercana.first));
   // Tiempo que tarda en procesar la zona más cercana
   tiempo += zonaCercana.first.getTiempoDeProcesado();
   // Tiempo que tarda en llegar a la swts más cercana
-  tiempo += vehiculo.calcularTiempo(zonaTransferenciaCercana.second);
+  tiempo += vehiculo.calcularTiempo(zonaCercana.first.getDistancia(zonaTransferenciaCercana.first));
   // Tiempo que tarda en volver al depósito desde la swts más cercana
-  tiempo += vehiculoAux.calcularTiempo(datos_.zonas[0].getDistancia(zonaTransferenciaCercana.first));
+  tiempo += vehiculoAux.calcularTiempo(datos_.zonas[0].getDistancia(vehiculoAux.getPosicion()));
 
   return tiempo;
 }

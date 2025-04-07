@@ -105,8 +105,8 @@ void VorazTransporte::ejecutar() {
   for (auto& vehiculo : rutasDeVehiculos) {
     if (!vehiculo.getPosicion().esDumpsite()) {
       // Nos aseguramos que la ruta finalice en el vertedero
-      vehiculo.vaciarVehiculo(datos_.zonas[3]); // Vaciar en el vertedero
       vehiculo.volverAlInicio();
+      vehiculo.vaciarVehiculo(datos_.zonas[3]); // Vaciar en el vertedero
     }
   }
   datos_.rutasTransporte = rutasDeVehiculos; // Guardamos las rutas de los vehículos de transporte
