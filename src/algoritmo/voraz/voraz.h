@@ -17,10 +17,12 @@ struct Tarea {
 
 class Voraz : public Algoritmo {
   public:
+    Voraz() : Algoritmo() {} // Constructor por defecto
     Voraz(Tools& datos) : Algoritmo(datos) {} // Constructor de la clase
 
     // Métodos de la clase
     void ejecutar() override; // Método para ejecutar el algoritmo Voraz
+    void mostrarResultados() override; // Método para mostrar los resultados del algoritmo Voraz
     void calcularRutasRecoleccion(); // Método para calcular las rutas de recolección
     void calcularRutasTransporte(); // Método para calcular las rutas de transporte
 

@@ -7,19 +7,19 @@
  * @return Zona más cercana al vehículo con su distancia
  */
 pair<Zona&, double> Voraz::zonaMasCercana(const Recoleccion& vehiculo) {
-  vector<vector<double>> distancias = datos_.distancias;
+  vector<vector<double>> distancias = dato_->distancias;
   Zona zonaActual = vehiculo.getPosicion();
   Zona* zonaCercana = nullptr; // Inicializo la zona más cercana
   double minDistancia = INFINITY;
-  auto it = find(datos_.zonas.begin(), datos_.zonas.end(), zonaActual); // Obtengo la posicion de la zona
+  auto it = find(dato_->zonas.begin(), dato_->zonas.end(), zonaActual); // Obtengo la posicion de la zona
 
-  int index = distance(datos_.zonas.begin(), it);
+  int index = distance(dato_->zonas.begin(), it);
   for (size_t i = 0; i < distancias[index].size(); i++) {
     if (distancias[index][i] < minDistancia &&
-        find(vehiculo.getZonasVisitadas().begin(), vehiculo.getZonasVisitadas().end(), datos_.zonas[i]) == vehiculo.getZonasVisitadas().end() &&
-        find(datos_.zonasRecoleccion.begin(), datos_.zonasRecoleccion.end(), datos_.zonas[i]) != datos_.zonasRecoleccion.end()) {
+        find(vehiculo.getZonasVisitadas().begin(), vehiculo.getZonasVisitadas().end(), dato_->zonas[i]) == vehiculo.getZonasVisitadas().end() &&
+        find(dato_->zonasRecoleccion.begin(), dato_->zonasRecoleccion.end(), dato_->zonas[i]) != dato_->zonasRecoleccion.end()) {
       minDistancia = distancias[index][i];
-      zonaCercana = &datos_.zonas[i];
+      zonaCercana = &dato_->zonas[i];
     }
   }
   return pair<Zona&, double>(*zonaCercana, minDistancia);
@@ -31,22 +31,22 @@ pair<Zona&, double> Voraz::zonaMasCercana(const Recoleccion& vehiculo) {
  * @return SWTS más cercana al vehículo con su distancia
  */
 pair<Zona&, double> Voraz::swtsMasCercana(const Recoleccion& vehiculo) {
-  vector<vector<double>> distancias = datos_.distancias;
+  vector<vector<double>> distancias = dato_->distancias;
   Zona zonaActual = vehiculo.getPosicion();
   Zona* swtsCercana = nullptr;
   double minDistancia = INFINITY;
 
-  auto it = find(datos_.zonas.begin(), datos_.zonas.end(), zonaActual);
+  auto it = find(dato_->zonas.begin(), dato_->zonas.end(), zonaActual);
 
-  int posicion = distance(datos_.zonas.begin(), it);
+  int posicion = distance(dato_->zonas.begin(), it);
 
   for (size_t i = 0; i < distancias[posicion].size(); i++) {
-    Zona& zona = datos_.zonas[i];
+    Zona& zona = dato_->zonas[i];
     if (!zona.esSWTS()) continue;
     else {
       if (distancias[posicion][i] < minDistancia) {
         minDistancia = distancias[posicion][i];
-        swtsCercana = &datos_.zonas[i];
+        swtsCercana = &dato_->zonas[i];
       }
     }
   }
@@ -72,7 +72,7 @@ int Voraz::TiempoVolverDeposito(Recoleccion vehiculo) {
   // Tiempo que tarda en llegar a la swts más cercana
   tiempo += vehiculo.calcularTiempo(zonaCercana.first.getDistancia(zonaTransferenciaCercana.first));
   // Tiempo que tarda en volver al depósito desde la swts más cercana
-  tiempo += vehiculoAux.calcularTiempo(datos_.zonas[0].getDistancia(vehiculoAux.getPosicion()));
+  tiempo += vehiculoAux.calcularTiempo(dato_->zonas[0].getDistancia(vehiculoAux.getPosicion()));
 
   return tiempo;
 }
@@ -84,7 +84,57 @@ int Voraz::TiempoVolverDeposito(Recoleccion vehiculo) {
 void Voraz::ejecutar() {
   calcularRutasRecoleccion(); // Calculamos las rutas de recolección
   calcularRutasTransporte(); // Calculamos las rutas de transporte
+  datos_.push_back(dato_); // Guardamos los datos de la instancia
 };
+
+/**
+ * @brief Método para mostrar los resultados del algoritmo Voraz
+ * @return void
+ */
+void Voraz::mostrarResultados() {
+  // Cabecera
+  cout << "----------------------------------------" << endl;
+  cout << left 
+  << setw(15) << "Instancia" 
+  << setw(10) << "#Zonas" 
+  << setw(6) << "#CV" 
+  << setw(6) << "#TV" 
+  << setw(12) << "Tiempo CPU" 
+  << endl;
+  cout << "----------------------------------------" << endl;
+
+  // Itero sobre los datos
+  for (const auto& dato : datos_) {
+    cout << left 
+    << setw(15) << dato->nombreInstancia 
+    << setw(10) << dato->numZonas
+    << setw(6) << dato->rutasRecoleccion.size()
+    << setw(6) << dato->rutasTransporte.size()
+    << setw(12) << dato->tiempoCPU
+    << endl;
+  }
+  cout << "----------------------------------------" << endl;
+  // Calculo la media de todas las instancias
+  double mediaZonas = 0.0, mediaCV = 0.0, mediaTV = 0.0, mediaCPU = 0.0;
+  for (const auto& dato : datos_) {
+    mediaZonas += dato->numZonas;
+    mediaCV += dato->rutasRecoleccion.size();
+    mediaTV += dato->rutasTransporte.size();
+    mediaCPU += dato->tiempoCPU;
+  }
+  mediaZonas /= datos_.size();
+  mediaCV /= datos_.size();
+  mediaTV /= datos_.size();
+  cout << left 
+  << setw(15) << "Averages" 
+  << setw(10) << mediaZonas
+  << setw(6) << mediaCV
+  << setw(6) << mediaTV
+  << setw(12) << mediaCPU
+  << endl;
+  cout << "----------------------------------------" << endl;
+  cout << "Fin del programa" << endl;
+}
 
 /**
  * @brief Método para calcular las rutas de los vehículos de recolección
@@ -92,11 +142,11 @@ void Voraz::ejecutar() {
  */
 void Voraz::calcularRutasRecoleccion() {
   vector<Recoleccion> rutasDeVehiculos;
-  vector<Zona>& zonasPendientes = datos_.zonasRecoleccion;
+  vector<Zona>& zonasPendientes = dato_->zonasRecoleccion;
 
   while (!zonasPendientes.empty()) {
     // Creamos el vehículo
-    Recoleccion vehiculo(datos_.capacidadRecoleccion, datos_.velocidad, datos_.zonas[0], datos_.duracionRecoleccion);
+    Recoleccion vehiculo(dato_->capacidadRecoleccion, dato_->velocidad, dato_->zonas[0], dato_->duracionRecoleccion);
     do {
       if (zonasPendientes.empty()) break;
       pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo);
@@ -127,7 +177,7 @@ void Voraz::calcularRutasRecoleccion() {
     }
     rutasDeVehiculos.push_back(vehiculo);
   }
-  datos_.rutasRecoleccion = rutasDeVehiculos; // Guardamos las rutas de los vehículos de recolección
+  dato_->rutasRecoleccion = rutasDeVehiculos; // Guardamos las rutas de los vehículos de recolección
 }
 
 /**
@@ -193,7 +243,7 @@ double Voraz::buscarCantidadMinima(const vector<Tarea>& tareas) {
  */
 void Voraz::calcularRutasTransporte() {
   vector<Transporte> rutasDeVehiculos;
-  vector<Tarea> tareas = crearConjuntoTareas(datos_.rutasRecoleccion);
+  vector<Tarea> tareas = crearConjuntoTareas(dato_->rutasRecoleccion);
   // Muestro las tareas
   cout << "Tareas:" << endl;
   for (const auto& tarea : tareas) {
@@ -211,7 +261,7 @@ void Voraz::calcularRutasTransporte() {
 
     if (vehiculo == nullptr) {
       // Si no hay vehículos disponibles, creamos uno nuevo
-      vehiculo = new Transporte(datos_.capacidadTransporte, datos_.velocidad, datos_.zonas[3], datos_.duracionTransporte);
+      vehiculo = new Transporte(dato_->capacidadTransporte, dato_->velocidad, dato_->zonas[3], dato_->duracionTransporte);
       vehiculo->moverVehiculo(tareaMinima.Sh, vehiculo->getPosicion().getDistancia(tareaMinima.Sh));
       // Llenamos el vehículo con la cantidad de la tarea
       vehiculo->agregarContenido(tareaMinima.Dh);
@@ -226,8 +276,8 @@ void Voraz::calcularRutasTransporte() {
       // Si la capacidad remanente es insuficiente para atender la tarea mínima
       if (vehiculo->getContenido() < cantidadMínima) {
         // Nos desplazamos al vertedero para vaciar el vehículo
-        vehiculo->moverVehiculo(datos_.zonas[3], vehiculo->getPosicion().getDistancia(datos_.zonas[3]));
-        vehiculo->vaciarVehiculo(datos_.zonas[3]); // Vaciar en el vertedero
+        vehiculo->moverVehiculo(dato_->zonas[3], vehiculo->getPosicion().getDistancia(dato_->zonas[3]));
+        vehiculo->vaciarVehiculo(dato_->zonas[3]); // Vaciar en el vertedero
       }
     }
   }
@@ -236,10 +286,10 @@ void Voraz::calcularRutasTransporte() {
     if (!vehiculo.getPosicion().esDumpsite()) {
       // Nos aseguramos que la ruta finalice en el vertedero
       vehiculo.volverAlInicio();
-      vehiculo.vaciarVehiculo(datos_.zonas[3]); // Vaciar en el vertedero
+      vehiculo.vaciarVehiculo(dato_->zonas[3]); // Vaciar en el vertedero
     }
   }
-  datos_.rutasTransporte = rutasDeVehiculos; // Guardamos las rutas de los vehículos de transporte
+  dato_->rutasTransporte = rutasDeVehiculos; // Guardamos las rutas de los vehículos de transporte
 }
 
 /**
@@ -300,7 +350,7 @@ double Voraz::calcularCostoInsercion(const Tarea& tarea, Transporte& vehiculo) {
 int Voraz::tiempoVolverAlVertedero(const Transporte& vehiculo) {
   int tiempo = 0;
   Transporte vehiculoAux = vehiculo;
-  vehiculoAux.setPosicion(datos_.zonas[3]); // Colocamos el vehículo en el vertedero
+  vehiculoAux.setPosicion(dato_->zonas[3]); // Colocamos el vehículo en el vertedero
   // Recorremos las tareas asignadas al vehículo
   for (auto& tarea : vehiculo.getTareasAsignadas()) {
     // Agregamos el tiempo que tarda en ir a la zona de la tarea
@@ -309,6 +359,6 @@ int Voraz::tiempoVolverAlVertedero(const Transporte& vehiculo) {
     vehiculoAux.setPosicion(tarea.Sh);
   }
   // Agrego el tiempo que tarda en volver al vertedero
-  tiempo += vehiculo.calcularTiempo(vehiculo.getPosicion().getDistancia(datos_.zonas[3]));
+  tiempo += vehiculo.calcularTiempo(vehiculo.getPosicion().getDistancia(dato_->zonas[3]));
   return tiempo;
 }

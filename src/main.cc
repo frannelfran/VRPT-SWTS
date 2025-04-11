@@ -16,19 +16,28 @@ int main(int argc, char* argv[]) {
   try {
     vector<Tools> datos = readData(dirName);
     // Menú de opciones
-    for (auto& dato : datos) {
-      auto inicio = chrono::high_resolution_clock::now();
-
-      // Creamos los algoritmos una vez
-      unique_ptr<Algoritmo> voraz = make_unique<Voraz>(dato);
-      // Pasamos los datos y ejecutamos los algoritmos
-      voraz->ejecutar();
-
-      auto fin = chrono::high_resolution_clock::now();
-      // Guardamos el tiempo de ejecución
-      dato.tiempoCPU = round(chrono::duration_cast<chrono::duration<double>>(fin - inicio).count() * 10000) / 10000.0;
+    mostrarMenu();
+    int opcion;
+    cin >> opcion;
+    if (opcion < 1 || opcion > 3) {
+      throw invalid_argument("Opción no válida");
     }
-    mostrarResultados(datos);
+    // Ejecutar el algoritmo Voraz
+    switch (opcion) {
+      case 1: {
+        Algoritmo* voraz = new Voraz();
+        for (auto& dato : datos) {
+          voraz->setDato(dato);
+          auto start = chrono::high_resolution_clock::now();
+          voraz->ejecutar();
+          auto end = chrono::high_resolution_clock::now();
+          dato.tiempoCPU = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+        }
+        voraz->mostrarResultados();
+      }
+      break;
+    }
+    
   } catch (const invalid_argument& e) {
     cerr << e.what() << endl;
     exit(1);

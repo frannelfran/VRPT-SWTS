@@ -52,4 +52,3 @@ vector<vector<double>> calcularDistancias(); // Función para calcular las dista
 void mostrarZonas(const vector<Zona>& zonas); // Función para mostrar las zonas
 void mostrarDistancias(); // Función para mostrar las distancias
 void mostrarMenu(); // Función para mostrar el menú de opciones
-void mostrarResultados(const vector<Tools>& datos); // Función para mostrar los resultados
