@@ -4,6 +4,16 @@
 
 #pragma once
 #include "../algoritmo.h"
+#include "../../vehiculo/recoleccion/recoleccion.h"
+#include "../../vehiculo/transporte/transporte.h"
+
+class Transporte;
+
+struct Tarea {
+  double Dh; // Cantidad de residuos
+  Zona Sh; // Zona a la que se va a mover el vehículo
+  int Th; // Tiempo que tarda en llegar a la zona
+};
 
 class Voraz : public Algoritmo {
   public:
@@ -20,4 +30,11 @@ class Voraz : public Algoritmo {
     pair<Zona&, double> swtsMasCercana(const Recoleccion& vehiculo); // SWTS más cercana a la zona
     int TiempoVolverDeposito(Recoleccion vehiculo); // Tiempo que tarda en volver al depósito pasando por las zonas y la swts más cercanas
 
+    // Métodos para calcular el voraz de las rutas de transporte
+    vector<Tarea> crearConjuntoTareas(const vector<Recoleccion>& vehiculos);
+    vector<Tarea> ordenarTareas(const vector<Tarea>& tareas);
+    double buscarCantidadMinima(const vector<Tarea>& tareas); // Método para obtener la cantidad mínima de residuos entre todas las tareas
+    double calcularCostoInsercion(const Tarea& tarea, Transporte& vehiculo); // Método para calcular el costo de inserción de una tarea en un vehículo
+    int tiempoVolverAlVertedero(const Transporte& vehiculo);
+    Transporte* escogerVehiculo(vector<Transporte>& vehiculos, const Tarea& tarea); // Escoger el vehículo que mínimice el costo de inserción
 };

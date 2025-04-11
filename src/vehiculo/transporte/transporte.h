@@ -4,7 +4,7 @@
 
 #pragma once
 #include "../vehiculo.h"
-#include "../../algoritmo/vorazTransporte/vorazTransporte.h"
+#include "../../algoritmo/voraz/voraz.h"
 
 class Tarea;
 

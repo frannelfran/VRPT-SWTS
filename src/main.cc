@@ -3,8 +3,7 @@
  * @brief Función principal del programa
  */
 #include "tools/tools.h"
-#include "algoritmo/vorazRecoleccion/vorazRecoleccion.h"
-#include "algoritmo/vorazTransporte/vorazTransporte.h"
+#include "algoritmo/voraz/voraz.h"
 #include <chrono>
 
 int main(int argc, char* argv[]) {
@@ -21,11 +20,9 @@ int main(int argc, char* argv[]) {
       auto inicio = chrono::high_resolution_clock::now();
 
       // Creamos los algoritmos una vez
-      unique_ptr<Algoritmo> vorazRecoleccion = make_unique<VorazRecoleccion>(dato);
-      unique_ptr<Algoritmo> vorazTransporte = make_unique<VorazTransporte>(dato);
+      unique_ptr<Algoritmo> voraz = make_unique<Voraz>(dato);
       // Pasamos los datos y ejecutamos los algoritmos
-      vorazRecoleccion->ejecutar();
-      vorazTransporte->ejecutar();
+      voraz->ejecutar();
 
       auto fin = chrono::high_resolution_clock::now();
       // Guardamos el tiempo de ejecución
