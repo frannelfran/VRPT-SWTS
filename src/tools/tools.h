@@ -44,6 +44,7 @@ struct Tools {
 };
 
 extern Tools tools;
+class Algoritmo; // Declaración anticipada de la clase Algoritmo
 
 vector<Tools> readData(const string& dirName); // Función para almacenar los datos de los ficheros
 void procesarLinea(istringstream& linea); // Función para procesar una línea de texto
@@ -52,3 +53,4 @@ vector<vector<double>> calcularDistancias(); // Función para calcular las dista
 void mostrarZonas(const vector<Zona>& zonas); // Función para mostrar las zonas
 void mostrarDistancias(); // Función para mostrar las distancias
 void mostrarMenu(); // Función para mostrar el menú de opciones
+Algoritmo* crearAlgoritmo(int opcion); // Función para crear el algoritmo según la opción elegida

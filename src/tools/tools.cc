@@ -143,3 +143,26 @@ void mostrarMenu() {
   cout << "4. Salir" << endl;
   cout << "Introduce una opción: ";
 }
+
+/**
+ * @brief Función para crear el algoritmo según la opción elegida
+ * @param opcion Opción elegida
+ * @return Algoritmo* Puntero al algoritmo creado
+ */
+Algoritmo* crearAlgoritmo(int opcion) {
+  Algoritmo* algoritmo = nullptr;
+  switch (opcion) {
+    case 1:
+      algoritmo = new Voraz();
+      break;
+    case 2:
+      // algoritmo = new Algoritmo2();
+      break;
+    case 3:
+      // algoritmo = new Algoritmo3();
+      break;
+    default:
+      throw invalid_argument("Opción no válida");
+  }
+  return algoritmo;
+}

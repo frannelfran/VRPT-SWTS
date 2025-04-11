@@ -19,25 +19,20 @@ int main(int argc, char* argv[]) {
     mostrarMenu();
     int opcion;
     cin >> opcion;
-    if (opcion < 1 || opcion > 3) {
-      throw invalid_argument("Opción no válida");
+    Algoritmo* algortimo = crearAlgoritmo(opcion);
+    // Ejecutar el algoritmo para cada instancia
+    for (auto& dato : datos) {
+      algortimo->setDato(dato);
+      auto start = chrono::high_resolution_clock::now();
+      algortimo->ejecutar();
+      auto end = chrono::high_resolution_clock::now();
+      dato.tiempoCPU = round(chrono::duration_cast<chrono::duration<double>>(end - start).count() * 10000) / 10000.0;
     }
-    // Ejecutar el algoritmo Voraz
-    switch (opcion) {
-      case 1: {
-        Algoritmo* voraz = new Voraz();
-        for (auto& dato : datos) {
-          voraz->setDato(dato);
-          auto start = chrono::high_resolution_clock::now();
-          voraz->ejecutar();
-          auto end = chrono::high_resolution_clock::now();
-          dato.tiempoCPU = chrono::duration_cast<chrono::milliseconds>(end - start).count();
-        }
-        voraz->mostrarResultados();
-      }
-      break;
-    }
-    
+    // Muestro los resultados
+    algortimo->mostrarResultados();
+    // Liberar memoria
+    delete algortimo;
+    cout << "Fin del programa" << endl;
   } catch (const invalid_argument& e) {
     cerr << e.what() << endl;
     exit(1);

@@ -133,7 +133,6 @@ void Voraz::mostrarResultados() {
   << setw(12) << mediaCPU
   << endl;
   cout << "----------------------------------------" << endl;
-  cout << "Fin del programa" << endl;
 }
 
 /**
