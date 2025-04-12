@@ -2,18 +2,12 @@
  * @class Clase para representar un algoritmo Voraz en el sistema
  */
 
-#pragma once
+#ifndef C_Voraz_H
+#define C_Voraz_H
+
 #include "../algoritmo.h"
 #include "../../vehiculo/recoleccion/recoleccion.h"
 #include "../../vehiculo/transporte/transporte.h"
-
-class Transporte;
-
-struct Tarea {
-  double Dh; // Cantidad de residuos
-  Zona Sh; // Zona a la que se va a mover el vehículo
-  int Th; // Tiempo que tarda en llegar a la zona
-};
 
 class Voraz : public Algoritmo {
   public:
@@ -40,3 +34,5 @@ class Voraz : public Algoritmo {
     int tiempoVolverAlVertedero(const Transporte& vehiculo);
     Transporte* escogerVehiculo(vector<Transporte>& vehiculos, const Tarea& tarea); // Escoger el vehículo que mínimice el costo de inserción
 };
+
+#endif

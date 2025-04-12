@@ -2,7 +2,9 @@
  * @struct Estructura para almacenar los datos de un archivo de texto
  */
 
-#pragma once
+#ifndef C_Tools_H
+#define C_Tools_H
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -13,9 +15,11 @@
 #include <stdexcept> // Para lanzar excepciones
 #include <filesystem> // Para recorrer los ficheros del directorio
 #include "../zona/zona.h"
-#include "../algoritmo/algoritmo.h"
 #include "../vehiculo/recoleccion/recoleccion.h"
 #include "../vehiculo/transporte/transporte.h"
+#include "../algoritmo/voraz/voraz.h"
+
+class Algoritmo;
 
 namespace fs = filesystem;
 
@@ -44,7 +48,8 @@ struct Tools {
 };
 
 extern Tools tools;
-class Algoritmo; // Declaración anticipada de la clase Algoritmo
+
+#endif
 
 vector<Tools> readData(const string& dirName); // Función para almacenar los datos de los ficheros
 void procesarLinea(istringstream& linea); // Función para procesar una línea de texto

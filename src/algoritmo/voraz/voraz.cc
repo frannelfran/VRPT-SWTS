@@ -1,4 +1,5 @@
 #include "voraz.h"
+#include "../../tools/tools.h"
 
 /**
  * @brief Método para obtener la zona más cercana al vehículo que no haya sido visitada aún.

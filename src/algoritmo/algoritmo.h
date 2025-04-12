@@ -2,8 +2,11 @@
  * @class Clase para repressentar un algoritmo en el sistema
  */
 
-#pragma once
-#include "../tools/tools.h"
+#ifndef C_Algoritmo_H
+#define C_Algoritmo_H
+
+#include <iostream>
+#include <vector>
 
 class Tools; // Declaración anticipada de la clase Tools
 
@@ -30,3 +33,5 @@ class Algoritmo {
     Tools* dato_;
     vector<Tools*> datos_;
 };
+
+#endif

@@ -2,7 +2,9 @@
  * @class Clase para representar a los vehículos de recolección
  */
 
-#pragma once
+#ifndef C_Recoleccion_H
+#define C_Recoleccion_H
+
 #include "../vehiculo.h"
 
 class Recoleccion : public Vehiculo {
@@ -15,3 +17,5 @@ class Recoleccion : public Vehiculo {
     // Métodos de la clase
     void vaciarZona(Zona& zona);
 };
+
+#endif

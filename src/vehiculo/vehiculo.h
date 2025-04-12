@@ -1,8 +1,9 @@
 /**
  * @class Clase para repressentar un vehículo en el sistema
  */
+#ifndef C_Vehiculo_H
+#define C_Vehiculo_H
 
-#pragma once
 #include <iostream>
 #include <string>
 #include <vector>
@@ -44,3 +45,5 @@ class Vehiculo {
     Zona posicion_; // Zona actual del vehículo
     vector<Zona> zonasVisitadas_; // Zonas que ha visitado el vehículo
 };
+
+#endif

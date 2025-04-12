@@ -2,11 +2,16 @@
  * @class Clase para representar un vehículo de transporte en el sistema
  */
 
-#pragma once
-#include "../vehiculo.h"
-#include "../../algoritmo/voraz/voraz.h"
+#ifndef C_Transporte_H
+#define C_Transporte_H
 
-class Tarea;
+#include "../vehiculo.h"
+
+struct Tarea {
+  double Dh; // Cantidad de residuos
+  Zona Sh; // Zona a la que se va a mover el vehículo
+  int Th; // Tiempo que tarda en llegar a la zona
+};
 
 class Transporte : public Vehiculo {
   public:
@@ -22,3 +27,5 @@ class Transporte : public Vehiculo {
   private:
     vector<Tarea> tareasAsignadas_; // Tareas asignadas al vehículo
 };
+
+#endif

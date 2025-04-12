@@ -1,9 +1,11 @@
 /**
  * @class Clase para representar una zona para recoger la basura
  */
+#ifndef C_Zona_H
+#define C_Zona_H
 
-#pragma once
 #include <iostream>
+#include <cmath>
 #include <string>
 
 using namespace std;
@@ -42,3 +44,5 @@ class Zona {
     double contenido_;
     double tiempoDeProcesado_ = 0.0; // Tiempo que tarda en procesar la zona
 };
+
+#endif
