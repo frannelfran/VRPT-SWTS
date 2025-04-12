@@ -83,8 +83,11 @@ int Voraz::TiempoVolverDeposito(Recoleccion vehiculo) {
  * @return void
  */
 void Voraz::ejecutar() {
+  auto start = chrono::high_resolution_clock::now();
   calcularRutasRecoleccion(); // Calculamos las rutas de recolección
   calcularRutasTransporte(); // Calculamos las rutas de transporte
+  auto end = chrono::high_resolution_clock::now();
+  dato_->tiempoCPU = round(chrono::duration_cast<chrono::duration<double>>(end - start).count() * 10000) / 10000.0;
   datos_.push_back(dato_); // Guardamos los datos de la instancia
 };
 

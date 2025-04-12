@@ -20,19 +20,16 @@ int main(int argc, char* argv[]) {
     mostrarMenu();
     int opcion;
     cin >> opcion;
-    Algoritmo* algortimo = crearAlgoritmo(opcion);
+    Algoritmo* algoritmo = crearAlgoritmo(opcion);
     // Ejecutar el algoritmo para cada instancia
     for (auto& dato : datos) {
-      algortimo->setDato(dato);
-      auto start = chrono::high_resolution_clock::now();
-      algortimo->ejecutar();
-      auto end = chrono::high_resolution_clock::now();
-      dato.tiempoCPU = round(chrono::duration_cast<chrono::duration<double>>(end - start).count() * 10000) / 10000.0;
+      algoritmo->setDato(dato);
+      algoritmo->ejecutar();
     }
     // Muestro los resultados
-    algortimo->mostrarResultados();
+    algoritmo->mostrarResultados();
     // Liberar memoria
-    delete algortimo;
+    delete algoritmo;
     cout << "Fin del programa" << endl;
   } catch (const invalid_argument& e) {
     cerr << e.what() << endl;

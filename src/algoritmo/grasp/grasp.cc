@@ -98,55 +98,49 @@ int Grasp::TiempoVolverDeposito(Recoleccion vehiculo, const int numeroMejoresZon
 
 /**
  * @brief Método para calcular las rutas de los vehículos de recolección
+ * @param numeroMejoresZonas Número de mejores zonas a considerar
+ * @param ejecucion Número de ejecución
  * @return void
  */
-void Grasp::calcularRutasRecoleccion() {
-  Tools datoOriginal = *dato_; // Guardamos el dato original
-  // Para todas las ejecuciones
-  for (int i = 2; i <= numeroMejoresZonasCercanas_; i++) {
-    for (int j = 1; j <= numeroEjecuciones_; j++) {
-      Tools copiaDato = datoOriginal; // Copiamos el dato original
-      dato_ = new Tools(copiaDato); // Creamos una nueva instancia de Tools
-      vector<Recoleccion> rutasDeVehiculos;
-      vector<Zona>& zonasPendientes = dato_->zonasRecoleccion;
-      while (!zonasPendientes.empty()) {
-        // Creamos el vehículo
-        Recoleccion vehiculo(dato_->capacidadRecoleccion, dato_->velocidad, dato_->zonas[0], dato_->duracionRecoleccion);
-        do {
-          if (zonasPendientes.empty()) break;
-          pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo, i);
-          int tiempoEnVolverAlDeposito = TiempoVolverDeposito(vehiculo, i);
-          // Si el contendio de la zona es menor a la capacidad del vehículo y le da tiempo a volver al deposito
-          if (vehiculo.llenarVehiculo(zonaCercana.first.getContenido()) && tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
-            vehiculo.moverVehiculo(zonaCercana.first, zonaCercana.second);
-            vehiculo.vaciarZona(zonaCercana.first);
-            zonasPendientes.erase(remove(zonasPendientes.begin(), zonasPendientes.end(), zonaCercana.first), zonasPendientes.end());
-          } else if (tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
-            // Si no puede recoger la zona, buscamos la swts más cercana
-            pair<Zona&, double> swtsCercana = swtsMasCercana(vehiculo);
-            vehiculo.moverVehiculo(swtsCercana.first, swtsCercana.second);
-            vehiculo.vaciarVehiculo(swtsCercana.first);
-          } else {
-            break; // No se puede añadir más zonas
-          }
-        } while (true);
-        // Si la última zona visitada no es una swts, buscamos la más cercana
-        if (!vehiculo.getPosicion().esSWTS()) {
-          pair<Zona&, double> swtsCercana = swtsMasCercana(vehiculo);
-          vehiculo.moverVehiculo(swtsCercana.first, swtsCercana.second);
-          vehiculo.vaciarVehiculo(swtsCercana.first);
-          vehiculo.volverAlInicio();
-        }
-        else {
-          vehiculo.volverAlInicio();
-        }
-        rutasDeVehiculos.push_back(vehiculo);
+void Grasp::calcularRutasRecoleccion(const int numeroMejoresZonas, const int ejecucion) {
+  vector<Recoleccion> rutasDeVehiculos;
+  vector<Zona>& zonasPendientes = dato_->zonasRecoleccion;
+  while (!zonasPendientes.empty()) {
+    // Creamos el vehículo
+    Recoleccion vehiculo(dato_->capacidadRecoleccion, dato_->velocidad, dato_->zonas[0], dato_->duracionRecoleccion);
+    do {
+      if (zonasPendientes.empty()) break;
+      pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo, numeroMejoresZonas);
+      int tiempoEnVolverAlDeposito = TiempoVolverDeposito(vehiculo, numeroMejoresZonas);
+      // Si el contendio de la zona es menor a la capacidad del vehículo y le da tiempo a volver al deposito
+      if (vehiculo.llenarVehiculo(zonaCercana.first.getContenido()) && tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
+        vehiculo.moverVehiculo(zonaCercana.first, zonaCercana.second);
+        vehiculo.vaciarZona(zonaCercana.first);
+        zonasPendientes.erase(remove(zonasPendientes.begin(), zonasPendientes.end(), zonaCercana.first), zonasPendientes.end());
+      } else if (tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
+        // Si no puede recoger la zona, buscamos la swts más cercana
+        pair<Zona&, double> swtsCercana = swtsMasCercana(vehiculo);
+        vehiculo.moverVehiculo(swtsCercana.first, swtsCercana.second);
+        vehiculo.vaciarVehiculo(swtsCercana.first);
+      } else {
+        break; // No se puede añadir más zonas
       }
-      dato_->rutasRecoleccion = rutasDeVehiculos;
-      datos_.push_back(dato_); // Guardamos los datos de la instancia
-      mejoresZonasYEjecuciones_.push_back(make_pair(i, j));
+    } while (true);
+    // Si la última zona visitada no es una swts, buscamos la más cercana
+    if (!vehiculo.getPosicion().esSWTS()) {
+      pair<Zona&, double> swtsCercana = swtsMasCercana(vehiculo);
+      vehiculo.moverVehiculo(swtsCercana.first, swtsCercana.second);
+      vehiculo.vaciarVehiculo(swtsCercana.first);
+      vehiculo.volverAlInicio();
     }
+    else {
+      vehiculo.volverAlInicio();
+    }
+    rutasDeVehiculos.push_back(vehiculo);
   }
+  dato_->rutasRecoleccion = rutasDeVehiculos;
+  datos_.push_back(dato_); // Guardamos los datos de la instancia
+  mejoresZonasYEjecuciones_.push_back(make_pair(numeroMejoresZonas, ejecucion)); // Guardamos el número de mejores zonas y la ejecución
 }
 
 /**
@@ -154,7 +148,17 @@ void Grasp::calcularRutasRecoleccion() {
  * @return void
  */
 void Grasp::ejecutar() {
-  calcularRutasRecoleccion(); // Calculamos las rutas de recolección
+  Tools datoOriginal = *dato_;
+  for (int i = 2; i <= numeroMejoresZonasCercanas_; i++) {
+    for (int j = 1; j <= numeroEjecuciones_; j++) {
+      Tools copiaDato = datoOriginal; // Copiamos el dato original
+      dato_ = new Tools(copiaDato); // Creamos una nueva instancia de Tools
+      auto start = chrono::high_resolution_clock::now();
+      calcularRutasRecoleccion(i, j); // Calculamos las rutas de recolección
+      auto end = chrono::high_resolution_clock::now();
+      dato_->tiempoCPU = round(chrono::duration_cast<chrono::duration<double>>(end - start).count() * 10000) / 10000.0;
+    }
+  }
 }
 
 /**
@@ -163,21 +167,17 @@ void Grasp::ejecutar() {
  */
 void Grasp::mostrarResultados() {
   // Cabecera
-  cout << "----------------------------------------------------------------" << endl;
+  cout << "--------------------------------------------------------------------------------------------" << endl;
   cout << left 
-  << setw(15) << "Instancia" 
-  << setw(10) << "#Zonas"
-  << setw(6) << "|LRC|"
-  << setw(10) << "Ejecucion"
-  << setw(6) << "#CV"
-  << setw(6) << "#TV"
-  << setw(12) << "Tiempo CPU" 
+  << setw(20) << "Instancia" 
+  << setw(15) << "#Zonas"
+  << setw(10) << "|LRC|"
+  << setw(15) << "Ejecucion"
+  << setw(10) << "#CV"
+  << setw(10) << "#TV"
+  << setw(15) << "Tiempo CPU" 
   << endl;
-  cout << "----------------------------------------------------------------" << endl;
-
-  // Itero sobre los datos
-  int numeroMejoresZonas = 2;
-  int numeroEjecuciones = 1;
+  cout << "--------------------------------------------------------------------------------------------" << endl;
 
   // Recorro los datos junto con los mejoresZonasYEjecuciones
   for (size_t i = 0; i < datos_.size(); i++) {
@@ -185,17 +185,17 @@ void Grasp::mostrarResultados() {
     const int mejoresZonas = mejoresZonasYEjecuciones_[i].first;
     const int ejecucion = mejoresZonasYEjecuciones_[i].second;
     cout << left
-    << setw(15) << dato->nombreInstancia
-    << setw(10) << dato->numZonas
-    << setw(6) << mejoresZonas
-    << setw(10) << ejecucion
-    << setw(6) << dato->rutasRecoleccion.size()
-    << setw(6) << dato->rutasTransporte.size()
-    << setw(12) << dato->tiempoCPU
+    << setw(20) << dato->nombreInstancia
+    << setw(15) << dato->numZonas
+    << setw(10) << mejoresZonas
+    << setw(15) << ejecucion
+    << setw(10) << dato->rutasRecoleccion.size()
+    << setw(10) << dato->rutasTransporte.size()
+    << setw(15) << dato->tiempoCPU
     << endl;
   }
 
-  cout << "----------------------------------------------------------------" << endl;
+  cout << "--------------------------------------------------------------------------------------------" << endl;
   // Calculo la media de todas las instancias
   double mediaZonas = 0.0, mediaMejoresZonas = 0.0, mediaEjecucion = 0.0, mediaCV = 0.0, mediaTV = 0.0, mediaCPU = 0.0;
   
@@ -218,13 +218,13 @@ void Grasp::mostrarResultados() {
   mediaCPU /= datos_.size();
 
   cout << left 
-  << setw(15) << "Averages" 
-  << setw(10) << mediaZonas
-  << setw(6) << mediaMejoresZonas
-  << setw(10) << mediaEjecucion
-  << setw(6) << fixed << setprecision(2) << mediaCV
-  << setw(6) << mediaTV
-  << setw(12) << mediaCPU
+  << setw(20) << "Averages" 
+  << setw(15) << mediaZonas
+  << setw(10) << mediaMejoresZonas
+  << setw(15) << mediaEjecucion
+  << setw(10) << mediaCV
+  << setw(10) << mediaTV
+  << setw(15) << mediaCPU
   << endl;
-  cout << "----------------------------------------------------------------" << endl;
+  cout << "--------------------------------------------------------------------------------------------" << endl;
 }

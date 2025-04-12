@@ -17,7 +17,7 @@ class Grasp : public Algoritmo {
     // Métodos de la clase
     void ejecutar() override;
     void mostrarResultados() override;
-    void calcularRutasRecoleccion(); // Método para calcular las rutas de recolección
+    void calcularRutasRecoleccion(const int mejorezZonas, const int ejecucion); // Método para calcular las rutas de recolección
 
   private:
     // Métodos para calcular el GRASP de las rutas de recolección
