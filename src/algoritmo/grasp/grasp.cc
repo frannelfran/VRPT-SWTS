@@ -36,10 +36,10 @@ pair<Zona&, double> Grasp::zonaMasCercana(const Recoleccion& vehiculo, const int
     }
   }
   // Escogemos una zona al azar entre las mejores zonas
-  random_device rd;
-  mt19937 gen(rd());
-  uniform_int_distribution<> dis(0, mejoresZonas.size() - 1);
-  int indiceAleatorio = dis(gen);
+  static mt19937 gen(random_device{}());
+  uniform_int_distribution<size_t> dis(0, mejoresZonas.size() - 1);
+  const size_t indiceAleatorio = dis(gen);
+
   return pair<Zona&, double>(*mejoresZonas[indiceAleatorio].first, mejoresZonas[indiceAleatorio].second);
 }
 
@@ -72,6 +72,31 @@ pair<Zona&, double> Grasp::swtsMasCercana(const Recoleccion& vehiculo) {
 }
 
 /**
+ * @brief Método para obtener el tiempo en que tarda el vehículo en volver al depósito pasando por las zonas y la swts más cercana
+ * @param vehiculo Vehículo que se va a mover
+ * @param numeroMejoresZonas Número de mejores zonas a considerar
+ * @return Tiempo que tarda en volver al depósito
+ */
+int Grasp::TiempoVolverDeposito(Recoleccion vehiculo, const int numeroMejoresZonas) {
+  int tiempo = 0;
+  pair<Zona&, double> zonaTransferenciaCercana = swtsMasCercana(vehiculo);
+  pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo, numeroMejoresZonas);
+
+  Recoleccion vehiculoAux = vehiculo;
+  vehiculoAux.setPosicion(zonaTransferenciaCercana.first);
+  // Tiempo que tarda en llegar a la zona más cercana
+  tiempo += vehiculo.calcularTiempo(vehiculo.getPosicion().getDistancia(zonaCercana.first));
+  // Tiempo que tarda en procesar la zona más cercana
+  tiempo += zonaCercana.first.getTiempoDeProcesado();
+  // Tiempo que tarda en llegar a la swts más cercana
+  tiempo += vehiculo.calcularTiempo(zonaCercana.first.getDistancia(zonaTransferenciaCercana.first));
+  // Tiempo que tarda en volver al depósito desde la swts más cercana
+  tiempo += vehiculoAux.calcularTiempo(dato_->zonas[0].getDistancia(vehiculoAux.getPosicion()));
+
+  return tiempo;
+}
+
+/**
  * @brief Método para calcular las rutas de los vehículos de recolección
  * @return void
  */
@@ -80,7 +105,8 @@ void Grasp::calcularRutasRecoleccion() {
   // Para todas las ejecuciones
   for (int i = 2; i <= numeroMejoresZonasCercanas_; i++) {
     for (int j = 1; j <= numeroEjecuciones_; j++) {
-      dato_ = &datoOriginal;
+      Tools copiaDato = datoOriginal; // Copiamos el dato original
+      dato_ = new Tools(copiaDato); // Creamos una nueva instancia de Tools
       vector<Recoleccion> rutasDeVehiculos;
       vector<Zona>& zonasPendientes = dato_->zonasRecoleccion;
       while (!zonasPendientes.empty()) {
@@ -89,7 +115,7 @@ void Grasp::calcularRutasRecoleccion() {
         do {
           if (zonasPendientes.empty()) break;
           pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo, i);
-          int tiempoEnVolverAlDeposito = TiempoVolverDeposito(vehiculo);
+          int tiempoEnVolverAlDeposito = TiempoVolverDeposito(vehiculo, i);
           // Si el contendio de la zona es menor a la capacidad del vehículo y le da tiempo a volver al deposito
           if (vehiculo.llenarVehiculo(zonaCercana.first.getContenido()) && tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
             vehiculo.moverVehiculo(zonaCercana.first, zonaCercana.second);
@@ -118,6 +144,7 @@ void Grasp::calcularRutasRecoleccion() {
       }
       dato_->rutasRecoleccion = rutasDeVehiculos;
       datos_.push_back(dato_); // Guardamos los datos de la instancia
+      mejoresZonasYEjecuciones_.push_back(make_pair(i, j));
     }
   }
 }
@@ -128,5 +155,76 @@ void Grasp::calcularRutasRecoleccion() {
  */
 void Grasp::ejecutar() {
   calcularRutasRecoleccion(); // Calculamos las rutas de recolección
-  mostrarResultados(); // Mostramos los resultados
+}
+
+/**
+ * @brief Método para mostrar los resultados del algoritmo GRASP
+ * @return void
+ */
+void Grasp::mostrarResultados() {
+  // Cabecera
+  cout << "----------------------------------------------------------------" << endl;
+  cout << left 
+  << setw(15) << "Instancia" 
+  << setw(10) << "#Zonas"
+  << setw(6) << "|LRC|"
+  << setw(10) << "Ejecucion"
+  << setw(6) << "#CV"
+  << setw(6) << "#TV"
+  << setw(12) << "Tiempo CPU" 
+  << endl;
+  cout << "----------------------------------------------------------------" << endl;
+
+  // Itero sobre los datos
+  int numeroMejoresZonas = 2;
+  int numeroEjecuciones = 1;
+
+  // Recorro los datos junto con los mejoresZonasYEjecuciones
+  for (size_t i = 0; i < datos_.size(); i++) {
+    const auto& dato = datos_[i];
+    const int mejoresZonas = mejoresZonasYEjecuciones_[i].first;
+    const int ejecucion = mejoresZonasYEjecuciones_[i].second;
+    cout << left
+    << setw(15) << dato->nombreInstancia
+    << setw(10) << dato->numZonas
+    << setw(6) << mejoresZonas
+    << setw(10) << ejecucion
+    << setw(6) << dato->rutasRecoleccion.size()
+    << setw(6) << dato->rutasTransporte.size()
+    << setw(12) << dato->tiempoCPU
+    << endl;
+  }
+
+  cout << "----------------------------------------------------------------" << endl;
+  // Calculo la media de todas las instancias
+  double mediaZonas = 0.0, mediaMejoresZonas = 0.0, mediaEjecucion = 0.0, mediaCV = 0.0, mediaTV = 0.0, mediaCPU = 0.0;
+  
+  for (size_t i = 0; i < datos_.size(); i++) {
+    const auto& dato = datos_[i];
+    const int mejoresZonas = mejoresZonasYEjecuciones_[i].first;
+    const int ejecucion = mejoresZonasYEjecuciones_[i].second;
+    mediaZonas += dato->numZonas;
+    mediaMejoresZonas += mejoresZonas;
+    mediaEjecucion += ejecucion;
+    mediaCV += dato->rutasRecoleccion.size();
+    mediaTV += dato->rutasTransporte.size();
+    mediaCPU += dato->tiempoCPU;
+  }
+  mediaZonas /= datos_.size();
+  mediaMejoresZonas /= datos_.size();
+  mediaEjecucion /= datos_.size();
+  mediaCV /= datos_.size();
+  mediaTV /= datos_.size();
+  mediaCPU /= datos_.size();
+
+  cout << left 
+  << setw(15) << "Averages" 
+  << setw(10) << mediaZonas
+  << setw(6) << mediaMejoresZonas
+  << setw(10) << mediaEjecucion
+  << setw(6) << fixed << setprecision(2) << mediaCV
+  << setw(6) << mediaTV
+  << setw(12) << mediaCPU
+  << endl;
+  cout << "----------------------------------------------------------------" << endl;
 }

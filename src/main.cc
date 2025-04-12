@@ -4,6 +4,7 @@
  */
 #include "tools/tools.h"
 #include "algoritmo/voraz/voraz.h"
+#include "algoritmo/grasp/grasp.h"
 #include <chrono>
 
 int main(int argc, char* argv[]) {

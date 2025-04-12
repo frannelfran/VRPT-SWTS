@@ -140,6 +140,7 @@ vector<Tools> readData(const string& dirName) {
 void mostrarMenu() {
   cout << "Seleccione una opción:" << endl;
   cout << "1. Algoritmo Voraz" << endl;
+  cout << "2. Algoritmo GRASP" << endl;
   cout << "4. Salir" << endl;
   cout << "Introduce una opción: ";
 }
@@ -156,7 +157,7 @@ Algoritmo* crearAlgoritmo(int opcion) {
       algoritmo = new Voraz();
       break;
     case 2:
-      // algoritmo = new Algoritmo2();
+      algoritmo = new Grasp(3, 3);
       break;
     case 3:
       // algoritmo = new Algoritmo3();

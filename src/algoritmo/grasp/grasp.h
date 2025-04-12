@@ -11,11 +11,12 @@
 class Grasp : public Algoritmo {
   public:
     // Constructores de la clase
+    Grasp(const int& mejoresZonas, const int& numeroEjecuciones) : Algoritmo(), numeroMejoresZonasCercanas_(mejoresZonas), numeroEjecuciones_(numeroEjecuciones) {}
     Grasp(Tools& dato, const int& mejoresZonas, const int& numeroEjecuciones) : Algoritmo(dato), numeroMejoresZonasCercanas_(mejoresZonas), numeroEjecuciones_(numeroEjecuciones) {}
 
     // Métodos de la clase
     void ejecutar() override;
-    void mostrarResultados() override {cout << "Resultados del algoritmo GRASP" << endl;}
+    void mostrarResultados() override;
     void calcularRutasRecoleccion(); // Método para calcular las rutas de recolección
 
   private:
@@ -26,6 +27,7 @@ class Grasp : public Algoritmo {
     // Atributos para cuántas zonas cercanas se van a considerar y el número de ejecuciones
     int numeroMejoresZonasCercanas_;
     int numeroEjecuciones_;
+    vector<pair<int, int>> mejoresZonasYEjecuciones_;
 };
 
 #endif

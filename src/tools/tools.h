@@ -18,6 +18,7 @@
 #include "../vehiculo/recoleccion/recoleccion.h"
 #include "../vehiculo/transporte/transporte.h"
 #include "../algoritmo/voraz/voraz.h"
+#include "../algoritmo/grasp/grasp.h"
 
 class Algoritmo;
 
