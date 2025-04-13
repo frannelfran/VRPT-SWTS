@@ -35,7 +35,7 @@ class Zona {
     inline bool esDumpsite() const { return id_ == "Dumpsite"; }
 
     // Sobrecarga de operadores
-    friend bool operator==(const Zona& zona1, const Zona& zona2) {
+    friend inline bool operator==(const Zona& zona1, const Zona& zona2) {
       return zona1.id_ == zona2.id_;
     }
 

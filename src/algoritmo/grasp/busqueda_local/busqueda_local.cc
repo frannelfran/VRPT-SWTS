@@ -39,15 +39,25 @@ bool BusquedaLocal::intercambioZonas() {
               Recoleccion ruta1Copia = ruta1;
               Recoleccion ruta2Copia = ruta2;
               // Intercambio las zonas
-              auto temp = ruta1Copia.getZonasVisitadas()[k];
-              
-              
+              swap(ruta1Copia.getZonasVisitadas()[k], ruta2Copia.getZonasVisitadas()[l]);
+
+              // Verifico que las rutas sean factibles
+              if (esFactible(ruta1Copia) && esFactible(ruta2Copia)) {
+                // Calculo el costo total
+                double costoNuevo = calcularCostoRuta(ruta1Copia) + calcularCostoRuta(ruta2Copia);
+                double costoAntiguo = calcularCostoRuta(ruta1) + calcularCostoRuta(ruta2);
+                if (costoNuevo < costoAntiguo) {
+                  // Si el costo nuevo es menor, actualizo las rutas
+                  vehiculos_[i] = ruta1Copia;
+                  vehiculos_[j] = ruta2Copia;
+                  mejorado = true;
+                }
+              }
             }
           }
         }
       }
     }
-    
   }
   return mejorado;
 }

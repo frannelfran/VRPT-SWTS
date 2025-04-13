@@ -28,7 +28,8 @@ class Vehiculo {
 
     // Getters
     inline Zona getPosicion() const { return posicion_; }
-    const inline vector<Zona>& getZonasVisitadas() const { return zonasVisitadas_; }
+    inline vector<Zona>& getZonasVisitadas() { return zonasVisitadas_; }
+    inline const vector<Zona>& getZonasVisitadas() const { return zonasVisitadas_; }
     inline int getDuracion() const { return duracion_; }
     inline int getContenido() const { return contenido_; }
 
