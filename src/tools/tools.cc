@@ -157,7 +157,7 @@ Algoritmo* crearAlgoritmo(int opcion) {
       algoritmo = new Voraz();
       break;
     case 2:
-      algoritmo = new Grasp(3, 3);
+      algoritmo = new Grasp(1, 1);
       break;
     case 3:
       // algoritmo = new Algoritmo3();
