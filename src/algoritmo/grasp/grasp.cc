@@ -144,6 +144,24 @@ void Grasp::calcularRutasRecoleccion(const int numeroMejoresZonas, const int eje
 }
 
 /**
+ * @brief Método para calcular el tiempo de recolección
+ * @return Tiempo de recolección
+ */
+int Grasp::CalcularTiempoRecoleccion() {
+  int tiempo = 0;
+  for (const auto& vehiculo : dato_->rutasRecoleccion) {
+    for (auto it = vehiculo.getZonasVisitadas().begin(); it != vehiculo.getZonasVisitadas().end(); ++it) {
+      Zona zona = *it;
+      tiempo += zona.getTiempoDeProcesado();
+      if (it + 1 != vehiculo.getZonasVisitadas().end()) {
+        tiempo += vehiculo.calcularTiempo(zona.getDistancia(*(it + 1)));
+      }
+    }
+  }
+  return tiempo /= 60;
+}
+
+/**
  * @brief Método para ejecutar el algoritmo GRASP
  * @return void
  */
@@ -156,9 +174,11 @@ void Grasp::ejecutar() {
       dato_ = new Tools(copiaDato); // Creamos una nueva instancia de Tools
       auto start = chrono::high_resolution_clock::now();
       calcularRutasRecoleccion(i, j); // Calculamos las rutas de recolección
+      tiemposSinMejoras_.push_back(CalcularTiempoRecoleccion());
       // Mejoro las rutas
       local.setVehiculos(dato_->rutasRecoleccion);
       local.mejorarRutas();
+      tiemposConMejoras_.push_back(CalcularTiempoRecoleccion());
       auto end = chrono::high_resolution_clock::now();
       dato_->tiempoCPU = round(chrono::duration_cast<chrono::duration<double>>(end - start).count() * 10000) / 10000.0;
     }
@@ -230,5 +250,33 @@ void Grasp::mostrarResultados() {
   << setw(10) << mediaTV
   << setw(15) << mediaCPU
   << endl;
+  cout << "--------------------------------------------------------------------------------------------" << endl;
+
+  mostrarTiempos();
+}
+
+/**
+ * @brief Método para mostrar los tiempos con y sin mejoras
+ * @return void
+ */
+void Grasp::mostrarTiempos() {
+  cout << "--------------------------------------------------------------------------------------------" << endl;
+  cout << left 
+  << setw(20) << "Instancia" 
+  << setw(15) << "Tiempo sin mejoras"
+  << setw(15) << "Tiempo con mejoras"
+  << endl;
+  cout << "--------------------------------------------------------------------------------------------" << endl;
+
+  for (size_t i = 0; i < datos_.size(); i++) {
+    const auto& dato = datos_[i];
+    const int mejoresZonas = mejoresZonasYEjecuciones_[i].first;
+    const int ejecucion = mejoresZonasYEjecuciones_[i].second;
+    cout << left
+    << setw(20) << dato->nombreInstancia
+    << setw(15) << tiemposSinMejoras_[i]
+    << setw(15) << tiemposConMejoras_[i]
+    << endl;
+  }
   cout << "--------------------------------------------------------------------------------------------" << endl;
 }

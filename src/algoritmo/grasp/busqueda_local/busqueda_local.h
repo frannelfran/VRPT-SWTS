@@ -13,7 +13,6 @@ class BusquedaLocal {
   public:
     // Constructor
     BusquedaLocal() = default;
-    BusquedaLocal(const vector<Recoleccion>& vehiculos) : vehiculos_(vehiculos) {}
 
     // Método para realizar la búsqueda local
     bool mejorarRutas();
@@ -29,10 +28,10 @@ class BusquedaLocal {
     bool esFactible(const Recoleccion& vehiculo); // Comprobar si la ruta del vehículo es factible
 
     // Setters
-    void setVehiculos(const vector<Recoleccion>& vehiculos) { vehiculos_ = vehiculos; }
+    void setVehiculos(vector<Recoleccion>& vehiculos) { vehiculos_ = &vehiculos; }
 
   private:
-    vector<Recoleccion> vehiculos_; // Vector de vehículos
+    vector<Recoleccion>* vehiculos_; // Vector de vehículos
 };
 
 #endif

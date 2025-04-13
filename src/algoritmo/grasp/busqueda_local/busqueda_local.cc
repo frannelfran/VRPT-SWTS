@@ -7,7 +7,7 @@
 bool BusquedaLocal::mejorarRutas() {
   bool mejorado = false;
   // Recorremos los vehículos
-  for (size_t i = 0; i < vehiculos_.size(); i++) {
+  for (size_t i = 0; i < vehiculos_->size(); i++) {
     // Intentamos mejorar la ruta del vehículo
     if (intercambioZonas() || insercionZonas() || reubicacionSWTS()) {
       mejorado = true;
@@ -24,11 +24,11 @@ bool BusquedaLocal::intercambioZonas() {
   bool mejorado = false;
   double costoInicial = calcularCostoTotal();
   // Recorremos los vehículos
-  for (size_t i = 0; i < vehiculos_.size(); i++) {
-    for (size_t j = i + 1; j < vehiculos_.size(); j++) {
+  for (size_t i = 0; i < vehiculos_->size(); i++) {
+    for (size_t j = i + 1; j < vehiculos_->size(); j++) {
       // Obtengo las zonas de los vehículos
-      Recoleccion& ruta1 = vehiculos_[i];
-      Recoleccion& ruta2 = vehiculos_[j];
+      Recoleccion& ruta1 = (*vehiculos_)[i];
+      Recoleccion& ruta2 = (*vehiculos_)[j];
 
       // Para cada zzona en la primera ruta
       for (size_t k = 1; k < ruta1.getZonasVisitadas().size() - 1; k++) {
@@ -48,8 +48,8 @@ bool BusquedaLocal::intercambioZonas() {
                 double costoAntiguo = calcularCostoRuta(ruta1) + calcularCostoRuta(ruta2);
                 if (costoNuevo < costoAntiguo) {
                   // Si el costo nuevo es menor, actualizo las rutas
-                  vehiculos_[i] = ruta1Copia;
-                  vehiculos_[j] = ruta2Copia;
+                  (*vehiculos_)[i] = ruta1Copia;
+                  (*vehiculos_)[j] = ruta2Copia;
                   mejorado = true;
                 }
               }
@@ -102,7 +102,7 @@ bool BusquedaLocal::esFactible(const Recoleccion& vehiculo) {
  */
 double BusquedaLocal::calcularCostoTotal() {
   double costoTotal = 0.0;
-  for (const auto& vehiculo : vehiculos_) {
+  for (const auto& vehiculo : *vehiculos_) {
     costoTotal += calcularCostoRuta(vehiculo);
   }
   return costoTotal;

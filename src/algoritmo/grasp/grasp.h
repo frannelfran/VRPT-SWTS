@@ -19,6 +19,8 @@ class Grasp : public Algoritmo {
     void ejecutar() override;
     void mostrarResultados() override;
     void calcularRutasRecoleccion(const int mejorezZonas, const int ejecucion); // Método para calcular las rutas de recolección
+    int CalcularTiempoRecoleccion(); // Método para calcular el tiempo de recolección
+    void mostrarTiempos();
 
   private:
     // Métodos para calcular el GRASP de las rutas de recolección
@@ -28,6 +30,8 @@ class Grasp : public Algoritmo {
     // Atributos para cuántas zonas cercanas se van a considerar y el número de ejecuciones
     int numeroMejoresZonasCercanas_;
     int numeroEjecuciones_;
+    vector<int> tiemposSinMejoras_;
+    vector<int> tiemposConMejoras_;
     vector<pair<int, int>> mejoresZonasYEjecuciones_;
 };
 
