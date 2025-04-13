@@ -22,7 +22,6 @@ bool BusquedaLocal::mejorarRutas() {
  */
 bool BusquedaLocal::intercambioZonas() {
   bool mejorado = false;
-  double costoInicial = calcularCostoTotal();
   // Recorremos los vehículos
   for (size_t i = 0; i < vehiculos_->size(); i++) {
     for (size_t j = i + 1; j < vehiculos_->size(); j++) {
@@ -93,19 +92,6 @@ bool BusquedaLocal::esFactible(const Recoleccion& vehiculo) {
     }
   }
   return true; // La ruta es factible
-}
-
-/**
- * @brief Método para calcular el costo total de un conjunto de rutas
- * @param vehiculos Conjunto de vehículos de recolección
- * @return Costo total de las rutas
- */
-double BusquedaLocal::calcularCostoTotal() {
-  double costoTotal = 0.0;
-  for (const auto& vehiculo : *vehiculos_) {
-    costoTotal += calcularCostoRuta(vehiculo);
-  }
-  return costoTotal;
 }
 
 /**

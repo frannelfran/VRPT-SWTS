@@ -247,13 +247,7 @@ double Voraz::buscarCantidadMinima(const vector<Tarea>& tareas) {
 void Voraz::calcularRutasTransporte() {
   vector<Transporte> rutasDeVehiculos;
   vector<Tarea> tareas = crearConjuntoTareas(dato_->rutasRecoleccion);
-  // Muestro las tareas
-  cout << "Tareas:" << endl;
-  for (const auto& tarea : tareas) {
-    cout << "Dh: " << tarea.Dh << ", Sh: " << tarea.Sh.getId() << ", Th: " << tarea.Th << endl;
-  }
   double cantidadMínima = buscarCantidadMinima(tareas);
-  cout << "Cantidad mínima de residuos: " << cantidadMínima << endl;
   // Mientras queden tareas por hacer
   while (!tareas.empty()) {
     Tarea tareaMinima = tareas.front(); // Tomamos la primera tarea

@@ -264,19 +264,35 @@ void Grasp::mostrarTiempos() {
   cout << left 
   << setw(20) << "Instancia" 
   << setw(15) << "Tiempo sin mejoras"
-  << setw(15) << "Tiempo con mejoras"
+  << setw(20) << "Tiempo con mejoras"
   << endl;
   cout << "--------------------------------------------------------------------------------------------" << endl;
 
+  
   for (size_t i = 0; i < datos_.size(); i++) {
     const auto& dato = datos_[i];
     const int mejoresZonas = mejoresZonasYEjecuciones_[i].first;
     const int ejecucion = mejoresZonasYEjecuciones_[i].second;
     cout << left
+    
     << setw(20) << dato->nombreInstancia
     << setw(15) << tiemposSinMejoras_[i]
-    << setw(15) << tiemposConMejoras_[i]
+    << setw(20) << tiemposConMejoras_[i]
     << endl;
   }
+  cout << "--------------------------------------------------------------------------------------------" << endl;
+  // Calculo la media
+  int mediaSinMejoras = 0, mediaConMejoras = 0;
+  for (size_t i = 0; i < datos_.size(); i++) {
+    mediaSinMejoras += tiemposSinMejoras_[i];
+    mediaConMejoras += tiemposConMejoras_[i];
+  }
+  mediaSinMejoras /= datos_.size();
+  mediaConMejoras /= datos_.size();
+  cout << left
+  << setw(20) << "Averages"
+  << setw(15) << mediaSinMejoras
+  << setw(20) << mediaConMejoras
+  << endl;
   cout << "--------------------------------------------------------------------------------------------" << endl;
 }
