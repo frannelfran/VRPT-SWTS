@@ -149,12 +149,16 @@ void Grasp::calcularRutasRecoleccion(const int numeroMejoresZonas, const int eje
  */
 void Grasp::ejecutar() {
   Tools datoOriginal = *dato_;
+  BusquedaLocal local;
   for (int i = 2; i <= numeroMejoresZonasCercanas_; i++) {
     for (int j = 1; j <= numeroEjecuciones_; j++) {
       Tools copiaDato = datoOriginal; // Copiamos el dato original
       dato_ = new Tools(copiaDato); // Creamos una nueva instancia de Tools
       auto start = chrono::high_resolution_clock::now();
       calcularRutasRecoleccion(i, j); // Calculamos las rutas de recolección
+      // Mejoro las rutas
+      local.setVehiculos(dato_->rutasRecoleccion);
+      local.mejorarRutas();
       auto end = chrono::high_resolution_clock::now();
       dato_->tiempoCPU = round(chrono::duration_cast<chrono::duration<double>>(end - start).count() * 10000) / 10000.0;
     }
