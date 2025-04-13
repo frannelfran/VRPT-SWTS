@@ -31,7 +31,7 @@ class Zona {
 
     // Métodos de la clase
     inline bool esSWTS() const { return id_ == "IF" || id_ == "IF1"; }
-    inline bool esDeposito() const { return id_ == "Deposito"; }
+    inline bool esDeposito() const { return id_ == "Depot"; }
     inline bool esDumpsite() const { return id_ == "Dumpsite"; }
 
     // Sobrecarga de operadores

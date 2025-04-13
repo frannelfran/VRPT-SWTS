@@ -26,7 +26,7 @@ class BusquedaLocal {
     // Métodos auxiliares
     double calcularCostoRuta(const Recoleccion& vehiculo);
     double calcularCostoTotal(); // Calcular el coste total de un conjunto de rutas
-    bool esFactible(const Recoleccion& vehiculo) { return true; } // Comprobar si la ruta del vehículo es factible
+    bool esFactible(const Recoleccion& vehiculo); // Comprobar si la ruta del vehículo es factible
 
     // Setters
     void setVehiculos(const vector<Recoleccion>& vehiculos) { vehiculos_ = vehiculos; }

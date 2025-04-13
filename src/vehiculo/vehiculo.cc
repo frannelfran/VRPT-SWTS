@@ -46,7 +46,7 @@ void Vehiculo::moverVehiculo(const Zona& zona, const double distancia) {
   // En base a la posicion actual del vehículo, la velocidad y la distancia a la que se encuentra la zona 
   // se calcula el tiempo que tarda en llegar a la zona
   int tiempo = calcularTiempo(distancia);
-  duracion_ -= tiempo;
+  tiempoTotal_ += tiempo;
   zonasVisitadas_.push_back(posicion_);
   posicion_ = zona;
 }

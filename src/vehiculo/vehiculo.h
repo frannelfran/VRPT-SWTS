@@ -32,6 +32,8 @@ class Vehiculo {
     inline const vector<Zona>& getZonasVisitadas() const { return zonasVisitadas_; }
     inline int getDuracion() const { return duracion_; }
     inline int getContenido() const { return contenido_; }
+    inline int getCapacidad() const { return capacidad_; }
+    inline int getTiempoTranscurrido() const { return tiempoTotal_; }
 
     // Setters
     inline void setPosicion(const Zona& zona) { posicion_ = zona; }
@@ -40,6 +42,7 @@ class Vehiculo {
     // Valores que dependen para que el vehículo siga funcionando
     int capacidad_;
     int duracion_;
+    int tiempoTotal_ = 0;
     // Datos importantes para el vehículo
     double contenido_ = 0.0;
     int velocidad_;

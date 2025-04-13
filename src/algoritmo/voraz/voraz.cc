@@ -155,11 +155,11 @@ void Voraz::calcularRutasRecoleccion() {
       pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo);
       int tiempoEnVolverAlDeposito = TiempoVolverDeposito(vehiculo);
       // Si el contendio de la zona es menor a la capacidad del vehículo y le da tiempo a volver al deposito
-      if (vehiculo.llenarVehiculo(zonaCercana.first.getContenido()) && tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
+      if (vehiculo.llenarVehiculo(zonaCercana.first.getContenido()) && tiempoEnVolverAlDeposito <= (vehiculo.getDuracion() - vehiculo.getTiempoTranscurrido())) {
         vehiculo.moverVehiculo(zonaCercana.first, zonaCercana.second);
         vehiculo.vaciarZona(zonaCercana.first);
         zonasPendientes.erase(remove(zonasPendientes.begin(), zonasPendientes.end(), zonaCercana.first), zonasPendientes.end());
-      } else if (tiempoEnVolverAlDeposito <= vehiculo.getDuracion()) {
+      } else if (tiempoEnVolverAlDeposito <= (vehiculo.getDuracion() - vehiculo.getTiempoTranscurrido())) {
         // Si no puede recoger la zona, buscamos la swts más cercana
         pair<Zona&, double> swtsCercana = swtsMasCercana(vehiculo);
         vehiculo.moverVehiculo(swtsCercana.first, swtsCercana.second);

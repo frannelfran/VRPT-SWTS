@@ -8,5 +8,5 @@
 void Recoleccion::vaciarZona(Zona& zona) {
   agregarContenido(zona.getContenido()); // Agregamos el contenido de la zona al vehículo
   zona.setContenido(0.0);
-  this->duracion_ -= zona.getTiempoDeProcesado();
+  this->tiempoTotal_ += zona.getTiempoDeProcesado();
 }
