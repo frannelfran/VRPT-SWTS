@@ -345,31 +345,24 @@ double Voraz::calcularCostoInsercion(const Tarea& tarea, Transporte& vehiculo) {
  * @return int Tiempo que tarda el vehículo en volver al vertedero
  */
 int Voraz::tiempoVolverAlVertedero(const Transporte& vehiculo) {
-  int tiempoActual = 0, tiempoTotal = 0;
+  int tiempo = 0;
   Transporte vehiculoAux = vehiculo;
   vector<Tarea> tareas = vehiculo.getTareasAsignadas();
   vehiculoAux.setPosicion(dato_->zonas[3]); // Colocamos el vehículo en el vertedero
   // Recorremos las tareas asignadas al vehículo
-  for (const auto& tarea : tareas) {
-    int tiempoMovimiento = vehiculoAux.calcularTiempo(
-      vehiculoAux.getPosicion().getDistancia(tarea.Sh)
-    );
-
-    tiempoActual += tiempoMovimiento; // El vehículo se mueve a la tarea
-    tiempoTotal += tiempoMovimiento;
-
-    // Si llega antes del tiempo de la tarea, espera
-    if (tiempoActual < tarea.Th) {
-      int tiempoEspera = tarea.Th - tiempoActual;
-      tiempoActual += tiempoEspera;
-      tiempoTotal += tiempoEspera;
-    }
-
-    // Actualizamos la posición
+  for (auto& tarea : tareas) {
+    // Agregamos el tiempo que tarda en ir a la zona de la tarea
+    tiempo += vehiculoAux.calcularTiempo(vehiculoAux.getPosicion().getDistancia(tarea.Sh));
+    // Actualizamos la posición del vehículo
     vehiculoAux.setPosicion(tarea.Sh);
   }
 
+  // Calculo el tiempo de espera entre las tareas
+  for (size_t i = 0; i < tareas.size() - 1; i++) {
+    tiempo += tareas[i + 1].Th - tareas[i].Th;
+  }
+
   // Agrego el tiempo que tarda en volver al vertedero
-  tiempoTotal += vehiculo.calcularTiempo(vehiculo.getPosicion().getDistancia(dato_->zonas[3]));
-  return tiempoTotal;
+  tiempo += vehiculo.calcularTiempo(vehiculo.getPosicion().getDistancia(dato_->zonas[3]));
+  return tiempo;
 }
