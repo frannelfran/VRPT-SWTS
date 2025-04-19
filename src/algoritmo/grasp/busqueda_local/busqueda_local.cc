@@ -28,7 +28,7 @@ bool BusquedaLocal::swapInter() {
       Recoleccion& ruta1 = (*vehiculos_)[i];
       Recoleccion& ruta2 = (*vehiculos_)[j];
 
-      // Para cada zzona en la primera ruta
+      // Para cada zona en la primera ruta
       for (size_t k = 1; k < ruta1.getZonasVisitadas().size() - 1; k++) {
         if (!ruta1.getZonasVisitadas()[k].esSWTS() && !ruta1.getZonasVisitadas()[k].esDeposito()) {
           // Para cada zona en la segunda ruta
@@ -111,6 +111,48 @@ bool BusquedaLocal::reinsertIntra() {
           // Si la ruta es factible y el costo es menor, actualizamos la ruta
           (*vehiculos_)[i] = copia;
           mejorado = true;
+        }
+      }
+    }
+  }
+  return mejorado;
+}
+
+/**
+ * @brief Implementación del método reinsertInter
+ * @return true si se ha mejorado alguna ruta, false en caso contrario
+ */
+bool BusquedaLocal::reinsertInter() {
+  bool mejorado = false;
+  for (size_t i = 0; i < vehiculos_->size(); ++i) {
+    for (size_t j = 0; j < vehiculos_->size(); ++j) {
+      if (i == j) continue; // No intercambiar la misma ruta
+      Recoleccion& rutaOrigen = (*vehiculos_)[i];
+      Recoleccion& rutaDestino = (*vehiculos_)[j];
+      vector<Zona>& zonasOrigen = rutaOrigen.getZonasVisitadas();
+
+      for (size_t k = 1; k < zonasOrigen.size() - 1; ++k) {
+        if (zonasOrigen[k].esSWTS() || zonasOrigen[k].esDeposito()) continue; // Ignoramos SWTS y depósitos
+        // Probar insertar en todas las posiciones de la ruta destino
+        for (size_t l = 1; l < rutaDestino.getZonasVisitadas().size() - 1; ++l) {
+          Recoleccion copiaOrigen = rutaOrigen;
+          Recoleccion copiaDestino = rutaDestino;
+          Zona zona = copiaOrigen.getZonasVisitadas()[k];
+          // Mover la zona a la ruta destino
+          copiaOrigen.getZonasVisitadas().erase(copiaOrigen.getZonasVisitadas().begin() + k);
+          copiaDestino.getZonasVisitadas().insert(copiaDestino.getZonasVisitadas().begin() + l, zona);
+          if (esFactible(copiaOrigen) && esFactible(copiaDestino)) {
+            double costoAntiguo = calcularCostoRuta(rutaOrigen) + calcularCostoRuta(rutaDestino);
+            double costoNuevo = calcularCostoRuta(copiaOrigen) + calcularCostoRuta(copiaDestino);
+
+            if (costoNuevo < costoAntiguo) {
+              // Si la ruta es factible y el costo es menor, actualizamos las rutas
+              (*vehiculos_)[i] = copiaOrigen;
+              (*vehiculos_)[j] = copiaDestino;
+              mejorado = true;
+              break;
+            }
+          }
         }
       }
     }

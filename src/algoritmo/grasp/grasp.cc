@@ -166,8 +166,9 @@ double Grasp::CalcularDistanciaRecoleccion() {
  */
 void Grasp::ejecutar() {
   Tools datoOriginal = *dato_;
+  Voraz* voraz = new Voraz();
   BusquedaLocal local;
-  for (int i = 1; i <= numeroMejoresZonasCercanas_; i++) {
+  for (int i = 2; i <= numeroMejoresZonasCercanas_; i++) {
     for (int j = 1; j <= numeroEjecuciones_; j++) {
       Tools copiaDato = datoOriginal; // Copiamos el dato original
       dato_ = new Tools(copiaDato); // Creamos una nueva instancia de Tools
@@ -178,6 +179,10 @@ void Grasp::ejecutar() {
       local.setVehiculos(dato_->rutasRecoleccion);
       local.mejorarRutas();
       distanciasConMejoras_.push_back(CalcularDistanciaRecoleccion());
+      // Calculo las rutas de transporte
+      voraz->setDato(*dato_);
+      voraz->calcularRutasTransporte();
+
       auto end = chrono::high_resolution_clock::now();
       dato_->tiempoCPU = round(chrono::duration_cast<chrono::duration<double>>(end - start).count() * 10000) / 10000.0;
     }

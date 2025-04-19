@@ -6,6 +6,7 @@
 
 #include "../algoritmo.h"
 #include "../../vehiculo/recoleccion/recoleccion.h"
+#include "../voraz/voraz.h"
 #include "busqueda_local/busqueda_local.h"
 #include <random>
 
