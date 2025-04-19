@@ -10,8 +10,8 @@ void BusquedaLocal::mejorarRutas() {
     mejorado = false;
     mejorado |= swapInter();
     mejorado |= swapIntra();
-    // mejorado |= reinsertIntra();
-    // mejorado |= reinsertInter();
+    mejorado |= reinsertIntra();
+    mejorado |= reinsertInter();
   }
 }
 
@@ -77,6 +77,36 @@ bool BusquedaLocal::swapIntra() {
         // Intercambiamos las zonas
         Recoleccion copia = ruta;
         swap(copia.getZonasVisitadas()[j], copia.getZonasVisitadas()[k]);
+        if (esFactible(copia) && calcularCostoRuta(copia) < calcularCostoRuta(ruta)) {
+          // Si la ruta es factible y el costo es menor, actualizamos la ruta
+          (*vehiculos_)[i] = copia;
+          mejorado = true;
+        }
+      }
+    }
+  }
+  return mejorado;
+}
+
+/**
+ * @brief Implementación del método reinsertIntra
+ * @return true si se ha mejorado alguna ruta, false en caso contrario
+ */
+bool BusquedaLocal::reinsertIntra() {
+  bool mejorado = false;
+  for (size_t i = 0; i < vehiculos_->size(); ++i) {
+    Recoleccion& ruta = (*vehiculos_)[i];
+    vector<Zona>& zonas = ruta.getZonasVisitadas();
+    for (size_t j = 1; j < zonas.size() - 1; ++j) {
+      if (zonas[j].esSWTS() || zonas[j].esDeposito()) continue; // Ignoramos SWTS y depósitos
+      // Probar todas las opciones disponibles
+      for (size_t k = 1; k < zonas.size() - 1; ++k) {
+        if (j == k) continue; // No intercambiar la misma zona
+        Recoleccion copia = ruta;
+        Zona zona = copia.getZonasVisitadas()[j];
+        // Mover la zona a la posición k
+        copia.getZonasVisitadas().erase(copia.getZonasVisitadas().begin() + j);
+        copia.getZonasVisitadas().insert(copia.getZonasVisitadas().begin() + k, zona);
         if (esFactible(copia) && calcularCostoRuta(copia) < calcularCostoRuta(ruta)) {
           // Si la ruta es factible y el costo es menor, actualizamos la ruta
           (*vehiculos_)[i] = copia;

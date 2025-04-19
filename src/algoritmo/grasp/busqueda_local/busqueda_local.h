@@ -20,8 +20,8 @@ class BusquedaLocal {
     // Operadores para realizar la búsuqeda local
     bool swapInter();
     bool swapIntra();
-    bool reinsertIntra() {}
-    bool reinsertInter() {}
+    bool reinsertIntra();
+    bool reinsertInter();
 
     // Métodos auxiliares
     double calcularCostoRuta(const Recoleccion& vehiculo);
