@@ -144,21 +144,20 @@ void Grasp::calcularRutasRecoleccion(const int numeroMejoresZonas, const int eje
 }
 
 /**
- * @brief Método para calcular el tiempo de recolección
- * @return Tiempo de recolección
+ * @brief Método para calcular la distancia de recolección
+ * @return Distancia de recolección
  */
-int Grasp::CalcularTiempoRecoleccion() {
-  int tiempo = 0;
+double Grasp::CalcularDistanciaRecoleccion() {
+  double distancia = 0.0;
   for (const auto& vehiculo : dato_->rutasRecoleccion) {
     for (auto it = vehiculo.getZonasVisitadas().begin(); it != vehiculo.getZonasVisitadas().end(); ++it) {
       Zona zona = *it;
-      tiempo += zona.getTiempoDeProcesado();
       if (it + 1 != vehiculo.getZonasVisitadas().end()) {
-        tiempo += vehiculo.calcularTiempo(zona.getDistancia(*(it + 1)));
+        distancia += zona.getDistancia(*next(it));
       }
     }
   }
-  return tiempo /= 60;
+  return distancia;
 }
 
 /**
@@ -168,17 +167,17 @@ int Grasp::CalcularTiempoRecoleccion() {
 void Grasp::ejecutar() {
   Tools datoOriginal = *dato_;
   BusquedaLocal local;
-  for (int i = 2; i <= numeroMejoresZonasCercanas_; i++) {
+  for (int i = 1; i <= numeroMejoresZonasCercanas_; i++) {
     for (int j = 1; j <= numeroEjecuciones_; j++) {
       Tools copiaDato = datoOriginal; // Copiamos el dato original
       dato_ = new Tools(copiaDato); // Creamos una nueva instancia de Tools
       auto start = chrono::high_resolution_clock::now();
       calcularRutasRecoleccion(i, j); // Calculamos las rutas de recolección
-      tiemposSinMejoras_.push_back(CalcularTiempoRecoleccion());
+      distanciaSinMejoras.push_back(CalcularDistanciaRecoleccion());
       // Mejoro las rutas
       local.setVehiculos(dato_->rutasRecoleccion);
       local.mejorarRutas();
-      tiemposConMejoras_.push_back(CalcularTiempoRecoleccion());
+      distanciasConMejoras_.push_back(CalcularDistanciaRecoleccion());
       auto end = chrono::high_resolution_clock::now();
       dato_->tiempoCPU = round(chrono::duration_cast<chrono::duration<double>>(end - start).count() * 10000) / 10000.0;
     }
@@ -252,47 +251,44 @@ void Grasp::mostrarResultados() {
   << endl;
   cout << "--------------------------------------------------------------------------------------------" << endl;
 
-  mostrarTiempos();
+  mostrarDistancias();
 }
 
 /**
  * @brief Método para mostrar los tiempos con y sin mejoras
  * @return void
  */
-void Grasp::mostrarTiempos() {
+void Grasp::mostrarDistancias() {
   cout << "--------------------------------------------------------------------------------------------" << endl;
   cout << left 
   << setw(20) << "Instancia" 
-  << setw(15) << "Tiempo sin mejoras"
-  << setw(20) << "Tiempo con mejoras"
+  << setw(25) << "Distancia sin mejoras"
+  << setw(25) << "Distancia con mejoras"
   << endl;
   cout << "--------------------------------------------------------------------------------------------" << endl;
 
-  
   for (size_t i = 0; i < datos_.size(); i++) {
     const auto& dato = datos_[i];
-    const int mejoresZonas = mejoresZonasYEjecuciones_[i].first;
-    const int ejecucion = mejoresZonasYEjecuciones_[i].second;
     cout << left
     
     << setw(20) << dato->nombreInstancia
-    << setw(15) << tiemposSinMejoras_[i]
-    << setw(20) << tiemposConMejoras_[i]
+    << setw(25) << distanciaSinMejoras[i]
+    << setw(25) << distanciasConMejoras_[i]
     << endl;
   }
   cout << "--------------------------------------------------------------------------------------------" << endl;
   // Calculo la media
-  int mediaSinMejoras = 0, mediaConMejoras = 0;
+  double mediaSinMejoras = 0, mediaConMejoras = 0;
   for (size_t i = 0; i < datos_.size(); i++) {
-    mediaSinMejoras += tiemposSinMejoras_[i];
-    mediaConMejoras += tiemposConMejoras_[i];
+    mediaSinMejoras += distanciaSinMejoras[i];
+    mediaConMejoras +=distanciasConMejoras_[i];
   }
   mediaSinMejoras /= datos_.size();
   mediaConMejoras /= datos_.size();
   cout << left
   << setw(20) << "Averages"
-  << setw(15) << mediaSinMejoras
-  << setw(20) << mediaConMejoras
+  << setw(25) << mediaSinMejoras
+  << setw(25) << mediaConMejoras
   << endl;
   cout << "--------------------------------------------------------------------------------------------" << endl;
 }
