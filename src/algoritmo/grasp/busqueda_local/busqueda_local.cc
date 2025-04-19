@@ -4,23 +4,22 @@
  * @brief Método para realizar la búsqueda local
  * @return true si se ha mejorado alguna ruta, false en caso contrario
  */
-bool BusquedaLocal::mejorarRutas() {
-  bool mejorado = false;
-  // Recorremos los vehículos
-  for (size_t i = 0; i < vehiculos_->size(); i++) {
-    // Intentamos mejorar la ruta del vehículo
-    if (intercambioZonas() || insercionZonas() || reubicacionSWTS()) {
-      mejorado = true;
-    }
+void BusquedaLocal::mejorarRutas() {
+  bool mejorado = true;
+  while (mejorado) {
+    mejorado = false;
+    mejorado |= swapInter();
+    mejorado |= swapIntra();
+    // mejorado |= reinsertIntra();
+    // mejorado |= reinsertInter();
   }
-  return mejorado;
 }
 
 /**
  * @brief Método para realizar la búsqueda local por intercambio de zonas
  * @return true si se ha mejorado alguna ruta, false en caso contrario
  */
-bool BusquedaLocal::intercambioZonas() {
+bool BusquedaLocal::swapInter() {
   bool mejorado = false;
   // Recorremos los vehículos
   for (size_t i = 0; i < vehiculos_->size(); i++) {
@@ -54,6 +53,34 @@ bool BusquedaLocal::intercambioZonas() {
               }
             }
           }
+        }
+      }
+    }
+  }
+  return mejorado;
+}
+
+/**
+ * @brief Implementación del método swapIntra
+ * @return true si se ha mejorado alguna ruta, false en caso contrario
+ */
+bool BusquedaLocal::swapIntra() {
+  bool mejorado = false;
+  for (size_t i = 0; i < vehiculos_->size(); ++i) {
+    Recoleccion& ruta = (*vehiculos_)[i];
+    // Recorremos las zonas de la ruta
+    vector<Zona>& zonas = ruta.getZonasVisitadas();
+    for (size_t j = 1; j < zonas.size() - 1; ++j) {
+      if (zonas[j].esSWTS() || zonas[j].esDeposito()) continue; // Ignoramos SWTS y depósitos
+      for (size_t k = j + 1; k < zonas.size() - 1; ++k) {
+        if (zonas[k].esSWTS() || zonas[k].esDeposito()) continue; // Ignoramos SWTS y depósitos
+        // Intercambiamos las zonas
+        Recoleccion copia = ruta;
+        swap(copia.getZonasVisitadas()[j], copia.getZonasVisitadas()[k]);
+        if (esFactible(copia) && calcularCostoRuta(copia) < calcularCostoRuta(ruta)) {
+          // Si la ruta es factible y el costo es menor, actualizamos la ruta
+          (*vehiculos_)[i] = copia;
+          mejorado = true;
         }
       }
     }

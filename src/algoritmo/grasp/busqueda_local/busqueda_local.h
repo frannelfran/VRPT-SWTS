@@ -15,12 +15,13 @@ class BusquedaLocal {
     BusquedaLocal() = default;
 
     // Método para realizar la búsqueda local
-    bool mejorarRutas();
+    void mejorarRutas();
 
     // Operadores para realizar la búsuqeda local
-    bool intercambioZonas();
-    bool insercionZonas() {}
-    bool reubicacionSWTS() {}
+    bool swapInter();
+    bool swapIntra();
+    bool reinsertIntra() {}
+    bool reinsertInter() {}
 
     // Métodos auxiliares
     double calcularCostoRuta(const Recoleccion& vehiculo);
