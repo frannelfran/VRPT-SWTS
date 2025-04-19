@@ -350,16 +350,25 @@ int Voraz::tiempoVolverAlVertedero(const Transporte& vehiculo) {
   vector<Tarea> tareas = vehiculo.getTareasAsignadas();
   vehiculoAux.setPosicion(dato_->zonas[3]); // Colocamos el vehículo en el vertedero
   // Recorremos las tareas asignadas al vehículo
-  for (auto& tarea : tareas) {
-    // Agregamos el tiempo que tarda en ir a la zona de la tarea
+  auto it = tareas.begin();
+  while (it != tareas.end()) {
+    auto& tarea = *it;
+    // Tiempo de viaje a la tarea actual
     tiempo += vehiculoAux.calcularTiempo(vehiculoAux.getPosicion().getDistancia(tarea.Sh));
-    // Actualizamos la posición del vehículo
+    
+    // Verificar si hay una tarea siguiente
+    auto next_it = std::next(it);
+    if (next_it != tareas.end()) {
+      // Calcular tiempo de espera si es necesario
+      if (next_it->Th > tiempo) {
+        tiempo += next_it->Th - tiempo; // Esperar hasta el inicio de la siguiente tarea
+      }
+    }
+    
+    // Actualizar posición del vehículo
     vehiculoAux.setPosicion(tarea.Sh);
-  }
-
-  // Calculo el tiempo de espera entre las tareas
-  for (size_t i = 0; i < tareas.size() - 1; i++) {
-    tiempo += tareas[i + 1].Th - tareas[i].Th;
+    
+    ++it;
   }
 
   // Agrego el tiempo que tarda en volver al vertedero
