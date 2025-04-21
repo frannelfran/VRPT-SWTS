@@ -23,6 +23,9 @@ class Grasp : public Algoritmo {
     double CalcularDistanciaRecoleccion(); // Método para calcular el tiempo de recolección
     void mostrarDistancias();
 
+    // Getters
+    vector<Tools*> getDato(const Tools& dato);
+
   private:
     // Métodos para calcular el GRASP de las rutas de recolección
     pair<Zona&, double> zonaMasCercana(const Recoleccion& vehiculo, const int numeroMejoresZonas); // Zona más cercana al vehículo

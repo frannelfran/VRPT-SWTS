@@ -166,7 +166,7 @@ double Grasp::CalcularDistanciaRecoleccion() {
  */
 void Grasp::ejecutar() {
   Tools datoOriginal = *dato_;
-  Voraz* voraz = new Voraz();
+  auto voraz = make_unique<Voraz>();
   BusquedaLocal local;
   for (int i = 2; i <= numeroMejoresZonasCercanas_; i++) {
     for (int j = 1; j <= numeroEjecuciones_; j++) {
@@ -184,9 +184,24 @@ void Grasp::ejecutar() {
       voraz->calcularRutasTransporte();
 
       auto end = chrono::high_resolution_clock::now();
-      dato_->tiempoCPU = round(chrono::duration_cast<chrono::duration<double>>(end - start).count() * 10000) / 10000.0;
+      dato_->tiempoCPU = std::chrono::duration<double>(end - start).count();
     }
   }
+}
+
+/**
+ * @brief Método para obtener las diferentes ejecuciones para un misma instancia
+ * @param dato Dato a obtener
+ * @return Dato
+ */
+vector<Tools*> Grasp::getDato(const Tools& dato) {
+  vector<Tools*> datos;
+  for (const auto& d : datos_) {
+    if (d->nombreInstancia == dato.nombreInstancia) {
+      datos.push_back(d);
+    }
+  }
+  return datos;
 }
 
 /**

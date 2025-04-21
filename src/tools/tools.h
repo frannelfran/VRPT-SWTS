@@ -19,6 +19,7 @@
 #include "../vehiculo/transporte/transporte.h"
 #include "../algoritmo/voraz/voraz.h"
 #include "../algoritmo/grasp/grasp.h"
+#include "../algoritmo/rvnd/rvnd.h"
 
 class Algoritmo;
 
@@ -46,6 +47,11 @@ struct Tools {
   int maxY;
   string nombreInstancia;
   double tiempoCPU; // Tiempo que tarda en resolver el problema
+
+  // Sobrecarga del operador de comparación para poder usar find
+  bool operator==(const Tools& other) const noexcept {
+    return this == &other;
+  }
 };
 
 extern Tools tools;

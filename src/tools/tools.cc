@@ -141,6 +141,7 @@ void mostrarMenu() {
   cout << "Seleccione una opción:" << endl;
   cout << "1. Algoritmo Voraz" << endl;
   cout << "2. Algoritmo GRASP" << endl;
+  cout << "3. Algoritmo RVND" << endl;
   cout << "4. Salir" << endl;
   cout << "Introduce una opción: ";
 }
@@ -157,10 +158,10 @@ Algoritmo* crearAlgoritmo(int opcion) {
       algoritmo = new Voraz();
       break;
     case 2:
-      algoritmo = new Grasp(3, 3);
+      algoritmo = new Grasp(20, 3);
       break;
     case 3:
-      // algoritmo = new Algoritmo3();
+      algoritmo = new RVND(10, 3);
       break;
     default:
       throw invalid_argument("Opción no válida");
