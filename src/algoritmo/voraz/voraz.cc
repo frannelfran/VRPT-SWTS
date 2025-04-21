@@ -97,7 +97,7 @@ void Voraz::ejecutar() {
  */
 void Voraz::mostrarResultados() {
   // Cabecera
-  cout << "----------------------------------------" << endl;
+  cout << "---------------------------------------------" << endl;
   cout << left 
   << setw(15) << "Instancia" 
   << setw(10) << "#Zonas" 
@@ -105,7 +105,7 @@ void Voraz::mostrarResultados() {
   << setw(6) << "#TV" 
   << setw(12) << "Tiempo CPU" 
   << endl;
-  cout << "----------------------------------------" << endl;
+  cout << "---------------------------------------------" << endl;
 
   // Itero sobre los datos
   for (const auto& dato : datos_) {
@@ -117,7 +117,7 @@ void Voraz::mostrarResultados() {
     << setw(12) << dato->tiempoCPU
     << endl;
   }
-  cout << "----------------------------------------" << endl;
+  cout << "---------------------------------------------" << endl;
   // Calculo la media de todas las instancias
   double mediaZonas = 0.0, mediaCV = 0.0, mediaTV = 0.0, mediaCPU = 0.0;
   for (const auto& dato : datos_) {
@@ -137,7 +137,7 @@ void Voraz::mostrarResultados() {
   << setw(6) << mediaTV
   << setw(12) << mediaCPU
   << endl;
-  cout << "----------------------------------------" << endl;
+  cout << "---------------------------------------------" << endl;
 }
 
 /**
