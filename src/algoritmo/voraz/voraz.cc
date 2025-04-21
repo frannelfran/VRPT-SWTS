@@ -129,6 +129,7 @@ void Voraz::mostrarResultados() {
   mediaZonas /= datos_.size();
   mediaCV /= datos_.size();
   mediaTV /= datos_.size();
+  mediaCPU /= datos_.size();
   cout << left 
   << setw(15) << "Averages" 
   << setw(10) << mediaZonas

@@ -20,7 +20,6 @@ class Grasp : public Algoritmo {
     void ejecutar() override;
     void mostrarResultados() override;
     void calcularRutasRecoleccion(const int mejorezZonas, const int ejecucion); // Método para calcular las rutas de recolección
-    double CalcularDistanciaRecoleccion(); // Método para calcular el tiempo de recolección
     void mostrarDistancias();
 
     // Getters

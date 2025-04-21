@@ -48,10 +48,7 @@ struct Tools {
   string nombreInstancia;
   double tiempoCPU; // Tiempo que tarda en resolver el problema
 
-  // Sobrecarga del operador de comparación para poder usar find
-  bool operator==(const Tools& other) const noexcept {
-    return this == &other;
-  }
+  double calcularDistanciaRecoleccion();
 };
 
 extern Tools tools;

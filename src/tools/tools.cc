@@ -158,13 +158,30 @@ Algoritmo* crearAlgoritmo(int opcion) {
       algoritmo = new Voraz();
       break;
     case 2:
-      algoritmo = new Grasp(20, 3);
+      algoritmo = new Grasp(3, 3);
       break;
     case 3:
-      algoritmo = new RVND(10, 3);
+      algoritmo = new RVND(3, 3);
       break;
     default:
       throw invalid_argument("Opción no válida");
   }
   return algoritmo;
+}
+
+/**
+ * @brief Función para calcular la distancia de recolección
+ * @return double Distancia de recolección
+ */
+double Tools::calcularDistanciaRecoleccion() {
+  double distancia = 0.0;
+  for (const auto& vehiculo : rutasRecoleccion) {
+    for (auto it = vehiculo.getZonasVisitadas().begin(); it != vehiculo.getZonasVisitadas().end(); ++it) {
+      Zona zona = *it;
+      if (it + 1 != vehiculo.getZonasVisitadas().end()) {
+        distancia += zona.getDistancia(*next(it));
+      }
+    }
+  }
+  return distancia;
 }

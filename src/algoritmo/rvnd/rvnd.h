@@ -24,6 +24,7 @@ class RVND : public Algoritmo {
     int mejoresZonasCercanas_;
     int numeroEjecuciones_;
     vector<Tools*> busquedasLocales_;
+    vector<double> distancias_;
 };
 
 #endif

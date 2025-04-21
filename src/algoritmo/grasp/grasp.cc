@@ -144,23 +144,6 @@ void Grasp::calcularRutasRecoleccion(const int numeroMejoresZonas, const int eje
 }
 
 /**
- * @brief Método para calcular la distancia de recolección
- * @return Distancia de recolección
- */
-double Grasp::CalcularDistanciaRecoleccion() {
-  double distancia = 0.0;
-  for (const auto& vehiculo : dato_->rutasRecoleccion) {
-    for (auto it = vehiculo.getZonasVisitadas().begin(); it != vehiculo.getZonasVisitadas().end(); ++it) {
-      Zona zona = *it;
-      if (it + 1 != vehiculo.getZonasVisitadas().end()) {
-        distancia += zona.getDistancia(*next(it));
-      }
-    }
-  }
-  return distancia;
-}
-
-/**
  * @brief Método para ejecutar el algoritmo GRASP
  * @return void
  */
@@ -174,11 +157,11 @@ void Grasp::ejecutar() {
       dato_ = new Tools(copiaDato); // Creamos una nueva instancia de Tools
       auto start = chrono::high_resolution_clock::now();
       calcularRutasRecoleccion(i, j); // Calculamos las rutas de recolección
-      distanciaSinMejoras.push_back(CalcularDistanciaRecoleccion());
+      distanciaSinMejoras.push_back(dato_->calcularDistanciaRecoleccion());
       // Mejoro las rutas
       local.setVehiculos(dato_->rutasRecoleccion);
       local.mejorarRutas();
-      distanciasConMejoras_.push_back(CalcularDistanciaRecoleccion());
+      distanciasConMejoras_.push_back(dato_->calcularDistanciaRecoleccion());
       // Calculo las rutas de transporte
       voraz->setDato(*dato_);
       voraz->calcularRutasTransporte();
@@ -282,6 +265,8 @@ void Grasp::mostrarDistancias() {
   cout << "--------------------------------------------------------------------------------------------" << endl;
   cout << left 
   << setw(20) << "Instancia" 
+  << setw(15) << "|LRC|"
+  << setw(15) << "#Ejecucion"
   << setw(25) << "Distancia sin mejoras"
   << setw(25) << "Distancia con mejoras"
   << endl;
@@ -292,21 +277,29 @@ void Grasp::mostrarDistancias() {
     cout << left
     
     << setw(20) << dato->nombreInstancia
+    << setw(15) << mejoresZonasYEjecuciones_[i].first
+    << setw(15) << mejoresZonasYEjecuciones_[i].second
     << setw(25) << distanciaSinMejoras[i]
     << setw(25) << distanciasConMejoras_[i]
     << endl;
   }
   cout << "--------------------------------------------------------------------------------------------" << endl;
   // Calculo la media
-  double mediaSinMejoras = 0, mediaConMejoras = 0;
+  double mediaSinMejoras = 0, mediaConMejoras = 0, mediaLRC = 0, mediaEjecucion = 0;
   for (size_t i = 0; i < datos_.size(); i++) {
+    mediaLRC += mejoresZonasYEjecuciones_[i].first;
+    mediaEjecucion += mejoresZonasYEjecuciones_[i].second;
     mediaSinMejoras += distanciaSinMejoras[i];
     mediaConMejoras +=distanciasConMejoras_[i];
   }
+  mediaLRC /= datos_.size();
+  mediaEjecucion /= datos_.size();
   mediaSinMejoras /= datos_.size();
   mediaConMejoras /= datos_.size();
   cout << left
   << setw(20) << "Averages"
+  << setw(15) << mediaLRC
+  << setw(15) << mediaEjecucion
   << setw(25) << mediaSinMejoras
   << setw(25) << mediaConMejoras
   << endl;
