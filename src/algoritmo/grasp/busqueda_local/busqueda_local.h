@@ -22,6 +22,7 @@ class BusquedaLocal {
     bool swapIntra();
     bool reinsertIntra();
     bool reinsertInter();
+    bool twoOptIntra();
 
     // Métodos auxiliares
     double calcularCostoRuta(const Recoleccion& vehiculo);

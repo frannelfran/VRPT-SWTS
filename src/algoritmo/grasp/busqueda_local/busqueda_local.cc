@@ -12,7 +12,31 @@ void BusquedaLocal::mejorarRutas() {
     mejorado |= swapIntra();
     mejorado |= reinsertIntra();
     mejorado |= reinsertInter();
+    mejorado |= twoOptIntra();
   }
+}
+
+/**
+ * @brief Método para realizar la búsqueda local por intercambio de zonas
+ * @return true si se ha mejorado alguna ruta, false en caso contrario
+ */
+bool BusquedaLocal::twoOptIntra() {
+  bool mejorado = false;
+  for (size_t i = 0; i < vehiculos_->size(); ++i) {
+    Recoleccion& ruta = (*vehiculos_)[i];
+    vector<Zona>& zonas = ruta.getZonasVisitadas();
+    for (size_t j = 1; j < zonas.size() - 2; ++j) {
+      for (size_t k = j + 1; k < zonas.size() - 1; ++k) {
+        Recoleccion copia = ruta;
+        reverse(copia.getZonasVisitadas().begin() + j, copia.getZonasVisitadas().begin() + k + 1);
+        if (esFactible(copia) && calcularCostoRuta(copia) < calcularCostoRuta(ruta)) {
+          (*vehiculos_)[i] = copia;
+          mejorado = true;
+        }
+      }
+    }
+  }
+  return mejorado;
 }
 
 /**

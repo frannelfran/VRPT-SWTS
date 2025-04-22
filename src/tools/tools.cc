@@ -119,6 +119,9 @@ vector<Tools> readData(const string& dirName) {
   // Recorro los ficheros del directorio
   for (int i = 1; i <= 20; i++) {
     string fileName = dirName + "instance" + to_string(i) + ".txt";
+    if (fileName != dirName + "instance1.txt" && fileName != dirName + "instance2.txt") {
+      continue; // Solo leo el primer fichero
+    }
     ifstream file(fileName);
     tools.nombreInstancia = "instance" + to_string(i);
     string line;

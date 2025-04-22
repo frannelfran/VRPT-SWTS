@@ -23,6 +23,7 @@ Tools* RVND::mejorRuta() {
  * @return void
  */
 
+// MODIFICACIÓN
 void RVND::ejecutar() {
   auto grasp = make_unique<Grasp>(mejoresZonasCercanas_, numeroEjecuciones_);
   grasp->setDato(*dato_);
@@ -31,8 +32,6 @@ void RVND::ejecutar() {
   grasp->ejecutar();
   // Guardamos los datos de la instancia
   busquedasLocales_ = grasp->getDato(*dato_);
-
-  // Guardamos las distancias
   
   // Buscamos la mejor ruta
   datos_.push_back(mejorRuta());
