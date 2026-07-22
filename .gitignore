@@ -6,3 +6,9 @@ obj/
 
 # No incluir .vscode
 .vscode
+
+# Símbolos de depuración generados por el compilador (macOS)
+*.dSYM/
+
+# Resultados exportados por el programa (ver visualizacion/index.html)
+resultados.json

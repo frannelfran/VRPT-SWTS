@@ -14,6 +14,7 @@
 #include <cctype> // Para convertir a minúsculas
 #include <stdexcept> // Para lanzar excepciones
 #include <filesystem> // Para recorrer los ficheros del directorio
+#include <memory>
 #include "../zona/zona.h"
 #include "../vehiculo/recoleccion/recoleccion.h"
 #include "../vehiculo/transporte/transporte.h"
@@ -23,43 +24,41 @@
 
 class Algoritmo;
 
-namespace fs = filesystem;
-
-using namespace std;
+namespace fs = std::filesystem;
 
 struct Tools {
-  vector<Zona> zonas; // Vector con todas las zonas
-  vector<Zona> zonasRecoleccion; // Vector con las zonas de recolección
-  vector<Recoleccion> rutasRecoleccion; // Vector con las rutas de los vehículos de recolección
-  vector<Transporte> rutasTransporte; // Vector con las rutas de los vehículos de transporte
-  vector<vector<double>> distancias;
-  int numZonas;
-  int numVehiculos;
+  std::vector<Zona> zonas; // Vector con todas las zonas
+  std::vector<Zona> zonasRecoleccion; // Vector con las zonas de recolección
+  std::vector<Recoleccion> rutasRecoleccion; // Vector con las rutas de los vehículos de recolección
+  std::vector<Transporte> rutasTransporte; // Vector con las rutas de los vehículos de transporte
+  std::vector<std::vector<double>> distancias;
+  int numZonas = 0;
+  int numVehiculos = 0;
   // Información de los vehículos de recolección
-  int capacidadRecoleccion;
-  int duracionRecoleccion;
+  int capacidadRecoleccion = 0;
+  int duracionRecoleccion = 0;
   // Información de los vehículos de transporte
-  int capacidadTransporte;
-  int duracionTransporte;
+  int capacidadTransporte = 0;
+  int duracionTransporte = 0;
   // Información general
-  int velocidad;
-  int maxX;
-  int maxY;
-  string nombreInstancia;
-  double tiempoCPU; // Tiempo que tarda en resolver el problema
+  int velocidad = 0;
+  int maxX = 0;
+  int maxY = 0;
+  std::string nombreInstancia;
+  double tiempoCPU = 0.0; // Tiempo que tarda en resolver el problema
 
-  double calcularDistanciaRecoleccion();
+  double calcularDistanciaRecoleccion() const;
 };
 
-extern Tools tools;
-
-#endif
-
-vector<Tools> readData(const string& dirName); // Función para almacenar los datos de los ficheros
-void procesarLinea(istringstream& linea); // Función para procesar una línea de texto
-void crearZona(string id, istringstream& linea); // Función para crear una zona
-vector<vector<double>> calcularDistancias(); // Función para calcular las distancias entre las zonas
-void mostrarZonas(const vector<Zona>& zonas); // Función para mostrar las zonas
-void mostrarDistancias(); // Función para mostrar las distancias
+std::vector<Tools> readData(const std::string& dirName); // Lee todos los ficheros "instanceN.txt" de un directorio
+Tools leerInstancia(const std::string& rutaFichero); // Lee los datos de un único fichero de instancia
+void procesarLinea(std::istringstream& linea, Tools& datos); // Función para procesar una línea de texto
+void crearZona(const std::string& id, std::istringstream& linea, Tools& datos); // Función para crear una zona
+std::vector<std::vector<double>> calcularDistancias(const Tools& datos); // Función para calcular las distancias entre las zonas
+void mostrarZonas(const std::vector<Zona>& zonas); // Función para mostrar las zonas
+void mostrarDistancias(const Tools& datos); // Función para mostrar las distancias
 void mostrarMenu(); // Función para mostrar el menú de opciones
 Algoritmo* crearAlgoritmo(int opcion); // Función para crear el algoritmo según la opción elegida
+void exportarResultadosJSON(const std::vector<std::shared_ptr<Tools>>& datos, const std::string& rutaSalida); // Exporta zonas y rutas a JSON para la visualización web
+
+#endif

@@ -11,15 +11,13 @@
 #include <algorithm>
 #include "../zona/zona.h"
 
-using namespace std;
-
 class Vehiculo {
   // Constructor de la clase
   public:
     Vehiculo(const int& capacidad, const int& velocidad, const Zona& posicion, const int& duracion);
 
     // Métodos de la clase
-    bool llenarVehiculo(double cantidad);
+    bool llenarVehiculo(double cantidad) const;
     void vaciarVehiculo(Zona& zona);
     void moverVehiculo(const Zona& zona, const double distancia);
     int calcularTiempo(const double distancia) const;
@@ -27,9 +25,9 @@ class Vehiculo {
     inline void agregarContenido(double contenido) { contenido_ += contenido; }
 
     // Getters
-    inline Zona getPosicion() const { return posicion_; }
-    inline vector<Zona>& getZonasVisitadas() { return zonasVisitadas_; }
-    inline const vector<Zona>& getZonasVisitadas() const { return zonasVisitadas_; }
+    inline const Zona& getPosicion() const { return posicion_; }
+    inline std::vector<Zona>& getZonasVisitadas() { return zonasVisitadas_; }
+    inline const std::vector<Zona>& getZonasVisitadas() const { return zonasVisitadas_; }
     inline int getDuracion() const { return duracion_; }
     inline int getContenido() const { return contenido_; }
     inline int getCapacidad() const { return capacidad_; }
@@ -37,7 +35,7 @@ class Vehiculo {
 
     // Setters
     inline void setPosicion(const Zona& zona) { posicion_ = zona; }
-    
+
   protected:
     // Valores que dependen para que el vehículo siga funcionando
     int capacidad_;
@@ -47,7 +45,7 @@ class Vehiculo {
     double contenido_ = 0.0;
     int velocidad_;
     Zona posicion_; // Zona actual del vehículo
-    vector<Zona> zonasVisitadas_; // Zonas que ha visitado el vehículo
+    std::vector<Zona> zonasVisitadas_; // Zonas que ha visitado el vehículo
 };
 
 #endif

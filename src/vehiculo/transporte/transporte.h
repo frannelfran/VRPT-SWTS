@@ -22,10 +22,10 @@ class Transporte : public Vehiculo {
     inline void agregarTarea(const Tarea& tarea) { tareasAsignadas_.push_back(tarea); } // Agregar una tarea al vehículo
 
     // Getters
-    inline const vector<Tarea>& getTareasAsignadas() const { return tareasAsignadas_; } // Obtener las tareas asignadas al vehículo
+    inline const std::vector<Tarea>& getTareasAsignadas() const { return tareasAsignadas_; } // Obtener las tareas asignadas al vehículo
 
   private:
-    vector<Tarea> tareasAsignadas_; // Tareas asignadas al vehículo
+    std::vector<Tarea> tareasAsignadas_; // Tareas asignadas al vehículo
 };
 
 #endif

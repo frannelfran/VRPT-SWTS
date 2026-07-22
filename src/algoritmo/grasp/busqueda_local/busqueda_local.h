@@ -29,10 +29,10 @@ class BusquedaLocal {
     bool esFactible(const Recoleccion& vehiculo); // Comprobar si la ruta del vehículo es factible
 
     // Setters
-    void setVehiculos(vector<Recoleccion>& vehiculos) { vehiculos_ = &vehiculos; }
+    void setVehiculos(std::vector<Recoleccion>& vehiculos) { vehiculos_ = &vehiculos; }
 
   private:
-    vector<Recoleccion>* vehiculos_; // Vector de vehículos
+    std::vector<Recoleccion>* vehiculos_; // Vector de vehículos
 };
 
 #endif

@@ -7,25 +7,24 @@
 #include <iostream>
 #include <cmath>
 #include <string>
-
-using namespace std;
+#include <utility>
 
 class Zona {
   public:
     // Constructor de la clase
     Zona() {}
-    Zona(const string& id, const pair<int, int>& posicion, const double& contenido) : id_(id), posicion_(posicion), contenido_(contenido) {};
-    Zona(const string& id, const pair<int, int>& posicion, const double& tiempoRecoleccion, const double& contenido) : id_(id), posicion_(posicion), tiempoDeProcesado_(tiempoRecoleccion), contenido_(contenido) {};
+    Zona(const std::string& id, const std::pair<int, int>& posicion, const double& contenido) : id_(id), posicion_(posicion), contenido_(contenido) {};
+    Zona(const std::string& id, const std::pair<int, int>& posicion, const double& tiempoRecoleccion, const double& contenido) : id_(id), posicion_(posicion), tiempoDeProcesado_(tiempoRecoleccion), contenido_(contenido) {};
 
     // Getters
-    inline string getId() const { return id_; }
-    inline pair<int, int> getPosicion() const { return posicion_; }
+    inline const std::string& getId() const { return id_; }
+    inline const std::pair<int, int>& getPosicion() const { return posicion_; }
     inline double getContenido() const { return contenido_; }
     inline double getDistancia(const Zona& zona) const {
-      return sqrt(pow(posicion_.first - zona.getPosicion().first, 2) + pow(posicion_.second - zona.getPosicion().second, 2));
+      return std::sqrt(std::pow(posicion_.first - zona.getPosicion().first, 2) + std::pow(posicion_.second - zona.getPosicion().second, 2));
     }
     inline double getTiempoDeProcesado() const { return tiempoDeProcesado_; }
-    
+
     // Setters
     inline void setContenido(double contenido) { contenido_ = contenido; }
 
@@ -40,8 +39,8 @@ class Zona {
     }
 
   private:
-    string id_;
-    pair<int, int> posicion_;
+    std::string id_;
+    std::pair<int, int> posicion_;
     double contenido_;
     double tiempoDeProcesado_ = 0.0; // Tiempo que tarda en procesar la zona
 };

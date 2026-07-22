@@ -1,5 +1,8 @@
 #include "grasp.h"
 #include "../../tools/tools.h"
+#include <iomanip>
+
+using namespace std;
 
 /**
  * @brief Método para obtener la zona más cercana al vehículo que no haya sido visitada aún.
@@ -9,13 +12,12 @@
  * @return Zona más cercana al vehículo con su distancia
  */
 pair<Zona&, double> Grasp::zonaMasCercana(const Recoleccion& vehiculo, const int numeroMejoresZonas) {
-  vector<vector<double>> distancias = dato_->distancias;
-  Zona zonaActual = vehiculo.getPosicion();
-  vector<pair<Zona*, double>> zonaCercana; // Vector con las mejores zonas cercanas
+  const vector<vector<double>>& distancias = dato_->distancias;
+  const Zona& zonaActual = vehiculo.getPosicion();
   auto it = find(dato_->zonas.begin(), dato_->zonas.end(), zonaActual); // Obtengo la posicion de la zona
-  
+
   int index = distance(dato_->zonas.begin(), it);
-  
+
   vector<pair<Zona*, double>> mejoresZonas; // Vector para almacenar las mejores zonas y sus distancias
 
   for (int i = 1; i <= numeroMejoresZonas; i++) {
@@ -35,6 +37,9 @@ pair<Zona&, double> Grasp::zonaMasCercana(const Recoleccion& vehiculo, const int
       mejoresZonas.push_back(make_pair(mejorZona, minDistanciaZona));
     }
   }
+  if (mejoresZonas.empty()) {
+    throw runtime_error("Grasp::zonaMasCercana: no quedan zonas de recolección candidatas para el vehículo");
+  }
   // Escogemos una zona al azar entre las mejores zonas
   static mt19937 gen(random_device{}());
   uniform_int_distribution<size_t> dis(0, mejoresZonas.size() - 1);
@@ -49,8 +54,8 @@ pair<Zona&, double> Grasp::zonaMasCercana(const Recoleccion& vehiculo, const int
  * @return SWTS más cercana al vehículo con su distancia
  */
 pair<Zona&, double> Grasp::swtsMasCercana(const Recoleccion& vehiculo) {
-  vector<vector<double>> distancias = dato_->distancias;
-  Zona zonaActual = vehiculo.getPosicion();
+  const vector<vector<double>>& distancias = dato_->distancias;
+  const Zona& zonaActual = vehiculo.getPosicion();
   Zona* swtsCercana = nullptr;
   double minDistancia = INFINITY;
 
@@ -77,7 +82,7 @@ pair<Zona&, double> Grasp::swtsMasCercana(const Recoleccion& vehiculo) {
  * @param numeroMejoresZonas Número de mejores zonas a considerar
  * @return Tiempo que tarda en volver al depósito
  */
-int Grasp::TiempoVolverDeposito(Recoleccion vehiculo, const int numeroMejoresZonas) {
+int Grasp::TiempoVolverDeposito(const Recoleccion& vehiculo, const int numeroMejoresZonas) {
   int tiempo = 0;
   pair<Zona&, double> zonaTransferenciaCercana = swtsMasCercana(vehiculo);
   pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo, numeroMejoresZonas);
@@ -138,8 +143,11 @@ void Grasp::calcularRutasRecoleccion(const int numeroMejoresZonas, const int eje
     }
     rutasDeVehiculos.push_back(vehiculo);
   }
-  dato_->rutasRecoleccion = rutasDeVehiculos;
-  datos_.push_back(dato_); // Guardamos los datos de la instancia
+  dato_->rutasRecoleccion = std::move(rutasDeVehiculos);
+  // dato_ apunta a un Tools creado con "new" en Grasp::ejecutar: el shared_ptr toma posesión
+  // para liberarlo automáticamente y mantenerlo con vida mientras alguien lo siga referenciando
+  // (p.ej. RVND, que consulta estos resultados después de que Grasp haya terminado).
+  datos_.push_back(shared_ptr<Tools>(dato_));
   mejoresZonasYEjecuciones_.push_back(make_pair(numeroMejoresZonas, ejecucion)); // Guardamos el número de mejores zonas y la ejecución
 }
 
@@ -153,8 +161,7 @@ void Grasp::ejecutar() {
   BusquedaLocal local;
   for (int i = 2; i <= numeroMejoresZonasCercanas_; i++) {
     for (int j = 1; j <= numeroEjecuciones_; j++) {
-      Tools copiaDato = datoOriginal; // Copiamos el dato original
-      dato_ = new Tools(copiaDato); // Creamos una nueva instancia de Tools
+      dato_ = new Tools(datoOriginal); // Creamos una nueva instancia de Tools a partir del dato original
       auto start = chrono::high_resolution_clock::now();
       calcularRutasRecoleccion(i, j); // Calculamos las rutas de recolección
       distanciaSinMejoras.push_back(dato_->calcularDistanciaRecoleccion());
@@ -177,8 +184,8 @@ void Grasp::ejecutar() {
  * @param dato Dato a obtener
  * @return Dato
  */
-vector<Tools*> Grasp::getDato(const Tools& dato) {
-  vector<Tools*> datos;
+vector<shared_ptr<Tools>> Grasp::getDato(const Tools& dato) {
+  vector<shared_ptr<Tools>> datos;
   for (const auto& d : datos_) {
     if (d->nombreInstancia == dato.nombreInstancia) {
       datos.push_back(d);

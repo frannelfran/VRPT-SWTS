@@ -23,19 +23,19 @@ class Grasp : public Algoritmo {
     void mostrarDistancias();
 
     // Getters
-    vector<Tools*> getDato(const Tools& dato);
+    std::vector<std::shared_ptr<Tools>> getDato(const Tools& dato);
 
   private:
     // Métodos para calcular el GRASP de las rutas de recolección
-    pair<Zona&, double> zonaMasCercana(const Recoleccion& vehiculo, const int numeroMejoresZonas); // Zona más cercana al vehículo
-    pair<Zona&, double> swtsMasCercana(const Recoleccion& vehiculo); // SWTS más cercana a la zona
-    int TiempoVolverDeposito(Recoleccion vehiculo, const int numeroMejoresZonas); // Tiempo que tarda en volver al depósito pasando por las zonas y la swts más cercanas
+    std::pair<Zona&, double> zonaMasCercana(const Recoleccion& vehiculo, const int numeroMejoresZonas); // Zona más cercana al vehículo
+    std::pair<Zona&, double> swtsMasCercana(const Recoleccion& vehiculo); // SWTS más cercana a la zona
+    int TiempoVolverDeposito(const Recoleccion& vehiculo, const int numeroMejoresZonas); // Tiempo que tarda en volver al depósito pasando por las zonas y la swts más cercanas
     // Atributos para cuántas zonas cercanas se van a considerar y el número de ejecuciones
     int numeroMejoresZonasCercanas_;
     int numeroEjecuciones_;
-    vector<double> distanciaSinMejoras;
-    vector<double> distanciasConMejoras_;
-    vector<pair<int, int>> mejoresZonasYEjecuciones_;
+    std::vector<double> distanciaSinMejoras;
+    std::vector<double> distanciasConMejoras_;
+    std::vector<std::pair<int, int>> mejoresZonasYEjecuciones_;
 };
 
 #endif

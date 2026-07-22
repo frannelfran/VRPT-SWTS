@@ -14,6 +14,7 @@ class Recoleccion : public Vehiculo {
     
     // Destructor de la clase
     ~Recoleccion() {}
+
     // Métodos de la clase
     void vaciarZona(Zona& zona);
 };

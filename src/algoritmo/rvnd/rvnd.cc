@@ -1,12 +1,15 @@
 #include "rvnd.h"
+#include <iomanip>
+
+using namespace std;
 
 /**
  * @brief Método para buscar la mejor ruta en base al número de vehículos que tenga
  * @return Tools* Mejor ruta
  */
 
-Tools* RVND::mejorRuta() {
-  Tools* mejorRuta = nullptr;
+shared_ptr<Tools> RVND::mejorRuta() {
+  shared_ptr<Tools> mejorRuta = nullptr;
   double numVehiculos = INFINITY;
   // Buscamos la mejor ruta
   for (auto& busquedaLocal : busquedasLocales_) {
@@ -22,8 +25,6 @@ Tools* RVND::mejorRuta() {
  * @brief Método para ejecutar el algoritmo RVND
  * @return void
  */
-
-// MODIFICACIÓN
 void RVND::ejecutar() {
   auto grasp = make_unique<Grasp>(mejoresZonasCercanas_, numeroEjecuciones_);
   grasp->setDato(*dato_);

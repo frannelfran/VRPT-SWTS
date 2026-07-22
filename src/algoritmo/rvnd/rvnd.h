@@ -18,13 +18,13 @@ class RVND : public Algoritmo {
     // Métodos de la clase
     void ejecutar() override;
     void mostrarResultados() override;
-    Tools* mejorRuta();
+    std::shared_ptr<Tools> mejorRuta();
 
   private:
     int mejoresZonasCercanas_;
     int numeroEjecuciones_;
-    vector<Tools*> busquedasLocales_;
-    vector<double> distancias_;
+    std::vector<std::shared_ptr<Tools>> busquedasLocales_;
+    std::vector<double> distancias_;
 };
 
 #endif

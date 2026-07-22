@@ -21,7 +21,7 @@ Vehiculo::Vehiculo(const int& capacidad, const int& velocidad, const Zona& posic
  * @param cantidad Cantidad de residuos que se van a añadir al vehículo
  * @return bool
  */
-bool Vehiculo::llenarVehiculo(double cantidad) {
+bool Vehiculo::llenarVehiculo(double cantidad) const {
   return (contenido_ + cantidad <= capacidad_);
 }
 

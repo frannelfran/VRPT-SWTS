@@ -1,5 +1,8 @@
 #include "voraz.h"
 #include "../../tools/tools.h"
+#include <iomanip>
+
+using namespace std;
 
 /**
  * @brief Método para obtener la zona más cercana al vehículo que no haya sido visitada aún.
@@ -8,8 +11,8 @@
  * @return Zona más cercana al vehículo con su distancia
  */
 pair<Zona&, double> Voraz::zonaMasCercana(const Recoleccion& vehiculo) {
-  vector<vector<double>> distancias = dato_->distancias;
-  Zona zonaActual = vehiculo.getPosicion();
+  const vector<vector<double>>& distancias = dato_->distancias;
+  const Zona& zonaActual = vehiculo.getPosicion();
   Zona* zonaCercana = nullptr; // Inicializo la zona más cercana
   double minDistancia = INFINITY;
   auto it = find(dato_->zonas.begin(), dato_->zonas.end(), zonaActual); // Obtengo la posicion de la zona
@@ -32,8 +35,8 @@ pair<Zona&, double> Voraz::zonaMasCercana(const Recoleccion& vehiculo) {
  * @return SWTS más cercana al vehículo con su distancia
  */
 pair<Zona&, double> Voraz::swtsMasCercana(const Recoleccion& vehiculo) {
-  vector<vector<double>> distancias = dato_->distancias;
-  Zona zonaActual = vehiculo.getPosicion();
+  const vector<vector<double>>& distancias = dato_->distancias;
+  const Zona& zonaActual = vehiculo.getPosicion();
   Zona* swtsCercana = nullptr;
   double minDistancia = INFINITY;
 
@@ -59,7 +62,7 @@ pair<Zona&, double> Voraz::swtsMasCercana(const Recoleccion& vehiculo) {
  * @param vehiculo Vehículo que se va a mover
  * @return Tiempo que tarda en volver al depósito
  */
-int Voraz::TiempoVolverDeposito(Recoleccion vehiculo) {
+int Voraz::TiempoVolverDeposito(const Recoleccion& vehiculo) {
   int tiempo = 0;
   pair<Zona&, double> zonaTransferenciaCercana = swtsMasCercana(vehiculo);
   pair<Zona&, double> zonaCercana = zonaMasCercana(vehiculo);
@@ -88,7 +91,9 @@ void Voraz::ejecutar() {
   calcularRutasTransporte(); // Calculamos las rutas de transporte
   auto end = chrono::high_resolution_clock::now();
   dato_->tiempoCPU = round(chrono::duration_cast<chrono::duration<double>>(end - start).count() * 10000) / 10000.0;
-  datos_.push_back(dato_); // Guardamos los datos de la instancia
+  // dato_ no es propiedad de Voraz (apunta a una instancia gestionada por el llamador),
+  // por lo que se envuelve en un shared_ptr sin dueño (deleter vacío) para no liberarlo aquí.
+  datos_.push_back(shared_ptr<Tools>(dato_, [](Tools*) {}));
 };
 
 /**
@@ -181,7 +186,7 @@ void Voraz::calcularRutasRecoleccion() {
     }
     rutasDeVehiculos.push_back(vehiculo);
   }
-  dato_->rutasRecoleccion = rutasDeVehiculos; // Guardamos las rutas de los vehículos de recolección
+  dato_->rutasRecoleccion = std::move(rutasDeVehiculos); // Guardamos las rutas de los vehículos de recolección
 }
 
 /**
@@ -209,7 +214,7 @@ vector<Tarea> Voraz::crearConjuntoTareas(const vector<Recoleccion>& vehiculos) {
     Tarea tarea;
     // Recorremos las zonas visitadas por el vehiculo
     for (auto it = vehiculo.getZonasVisitadas().begin(); it != vehiculo.getZonasVisitadas().end(); ++it) {
-      Zona zona = *it;
+      const Zona& zona = *it;
       if (zona.esSWTS()) {
         tarea.Dh = totalBasura;
         tarea.Sh = zona;
@@ -217,7 +222,9 @@ vector<Tarea> Voraz::crearConjuntoTareas(const vector<Recoleccion>& vehiculos) {
         tareas.push_back(tarea);
         totalBasura = 0;
       }
-      else {
+      else if (next(it) != vehiculo.getZonasVisitadas().end()) {
+        // La última zona de la ruta es siempre el depósito (ver Vehiculo::volverAlInicio):
+        // no tiene "siguiente zona", así que no se puede calcular el tramo hacia next(it).
         totalBasura += zona.getContenido();
         totalTiempo += vehiculo.calcularTiempo(zona.getDistancia(*next(it))) + zona.getTiempoDeProcesado();
       }
@@ -253,19 +260,18 @@ void Voraz::calcularRutasTransporte() {
   while (!tareas.empty()) {
     Tarea tareaMinima = tareas.front(); // Tomamos la primera tarea
     tareas.erase(tareas.begin()); // La eliminamos de la lista
-    Transporte* vehiculo = nullptr;
     // Buscamos el vehículo que mínimice el costo de inserción
-    vehiculo = escogerVehiculo(rutasDeVehiculos, tareaMinima);
+    Transporte* vehiculo = escogerVehiculo(rutasDeVehiculos, tareaMinima);
 
     if (vehiculo == nullptr) {
       // Si no hay vehículos disponibles, creamos uno nuevo
-      vehiculo = new Transporte(dato_->capacidadTransporte, dato_->velocidad, dato_->zonas[3], dato_->duracionTransporte);
-      vehiculo->moverVehiculo(tareaMinima.Sh, vehiculo->getPosicion().getDistancia(tareaMinima.Sh));
+      Transporte nuevoVehiculo(dato_->capacidadTransporte, dato_->velocidad, dato_->zonas[3], dato_->duracionTransporte);
+      nuevoVehiculo.moverVehiculo(tareaMinima.Sh, nuevoVehiculo.getPosicion().getDistancia(tareaMinima.Sh));
       // Llenamos el vehículo con la cantidad de la tarea
-      vehiculo->agregarContenido(tareaMinima.Dh);
-      vehiculo->agregarTarea(tareaMinima);
+      nuevoVehiculo.agregarContenido(tareaMinima.Dh);
+      nuevoVehiculo.agregarTarea(tareaMinima);
       // Agregamos el vehículo a la lista de rutas
-      rutasDeVehiculos.push_back(*vehiculo);
+      rutasDeVehiculos.push_back(std::move(nuevoVehiculo));
     } else {
       // Agregamos la SWTS de la tarea a la ruta del vehículo
       vehiculo->agregarTarea(tareaMinima);
@@ -287,7 +293,7 @@ void Voraz::calcularRutasTransporte() {
       vehiculo.vaciarVehiculo(dato_->zonas[3]); // Vaciar en el vertedero
     }
   }
-  dato_->rutasTransporte = rutasDeVehiculos; // Guardamos las rutas de los vehículos de transporte
+  dato_->rutasTransporte = std::move(rutasDeVehiculos); // Guardamos las rutas de los vehículos de transporte
 }
 
 /**
@@ -348,7 +354,7 @@ double Voraz::calcularCostoInsercion(const Tarea& tarea, Transporte& vehiculo) {
 int Voraz::tiempoVolverAlVertedero(const Transporte& vehiculo) {
   int tiempo = 0;
   Transporte vehiculoAux = vehiculo;
-  vector<Tarea> tareas = vehiculo.getTareasAsignadas();
+  const vector<Tarea>& tareas = vehiculo.getTareasAsignadas();
   vehiculoAux.setPosicion(dato_->zonas[3]); // Colocamos el vehículo en el vertedero
   // Recorremos las tareas asignadas al vehículo
   auto it = tareas.begin();

@@ -1,5 +1,7 @@
 #include "busqueda_local.h"
 
+using namespace std;
+
 /**
  * @brief Método para realizar la búsqueda local
  * @return true si se ha mejorado alguna ruta, false en caso contrario
